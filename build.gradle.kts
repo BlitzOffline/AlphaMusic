@@ -27,7 +27,6 @@ dependencies {
     implementation("org.slf4j:slf4j-log4j12:1.7.32")
     implementation("net.dv8tion:JDA:5.0.0-alpha1")
     implementation("com.github.walkyst:lavaplayer-fork:1.3.96")
-    implementation("me.mattstudios:triumph-config:1.0.5-SNAPSHOT")
     implementation("dev.triumphteam:triumph-cmd-jda-slash:2.0.0-SNAPSHOT")
 }
 
@@ -47,7 +46,6 @@ tasks {
 
         relocate("kotlin", "com.blitzoffline.alphamusic.libs.kotlin")
         relocate("org.slf4j", "com.blitzoffline.alphamusic.libs.slf4j")
-        relocate("me.mattstudios.config", "com.blitzoffline.alphamusic.libs.config")
         relocate("dev.triumphteam.cmd", "com.blitzoffline.alphamusic.libs.commands")
 
         archiveFileName.set("AlphaMusic.jar")
