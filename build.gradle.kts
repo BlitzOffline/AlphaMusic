@@ -50,11 +50,4 @@ tasks {
 
         archiveFileName.set("AlphaMusic.jar")
     }
-
-    register<Copy>("copyJar") {
-        from ("/home/blitz/Github/AlphaMusic/build/libs")
-        into("/home/blitz/Github/AlphaMusic/.test")
-
-        dependsOn(shadowJar)
-    }
 }
