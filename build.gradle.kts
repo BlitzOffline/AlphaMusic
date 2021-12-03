@@ -23,6 +23,7 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.0")
+    implementation("commons-cli:commons-cli:1.4")
     implementation("org.slf4j:slf4j-log4j12:1.7.32")
     implementation("net.dv8tion:JDA:5.0.0-alpha1")
     implementation("com.github.walkyst:lavaplayer-fork:1.3.96")

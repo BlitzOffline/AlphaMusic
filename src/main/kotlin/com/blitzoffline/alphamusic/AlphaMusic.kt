@@ -2,8 +2,8 @@ package com.blitzoffline.alphamusic
 
 import com.blitzoffline.alphamusic.audio.GuildMusicManager
 import com.blitzoffline.alphamusic.audio.PlayerManager
+import com.blitzoffline.alphamusic.commands.PlayCommand
 import com.blitzoffline.alphamusic.settings.SettingsHandler
-import com.blitzoffline.alphamusic.settings.holders.Bot
 import dev.triumphteam.cmd.slash.SlashCommandManager
 import me.mattstudios.config.SettingsManager
 import net.dv8tion.jda.api.JDA
@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-class AlphaMusic {
+class AlphaMusic(private val token: String) {
     val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
     val playerManager = PlayerManager()
@@ -33,12 +33,15 @@ class AlphaMusic {
 
         jda = createJDAInstance().awaitReady()
 
-        val slashCommandManager = SlashCommandManager.createDefault(jda)
+        val manager = SlashCommandManager.createDefault(jda)
+        manager.registerCommand(
+            PlayCommand(this)
+        )
     }
 
     private fun createJDAInstance() = JDABuilder
         .create(
-            settings[Bot.TOKEN],
+            token,
             listOf(
                 GatewayIntent.GUILD_VOICE_STATES
             )

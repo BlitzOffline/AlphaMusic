@@ -3,6 +3,7 @@ package com.blitzoffline.alphamusic.commands
 import com.blitzoffline.alphamusic.AlphaMusic
 import com.blitzoffline.alphamusic.audio.AudioLoaderResultHandler
 import com.blitzoffline.alphamusic.utils.terminate
+import dev.triumphteam.cmd.core.BaseCommand
 import dev.triumphteam.cmd.core.annotation.Command
 import dev.triumphteam.cmd.core.annotation.Description
 import dev.triumphteam.cmd.core.annotation.SubCommand
@@ -11,7 +12,7 @@ import net.dv8tion.jda.api.Permission
 
 @Command("play")
 @Description("Play a song!")
-class PlayCommand(private val bot: AlphaMusic) {
+class PlayCommand(private val bot: AlphaMusic) : BaseCommand() {
 
     @SubCommand("link")
     @Description("Find a song using a link!")

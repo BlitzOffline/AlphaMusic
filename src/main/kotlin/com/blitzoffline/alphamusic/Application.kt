@@ -1,6 +1,8 @@
 package com.blitzoffline.alphamusic
 
-fun main() {
-    val bot = AlphaMusic()
+import com.blitzoffline.alphamusic.utils.fetchTokenFromFlag
+
+fun main(args: Array<String>) {
+    val bot = AlphaMusic(fetchTokenFromFlag(args))
     bot.run()
 }

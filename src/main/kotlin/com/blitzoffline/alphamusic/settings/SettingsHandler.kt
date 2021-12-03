@@ -1,16 +1,13 @@
 package com.blitzoffline.alphamusic.settings
 
 import com.blitzoffline.alphamusic.AlphaMusic
-import com.blitzoffline.alphamusic.settings.holders.Bot
 import java.io.File
 import me.mattstudios.config.SettingsManager
 
 class SettingsHandler(private val bot: AlphaMusic) {
     fun fetchSettings() = SettingsManager
         .from(fetchSettingsFile("settings.yml"))
-        .configurationData(
-            Bot::class.java
-        )
+        .configurationData()
         .create()
 
     private fun fetchSettingsFile(name: String): File {
