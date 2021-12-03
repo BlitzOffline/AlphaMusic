@@ -7,6 +7,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
 
+// todo: Fix track loaded method not being called!
 class AudioLoaderResultHandler(private val event: SlashCommandEvent, private val musicManager: GuildMusicManager, private val deferred: Boolean = false) : AudioLoadResultHandler {
     override fun trackLoaded(track: AudioTrack) {
         track.userData = TrackMetadata(event.user)
@@ -44,7 +45,7 @@ class AudioLoaderResultHandler(private val event: SlashCommandEvent, private val
     override fun loadFailed(throwable: FriendlyException) {
         val message = throwable.message
 
-        return if (throwable.severity == FriendlyException.Severity.COMMON && message != null) {
+        if (throwable.severity == FriendlyException.Severity.COMMON && message != null) {
             event.terminate(message, deferred)
         } else {
             event.terminate("Something went wrong while loading!", deferred)

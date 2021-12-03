@@ -2,9 +2,10 @@ package com.blitzoffline.alphamusic
 
 import com.blitzoffline.alphamusic.audio.GuildMusicManager
 import com.blitzoffline.alphamusic.audio.PlayerManager
-import com.blitzoffline.alphamusic.commands.PlayCommand
+import com.blitzoffline.alphamusic.listeners.AwaitReady
 import com.blitzoffline.alphamusic.settings.SettingsHandler
 import dev.triumphteam.cmd.slash.SlashCommandManager
+import dev.triumphteam.cmd.slash.sender.SlashSender
 import me.mattstudios.config.SettingsManager
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
@@ -21,6 +22,8 @@ class AlphaMusic(private val token: String) {
 
     private val musicManagers = HashMap<String, GuildMusicManager>()
 
+    lateinit var manager: SlashCommandManager<SlashSender>
+
     lateinit var settings: SettingsManager
         private set
 
@@ -31,18 +34,16 @@ class AlphaMusic(private val token: String) {
         val settingsHandler = SettingsHandler(this)
         settings = settingsHandler.fetchSettings()
 
-        jda = createJDAInstance().awaitReady()
+        jda = createJDAInstance()
 
-        val manager = SlashCommandManager.createDefault(jda)
-        manager.registerCommand(
-            PlayCommand(this)
-        )
+        manager = SlashCommandManager.createDefault(jda)
     }
 
     private fun createJDAInstance() = JDABuilder
         .create(
             token,
             listOf(
+                GatewayIntent.GUILD_EMOJIS,
                 GatewayIntent.GUILD_VOICE_STATES
             )
         )
@@ -50,6 +51,9 @@ class AlphaMusic(private val token: String) {
             CacheFlag.ACTIVITY,
             CacheFlag.CLIENT_STATUS,
             CacheFlag.ONLINE_STATUS
+        )
+        .addEventListeners(
+            AwaitReady(this)
         )
         .build()
 
