@@ -49,8 +49,12 @@ class PlayCommand(private val bot: AlphaMusic) : BaseCommand() {
         val alphaMusicVC = alphaMusic.voiceState?.channel
 
         if (alphaMusicVC == null) {
+            if (memberVC == null) {
+                return event.terminate("Either you or the bot need to be in a voice channel!", deferred = true)
+            }
+
             if (kotlin.runCatching { guild.audioManager.openAudioConnection(memberVC) }.isFailure) {
-                return event.terminate("Something went wrong while trying to connect to your voice channel!", deferred = true)
+                return event.terminate("Could not connect to your voice channel!", deferred = true)
             }
         }
 
