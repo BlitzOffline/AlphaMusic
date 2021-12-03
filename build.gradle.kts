@@ -43,7 +43,6 @@ tasks {
     }
 
     withType<ShadowJar> {
-        minimize()
 
         relocate("kotlin", "com.blitzoffline.alphamusic.libs.kotlin")
         relocate("org.slf4j", "com.blitzoffline.alphamusic.libs.slf4j")
