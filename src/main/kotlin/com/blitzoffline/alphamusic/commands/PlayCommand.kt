@@ -2,13 +2,12 @@ package com.blitzoffline.alphamusic.commands
 
 import com.blitzoffline.alphamusic.AlphaMusic
 import com.blitzoffline.alphamusic.audio.AudioLoaderResultHandler
-import com.blitzoffline.alphamusic.utils.terminate
+import com.blitzoffline.alphamusic.utils.process
 import dev.triumphteam.cmd.core.BaseCommand
 import dev.triumphteam.cmd.core.annotation.Command
 import dev.triumphteam.cmd.core.annotation.Description
 import dev.triumphteam.cmd.core.annotation.SubCommand
 import dev.triumphteam.cmd.slash.sender.SlashSender
-import net.dv8tion.jda.api.Permission
 
 @Command("play")
 @Description("Play a song!")
@@ -17,52 +16,56 @@ class PlayCommand(private val bot: AlphaMusic) : BaseCommand() {
     @SubCommand("link")
     @Description("Find a song using a link!")
     fun SlashSender.link(link: String) {
-        processSong(link)
+        event.deferReply().queue()
+        if (!process(join = true, sameChannel = true, adminBypass = true, deferred = true)) {
+            return
+        }
+
+        val guild = guild ?: return
+
+        val musicManager = bot.getGuildMusicManager(guild)
+        bot.playerManager.loadItemOrdered(musicManager.player, link, AudioLoaderResultHandler(event, musicManager, true))
     }
 
     @SubCommand("youtube")
     @Description("Find a song on youtube using keywords!")
     fun SlashSender.youtube(keywords: String) {
-        processSong("ytsearch:$keywords")
+        event.deferReply().queue()
+        if (!process(join = true, sameChannel = true, adminBypass = true, deferred = true)) {
+            return
+        }
+
+        val guild = guild ?: return
+
+        val musicManager = bot.getGuildMusicManager(guild)
+        bot.playerManager.loadItemOrdered(musicManager.player, "ytsearch:$keywords", AudioLoaderResultHandler(event, musicManager, true))
     }
 
     @SubCommand("youtube-music")
     @Description("Find a song on youtube music using keywords!")
     fun SlashSender.youtubeMusic(keywords: String) {
-        processSong("ytmsearch:$keywords")
+        event.deferReply().queue()
+        if (!process(join = true, sameChannel = true, adminBypass = true, deferred = true)) {
+            return
+        }
+
+        val guild = guild ?: return
+
+        val musicManager = bot.getGuildMusicManager(guild)
+        bot.playerManager.loadItemOrdered(musicManager.player, "ytmsearch:$keywords", AudioLoaderResultHandler(event, musicManager, true))
     }
 
     @SubCommand("soundcloud")
     @Description("Find a song on soundcloud using keywords!")
     fun SlashSender.soundcloud(keywords: String) {
-        processSong("scsearch:$keywords")
-    }
-
-    private fun SlashSender.processSong(search: String) {
         event.deferReply().queue()
-
-        val guild = guild ?: return event.terminate("This command can only be used in a guild!", ephemeral = false, deferred = true)
-        val member = member ?: return event.terminate("This command can only be used in a guild!", ephemeral = false, deferred = true)
-
-        val alphaMusic = guild.selfMember
-        val memberVC = member.voiceState?.channel
-        val alphaMusicVC = alphaMusic.voiceState?.channel
-
-        if (alphaMusicVC == null) {
-            if (memberVC == null) {
-                return event.terminate("Either you or the bot need to be in a voice channel!", deferred = true)
-            }
-
-            if (kotlin.runCatching { guild.audioManager.openAudioConnection(memberVC) }.isFailure) {
-                return event.terminate("Could not connect to your voice channel!", deferred = true)
-            }
+        if (!process(join = true, sameChannel = true, adminBypass = true, deferred = true)) {
+            return
         }
 
-        if (alphaMusicVC != memberVC && !member.hasPermission(Permission.ADMINISTRATOR)) {
-            return event.terminate("You need to be in the same Voice Channel as the bot to do this!", deferred = true)
-        }
+        val guild = guild ?: return
 
         val musicManager = bot.getGuildMusicManager(guild)
-        bot.playerManager.loadItemOrdered(musicManager.player, search, AudioLoaderResultHandler(event, musicManager, true))
+        bot.playerManager.loadItemOrdered(musicManager.player, "scsearch:$keywords", AudioLoaderResultHandler(event, musicManager, true))
     }
 }

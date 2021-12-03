@@ -12,10 +12,9 @@ import dev.triumphteam.cmd.slash.sender.SlashSender
 @Command("loop")
 @Description("Toggle looping for playing song!")
 class LoopCommand(private val bot: AlphaMusic) : BaseCommand() {
-
     @Default
     fun SlashSender.loop() {
-        if (!process()) {
+        if (!process(sameChannel = true, adminBypass = true)) {
             return
         }
 
@@ -30,5 +29,4 @@ class LoopCommand(private val bot: AlphaMusic) : BaseCommand() {
             event.terminate("The song will no longer be looped!", ephemeral = false)
         }
     }
-
 }
