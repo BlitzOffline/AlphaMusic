@@ -14,34 +14,45 @@ import dev.triumphteam.cmd.slash.sender.SlashSender
 import java.time.Duration
 import net.dv8tion.jda.api.EmbedBuilder
 
-@Command("np")
-@Description("List currently playing song!")
-class NowPlayingCommand(private val bot: AlphaMusic) : BaseCommand() {
+
+@Command("grab")
+@Description("Get a DM listing the currently playing song!")
+class GrabCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
-    fun SlashSender.nowPlaying() {
+    fun SlashSender.grab() {
         if (!process()) {
             return
         }
 
-        val guild = event.guild ?: return
+        val guild = guild ?: return
 
         val musicManager = bot.getGuildMusicManager(guild)
         val nowPlaying = musicManager.player.playingTrack
             ?: return event.terminate("There is no song playing currently!")
 
-        event.terminate(
-             EmbedBuilder()
-                .setAuthor("Now Playing ♪", null, bot.jda.selfUser.avatarUrl)
-                .setTitle(nowPlaying.info.title, nowPlaying.info.uri)
-                .setThumbnail(nowPlaying.info.artworkUrl)
-                .setDescription("""
+
+        event.user.openPrivateChannel().flatMap { channel ->
+            channel.sendMessageEmbeds(
+                EmbedBuilder()
+                    .setAuthor("Now Playing ♪", null, bot.jda.selfUser.avatarUrl)
+                    .setTitle(nowPlaying.info.title, nowPlaying.info.uri)
+                    .setThumbnail(nowPlaying.info.artworkUrl)
+                    .setDescription("""
                     `${progressBar(nowPlaying.position, nowPlaying.duration)}`
                     
                     `${formatHMSDouble(Duration.ofMillis(nowPlaying.position), Duration.ofMillis(nowPlaying.duration))}`
                     
                     `Requested by:` ${nowPlaying.getUserData(TrackMetadata::class.java).data.name}
                 """.trimIndent())
-                .build(),
+                    .build(),
+            )
+        }.queue(
+            {
+                event.terminate("Check your DMs! Currently playing song was listed there.")
+            }
         )
+        {
+            event.terminate("Something went wrong while grabbing. Make sure your DMs are not closed!")
+        }
     }
 }
