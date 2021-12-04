@@ -12,7 +12,6 @@ import dev.triumphteam.cmd.slash.sender.SlashSender
 @Command("play")
 @Description("Play a song!")
 class PlayCommand(private val bot: AlphaMusic) : BaseCommand() {
-
     @SubCommand("link")
     @Description("Find a song using a link!")
     fun SlashSender.link(link: String) {

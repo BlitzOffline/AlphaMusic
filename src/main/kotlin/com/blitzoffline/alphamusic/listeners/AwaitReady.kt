@@ -2,9 +2,9 @@ package com.blitzoffline.alphamusic.listeners
 
 import com.blitzoffline.alphamusic.AlphaMusic
 import com.blitzoffline.alphamusic.commands.LoopCommand
+import com.blitzoffline.alphamusic.commands.NowPlayingCommand
 import com.blitzoffline.alphamusic.commands.PlayCommand
 import com.blitzoffline.alphamusic.commands.QueueCommand
-import com.github.ygimenez.method.Pages
 import com.github.ygimenez.model.PaginatorBuilder
 import com.github.ygimenez.type.Emote
 import net.dv8tion.jda.api.events.ReadyEvent
@@ -31,6 +31,10 @@ class AwaitReady(private val bot: AlphaMusic) : ListenerAdapter() {
         bot.manager.registerCommand(
             guild,
             QueueCommand(bot)
+        )
+        bot.manager.registerCommand(
+            guild,
+            NowPlayingCommand(bot)
         )
     }
 }
