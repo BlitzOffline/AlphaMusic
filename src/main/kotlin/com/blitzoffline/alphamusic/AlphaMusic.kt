@@ -35,7 +35,9 @@ class AlphaMusic(private val token: String) {
             token,
             listOf(
                 GatewayIntent.GUILD_EMOJIS,
-                GatewayIntent.GUILD_VOICE_STATES
+                GatewayIntent.GUILD_VOICE_STATES,
+                GatewayIntent.GUILD_MESSAGES,
+                GatewayIntent.GUILD_MESSAGE_REACTIONS,
             )
         )
         .disableCache(

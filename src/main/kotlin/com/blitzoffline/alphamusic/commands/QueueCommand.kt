@@ -5,6 +5,9 @@ import com.blitzoffline.alphamusic.audio.TrackMetadata
 import com.blitzoffline.alphamusic.utils.formatHMS
 import com.blitzoffline.alphamusic.utils.process
 import com.blitzoffline.alphamusic.utils.terminate
+import com.github.ygimenez.method.Pages
+import com.github.ygimenez.model.InteractPage
+import com.github.ygimenez.model.Page
 import dev.triumphteam.cmd.core.BaseCommand
 import dev.triumphteam.cmd.core.annotation.Command
 import dev.triumphteam.cmd.core.annotation.Default
@@ -12,13 +15,15 @@ import dev.triumphteam.cmd.core.annotation.Description
 import dev.triumphteam.cmd.slash.sender.SlashSender
 import java.time.Duration
 import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.entities.MessageEmbed
 
 @Command("queue")
 @Description("List all the songs that are currently queued!")
 class QueueCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
     fun SlashSender.queue() {
-        if (!process()) {
+        event.deferReply().queue()
+        if (!process(deferred = true)) {
             return
         }
 
@@ -26,75 +31,61 @@ class QueueCommand(private val bot: AlphaMusic) : BaseCommand() {
         val musicManager = bot.getGuildMusicManager(guild)
 
         if (musicManager.audioHandler.queue.size == 0) {
-            return event.terminate("The queue is empty!.", ephemeral = false)
+            return event.terminate("The queue is empty!.", deferred = true)
         }
 
         val nowPlaying = musicManager.player.playingTrack
+        val totalPages = musicManager.audioHandler.queue.chunked(10).size
+        val pages = mutableListOf<Page>()
 
-        val embed = EmbedBuilder()
-            .setAuthor("Queue for ${guild.name}")
+        for ((pageIndex, page) in musicManager.audioHandler.queue.chunked(10).withIndex()) {
+            val embed = EmbedBuilder()
+                .setAuthor("Queue for ${guild.name}")
 
-        if (nowPlaying != null) {
-            embed.appendDescription(
-                """
+            if (nowPlaying != null) {
+                embed.appendDescription(
+                    """
                     __Now Playing:__
                     [${nowPlaying.info.title}](${nowPlaying.info.uri}) | `${formatHMS(Duration.ofMillis(nowPlaying.duration))} Requested by: ${nowPlaying.getUserData(TrackMetadata::class.java).data.name}`
                     ${System.lineSeparator()}
                 """.trimIndent()
-            )
-        }
+                )
+            }
 
-        embed.appendDescription(
-            """
+            embed.appendDescription(
+                """
                 __Up Next:__
                 ${System.lineSeparator()}
             """.trimIndent()
-        )
+            )
 
-        // todo: display songs based on page you are on.
-
-        val pages = musicManager.audioHandler.queue.chunked(10)
-
-        val pageNumber = 0
-        val page = pages[pageNumber]
-
-        var item = 1
-        page.forEach { track ->
-            embed.appendDescription(
-                """
-                    `$item.` [${track.info.title}](${track.info.uri}) | `${formatHMS(Duration.ofMillis(track.duration))} Requested by: ${track.getUserData(TrackMetadata::class.java).data.name}`
+            for ((trackIndex, track) in page.withIndex()) {
+                embed.appendDescription(
+                    """
+                    `${trackIndex + 1}.` [${track.info.title}](${track.info.uri}) | `${formatHMS(Duration.ofMillis(track.duration))} Requested by: ${track.getUserData(TrackMetadata::class.java).data.name}`
                     ${System.lineSeparator()}
                 """.trimIndent()
-            )
-            item++
-        }
+                )
+            }
 
-        val total = musicManager.audioHandler.queue.sumOf { it.duration }
-
-        embed.appendDescription(
-            """
-                **${musicManager.audioHandler.queue.size} songs in queue | ${formatHMS(Duration.ofMillis(total))} total length**
+            embed.appendDescription(
+                """
+                **${musicManager.audioHandler.queue.size} songs in queue | ${formatHMS(Duration.ofMillis(musicManager.audioHandler.queue.sumOf { it.duration }))} total length**
             """.trimIndent()
-        )
+            )
 
-        val footer = StringBuilder()
-        footer.append("Page ${pageNumber+1}/${pages.size} | Loop: ")
-        if (musicManager.audioHandler.loop) {
-            footer.append("✅")
-        } else {
-            footer.append("❌")
+            val footer = StringBuilder()
+            footer.append("Page ${pageIndex+1}/${totalPages} | Loop: ")
+            footer.append(if (musicManager.audioHandler.loop) "✅" else "❌")
+            footer.append(" | Paused: ")
+            footer.append(if (musicManager.player.isPaused) "✅" else "❌")
+
+            embed.setFooter(footer.toString())
+            pages.add(InteractPage(embed.build()))
         }
 
-        footer.append(" | Paused: ")
-
-        if (musicManager.player.isPaused) {
-            footer.append("✅")
-        } else {
-            footer.append("❌")
+        event.interaction.hook.editOriginalEmbeds(pages[0].content as MessageEmbed).queue {
+            Pages.paginate(it , pages, true)
         }
-
-        embed.setFooter(footer.toString())
-
-        event.terminate(embed.build())
     }
 }
