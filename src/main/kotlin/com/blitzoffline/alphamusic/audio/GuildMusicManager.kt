@@ -16,10 +16,6 @@ class GuildMusicManager(private val bot: AlphaMusic) {
         player.addListener(audioHandler)
     }
 
-//    fun queue(): MessageEmbed? {
-//
-//    }
-
     fun playing(): MessageEmbed? {
         val playing = player.playingTrack ?: return null
         return EmbedBuilder()
