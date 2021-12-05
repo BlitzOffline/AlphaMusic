@@ -14,22 +14,23 @@ import dev.triumphteam.cmd.slash.sender.SlashSender
 class GrabCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
     fun SlashSender.grab() {
-        if (!process()) {
+        deferReply().queue()
+        if (!process(deferred = true)) {
             return
         }
 
         val guild = guild ?: return
         val musicManager = bot.getGuildMusicManager(guild)
-        val playing = musicManager.playing() ?: return event.terminate("There is no song playing currently!")
+        val playing = musicManager.playing() ?: return event.terminate("There is no song playing currently!", deferred = true)
 
         event.user.openPrivateChannel()
             .flatMap { it.sendMessageEmbeds(playing) }
             .queue(
                 {
-                    event.terminate("Check your DMs! Currently playing song was listed there.")
+                    event.terminate("Check your DMs! Currently playing song was listed there.", deferred = true)
                 }
             ) {
-                event.terminate("Something went wrong while grabbing. Make sure your DMs are not closed!")
+                event.terminate("Something went wrong while grabbing. Make sure your DMs are not closed!", deferred = true)
             }
     }
 }

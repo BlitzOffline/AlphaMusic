@@ -18,7 +18,7 @@ class VoiceChannelListener(private val bot: AlphaMusic) : ListenerAdapter() {
             val musicManager = bot.getGuildMusicManager(guild)
             musicManager.player.isPaused = true
 
-            clearTasks[guild.id] = Timer().schedule(3000000) {
+            clearTasks[guild.id] = Timer().schedule(300000) {
                 musicManager.audioHandler.queue.clear()
                 musicManager.audioHandler.nextTrack()
                 clearTasks[guild.id]?.cancel()
@@ -29,7 +29,7 @@ class VoiceChannelListener(private val bot: AlphaMusic) : ListenerAdapter() {
             if (event.channelLeft.members.size >= 2) return
             if (event.channelLeft.members[0] != guild.selfMember) return
 
-            leaveTasks[guild.id] = Timer().schedule(3000000) {
+            leaveTasks[guild.id] = Timer().schedule(300000) {
                 guild.audioManager.closeAudioConnection()
                 leaveTasks[guild.id]?.cancel()
                 leaveTasks.remove(guild.id)

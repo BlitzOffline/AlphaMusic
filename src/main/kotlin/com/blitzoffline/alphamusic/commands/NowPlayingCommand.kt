@@ -14,14 +14,15 @@ import dev.triumphteam.cmd.slash.sender.SlashSender
 class NowPlayingCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
     fun SlashSender.nowPlaying() {
-        if (!process()) {
+        deferReply().queue()
+        if (!process(deferred = true)) {
             return
         }
 
         val guild = guild ?: return
         val musicManager = bot.getGuildMusicManager(guild)
-        val playing = musicManager.playing() ?: return event.terminate("There is no song playing currently!")
+        val playing = musicManager.playing() ?: return event.terminate("There is no song playing currently!", deferred = true)
 
-        event.terminate(playing)
+        event.terminate(playing, deferred = true)
     }
 }
