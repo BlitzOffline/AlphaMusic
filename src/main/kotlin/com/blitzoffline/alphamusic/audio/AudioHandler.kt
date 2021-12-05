@@ -37,6 +37,16 @@ class AudioHandler(private val player: AudioPlayer) : AudioEventAdapter(), Audio
         queue.addAll(shuffled)
     }
 
+    fun removeDupes(): Int {
+        val distinct = queue.toList().distinctBy { it.info.identifier }
+        val removed = queue.size - distinct.size
+
+        queue.clear()
+        queue.addAll(distinct)
+
+        return removed
+    }
+
     override fun onTrackEnd(player: AudioPlayer, track: AudioTrack, endReason: AudioTrackEndReason) {
         if (!endReason.mayStartNext) {
             return

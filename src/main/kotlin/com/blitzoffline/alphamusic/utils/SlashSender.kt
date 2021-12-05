@@ -3,6 +3,7 @@ package com.blitzoffline.alphamusic.utils
 import dev.triumphteam.cmd.slash.sender.SlashSender
 import net.dv8tion.jda.api.Permission
 
+// todo: Possibly remove the ephemeral value from here.
 fun SlashSender.process(
     join: Boolean = false,
     sameChannel: Boolean = false,
