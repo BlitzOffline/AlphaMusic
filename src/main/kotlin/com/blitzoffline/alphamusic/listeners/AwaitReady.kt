@@ -9,6 +9,7 @@ import com.blitzoffline.alphamusic.commands.PlayCommand
 import com.blitzoffline.alphamusic.commands.QueueCommand
 import com.blitzoffline.alphamusic.commands.ResumeCommand
 import com.blitzoffline.alphamusic.commands.ShuffleCommand
+import com.blitzoffline.alphamusic.commands.SkipCommand
 import com.blitzoffline.alphamusic.commands.VolumeCommand
 import com.github.ygimenez.model.PaginatorBuilder
 import com.github.ygimenez.type.Emote
@@ -39,7 +40,8 @@ class AwaitReady(private val bot: AlphaMusic) : ListenerAdapter() {
             ShuffleCommand(bot),
             VolumeCommand(bot),
             PauseCommand(bot),
-            ResumeCommand(bot)
+            ResumeCommand(bot),
+            SkipCommand(bot)
         )
     }
 
