@@ -7,7 +7,12 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
 
-class AudioLoaderResultHandler(private val event: SlashCommandEvent, private val musicManager: GuildMusicManager, private val deferred: Boolean = false) : AudioLoadResultHandler {
+class AudioLoaderResultHandler(
+    private val event: SlashCommandEvent,
+    private val musicManager: GuildMusicManager,
+    private val deferred: Boolean = false,
+    private val ytSearch: Boolean = false
+) : AudioLoadResultHandler {
     override fun trackLoaded(track: AudioTrack) {
         track.userData = TrackMetadata(event.user)
         if (musicManager.audioHandler.queue(track)) {
@@ -26,11 +31,22 @@ class AudioLoaderResultHandler(private val event: SlashCommandEvent, private val
             return event.terminate("Could not find any songs!", deferred = deferred)
         }
 
+        if (ytSearch) {
+            val track = playlist.tracks[0]
+            track.userData = TrackMetadata(event.user)
+
+            if (musicManager.audioHandler.queue(track)) {
+                return event.terminate("Added song to queue.", deferred = deferred)
+            }
+
+            return event.terminate("Queue is full. Could not add song.", deferred = deferred)
+        }
+
         var count = 0
         for (track in playlist.tracks) {
             track.userData = TrackMetadata(event.user)
             if (musicManager.audioHandler.queue(track)) {
-                count ++
+                count++
             }
         }
 

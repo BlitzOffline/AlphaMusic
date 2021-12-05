@@ -22,9 +22,10 @@ class PlayCommand(private val bot: AlphaMusic) : BaseCommand() {
         }
 
         val guild = guild ?: return
+        val isUrl = URL_REGEX.matches(song)
         val musicManager = bot.getGuildMusicManager(guild)
-        val track = if (URL_REGEX.matches(song)) song else "ytsearch:${song}"
+        val track = if (isUrl) song else "ytsearch:${song}"
 
-        bot.playerManager.loadItemOrdered(musicManager.player, track, AudioLoaderResultHandler(event, musicManager, true))
+        bot.playerManager.loadItemOrdered(musicManager.player, track, AudioLoaderResultHandler(event, musicManager, true, !isUrl))
     }
 }
