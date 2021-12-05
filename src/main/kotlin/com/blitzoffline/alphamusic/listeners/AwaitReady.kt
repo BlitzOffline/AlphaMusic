@@ -4,8 +4,10 @@ import com.blitzoffline.alphamusic.AlphaMusic
 import com.blitzoffline.alphamusic.commands.GrabCommand
 import com.blitzoffline.alphamusic.commands.LoopCommand
 import com.blitzoffline.alphamusic.commands.NowPlayingCommand
+import com.blitzoffline.alphamusic.commands.PauseCommand
 import com.blitzoffline.alphamusic.commands.PlayCommand
 import com.blitzoffline.alphamusic.commands.QueueCommand
+import com.blitzoffline.alphamusic.commands.ResumeCommand
 import com.blitzoffline.alphamusic.commands.ShuffleCommand
 import com.blitzoffline.alphamusic.commands.VolumeCommand
 import com.github.ygimenez.model.PaginatorBuilder
@@ -35,8 +37,9 @@ class AwaitReady(private val bot: AlphaMusic) : ListenerAdapter() {
             NowPlayingCommand(bot),
             GrabCommand(bot),
             ShuffleCommand(bot),
-            VolumeCommand(bot)
-        
+            VolumeCommand(bot),
+            PauseCommand(bot),
+            ResumeCommand(bot)
         )
     }
 
