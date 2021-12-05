@@ -24,13 +24,9 @@ class ShuffleCommand(private val bot: AlphaMusic) : BaseCommand() {
         when (musicManager.audioHandler.queue.size) {
             0 -> event.terminate("There are no songs in the queue to be shuffled.")
             1 -> event.terminate("There is only one song in the queue.")
-            else -> {
-                val shuffled = musicManager.audioHandler.queue.shuffled()
-                musicManager.audioHandler.queue.clear()
-                musicManager.audioHandler.queue.addAll(shuffled)
-
-                event.terminate("The queue was successfully shuffled.")
-            }
+            else -> musicManager.audioHandler.shuffle()
         }
+
+        event.terminate("The queue was successfully shuffled.")
     }
 }

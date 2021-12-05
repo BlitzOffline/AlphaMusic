@@ -31,6 +31,12 @@ class AudioHandler(private val player: AudioPlayer) : AudioEventAdapter(), Audio
         player.startTrack(queue.poll(), false)
     }
 
+    fun shuffle() {
+        val shuffled = queue.shuffled()
+        queue.clear()
+        queue.addAll(shuffled)
+    }
+
     override fun onTrackEnd(player: AudioPlayer, track: AudioTrack, endReason: AudioTrackEndReason) {
         if (!endReason.mayStartNext) {
             return
