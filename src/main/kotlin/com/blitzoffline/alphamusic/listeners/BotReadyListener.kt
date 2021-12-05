@@ -20,7 +20,7 @@ import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.events.ReadyEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 
-class AwaitReady(private val bot: AlphaMusic) : ListenerAdapter() {
+class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
     override fun onReady(event: ReadyEvent) {
         PaginatorBuilder.createPaginator()
             .setHandler(bot.jda)

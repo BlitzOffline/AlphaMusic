@@ -2,7 +2,8 @@ package com.blitzoffline.alphamusic
 
 import com.blitzoffline.alphamusic.audio.GuildMusicManager
 import com.blitzoffline.alphamusic.audio.PlayerManager
-import com.blitzoffline.alphamusic.listeners.AwaitReady
+import com.blitzoffline.alphamusic.listeners.BotReadyListener
+import com.blitzoffline.alphamusic.listeners.VoiceChannelListener
 import dev.triumphteam.cmd.slash.SlashCommandManager
 import dev.triumphteam.cmd.slash.sender.SlashSender
 import net.dv8tion.jda.api.JDA
@@ -46,7 +47,8 @@ class AlphaMusic(private val token: String) {
             CacheFlag.ONLINE_STATUS
         )
         .addEventListeners(
-            AwaitReady(this)
+            BotReadyListener(this),
+            VoiceChannelListener(this)
         )
         .build()
 
