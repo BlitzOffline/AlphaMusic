@@ -27,7 +27,7 @@ class QueueCommand(private val bot: AlphaMusic) : BaseCommand() {
             return
         }
 
-        val guild = event.guild ?: return
+        val guild = guild ?: return
         val musicManager = bot.getGuildMusicManager(guild)
 
         if (musicManager.audioHandler.queue.size == 0) {

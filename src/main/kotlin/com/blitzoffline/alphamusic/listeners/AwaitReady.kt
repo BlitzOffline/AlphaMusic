@@ -6,6 +6,7 @@ import com.blitzoffline.alphamusic.commands.LoopCommand
 import com.blitzoffline.alphamusic.commands.NowPlayingCommand
 import com.blitzoffline.alphamusic.commands.PlayCommand
 import com.blitzoffline.alphamusic.commands.QueueCommand
+import com.blitzoffline.alphamusic.commands.ShuffleCommand
 import com.github.ygimenez.model.PaginatorBuilder
 import com.github.ygimenez.type.Emote
 import dev.triumphteam.cmd.core.BaseCommand
@@ -31,7 +32,8 @@ class AwaitReady(private val bot: AlphaMusic) : ListenerAdapter() {
             LoopCommand(bot),
             QueueCommand(bot),
             NowPlayingCommand(bot),
-            GrabCommand(bot)
+            GrabCommand(bot),
+            ShuffleCommand(bot)
         )
     }
 

@@ -23,7 +23,7 @@ class NowPlayingCommand(private val bot: AlphaMusic) : BaseCommand() {
             return
         }
 
-        val guild = event.guild ?: return
+        val guild = guild ?: return
 
         val musicManager = bot.getGuildMusicManager(guild)
         val nowPlaying = musicManager.player.playingTrack
