@@ -25,6 +25,11 @@ fun SlashSender.process(
 
     if (alphaMusicVC == null) {
         if (join) {
+            if (memberVC == null) {
+                event.terminate("You need to be in a voice channel!", ephemeral = ephemeral, deferred = deferred)
+                return false
+            }
+
             if (kotlin.runCatching { guild.audioManager.openAudioConnection(memberVC) }.isFailure) {
                 event.terminate("Could not connect to your voice channel!", ephemeral = ephemeral , deferred = deferred)
                 return false
