@@ -20,9 +20,8 @@ class SkipCommand(private val bot: AlphaMusic) : BaseCommand() {
         }
 
         val guild = guild ?: return
-        val musicManager = bot.getGuildMusicManager(guild)
-
         val finalAmount = amount ?: 1
+        val musicManager = bot.getGuildMusicManager(guild)
 
         if (finalAmount <= 0) {
             return event.terminate("Make sure you enter a positive integer!")

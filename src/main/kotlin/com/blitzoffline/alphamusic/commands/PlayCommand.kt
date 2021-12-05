@@ -7,7 +7,6 @@ import dev.triumphteam.cmd.core.BaseCommand
 import dev.triumphteam.cmd.core.annotation.Command
 import dev.triumphteam.cmd.core.annotation.Default
 import dev.triumphteam.cmd.core.annotation.Description
-import dev.triumphteam.cmd.core.annotation.SubCommand
 import dev.triumphteam.cmd.slash.sender.SlashSender
 
 @Command("play")
@@ -25,6 +24,7 @@ class PlayCommand(private val bot: AlphaMusic) : BaseCommand() {
         val guild = guild ?: return
         val musicManager = bot.getGuildMusicManager(guild)
         val track = if (URL_REGEX.matches(song)) song else "ytsearch:${song}"
+
         bot.playerManager.loadItemOrdered(musicManager.player, track, AudioLoaderResultHandler(event, musicManager, true))
     }
 }

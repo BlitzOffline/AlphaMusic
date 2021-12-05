@@ -19,14 +19,13 @@ class LoopCommand(private val bot: AlphaMusic) : BaseCommand() {
         }
 
         val guild = guild ?: return
-
         val musicManager = bot.getGuildMusicManager(guild)
         musicManager.audioHandler.loop = !musicManager.audioHandler.loop
 
         if (musicManager.audioHandler.loop) {
-            event.terminate("The song will now be looped!", ephemeral = false)
-        } else {
-            event.terminate("The song will no longer be looped!", ephemeral = false)
+            return event.terminate("The song will now be looped!")
         }
+
+        event.terminate("The song will no longer be looped!")
     }
 }
