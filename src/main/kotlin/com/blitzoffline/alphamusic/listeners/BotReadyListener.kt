@@ -1,6 +1,7 @@
 package com.blitzoffline.alphamusic.listeners
 
 import com.blitzoffline.alphamusic.AlphaMusic
+import com.blitzoffline.alphamusic.commands.ClearCommand
 import com.blitzoffline.alphamusic.commands.GrabCommand
 import com.blitzoffline.alphamusic.commands.JoinCommand
 import com.blitzoffline.alphamusic.commands.LoopCommand
@@ -9,6 +10,7 @@ import com.blitzoffline.alphamusic.commands.PauseCommand
 import com.blitzoffline.alphamusic.commands.PlayCommand
 import com.blitzoffline.alphamusic.commands.QueueCommand
 import com.blitzoffline.alphamusic.commands.RemoveDupesCommand
+import com.blitzoffline.alphamusic.commands.ReplayCommand
 import com.blitzoffline.alphamusic.commands.ResumeCommand
 import com.blitzoffline.alphamusic.commands.ShuffleCommand
 import com.blitzoffline.alphamusic.commands.SkipCommand
@@ -45,7 +47,9 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
             ResumeCommand(bot),
             SkipCommand(bot),
             JoinCommand(),
-            RemoveDupesCommand(bot)
+            RemoveDupesCommand(bot),
+            ClearCommand(bot),
+            ReplayCommand(bot)
         )
     }
 

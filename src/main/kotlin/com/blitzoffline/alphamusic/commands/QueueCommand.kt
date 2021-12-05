@@ -30,8 +30,8 @@ class QueueCommand(private val bot: AlphaMusic) : BaseCommand() {
         val guild = guild ?: return
         val musicManager = bot.getGuildMusicManager(guild)
 
-        if (musicManager.audioHandler.queue.size == 0) {
-            return event.terminate("The queue is empty!.", deferred = true)
+        if (musicManager.audioHandler.queue.isEmpty()) {
+            return event.terminate("The queue is empty!", deferred = true)
         }
 
         val nowPlaying = musicManager.player.playingTrack

@@ -9,11 +9,11 @@ import dev.triumphteam.cmd.core.annotation.Default
 import dev.triumphteam.cmd.core.annotation.Description
 import dev.triumphteam.cmd.slash.sender.SlashSender
 
-@Command("remove-dupes")
-@Description("Remove all duplicates from the queue!")
-class RemoveDupesCommand(private val bot: AlphaMusic) : BaseCommand() {
+@Command("replay")
+@Description("Mark a song to be replayed!")
+class ReplayCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
-    fun SlashSender.removeDupes() {
+    fun SlashSender.replay() {
         if (!process(sameChannel = true, adminBypass = true)) {
             return
         }
@@ -21,13 +21,15 @@ class RemoveDupesCommand(private val bot: AlphaMusic) : BaseCommand() {
         val guild = guild ?: return
         val musicManager = bot.getGuildMusicManager(guild)
 
-        if (musicManager.audioHandler.queue.isEmpty()) {
-            return event.terminate("There are no song queued currently!")
+        if (musicManager.player.playingTrack == null) {
+            return event.terminate("There is no song currently playing to be replayed!")
         }
 
-        when(musicManager.audioHandler.removeDupes()) {
-            0 -> event.terminate("No dupes found!")
-            else -> event.terminate("Successfully removed all duplicates!")
+        if (musicManager.audioHandler.replay) {
+            return event.terminate("Currently playing song is already marked to be replayed!")
         }
+
+        musicManager.audioHandler.replay = true
+        event.terminate("Currently playing song marked to be replayed!")
     }
 }
