@@ -1,35 +1,55 @@
 package com.blitzoffline.alphamusic.listeners
 
 import com.blitzoffline.alphamusic.AlphaMusic
+import java.util.Timer
+import java.util.TimerTask
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
+import kotlin.concurrent.schedule
 
 class VoiceChannelListener(private val bot: AlphaMusic) : ListenerAdapter() {
+    private var clearTasks = hashMapOf<String, TimerTask>()
+    private var leaveTasks = hashMapOf<String, TimerTask>()
+
     override fun onGuildVoiceLeave(event: GuildVoiceLeaveEvent) {
-        if (event.member.id != bot.jda.selfUser.id) {
-            return
-        }
+        val guild = event.guild
+        if (event.member == guild.selfMember) {
+            val musicManager = bot.getGuildMusicManager(guild)
+            musicManager.player.isPaused = true
 
-        val musicManager = bot.getGuildMusicManager(event.guild)
-        if (musicManager.player.isPaused) {
-            return
-        }
+            clearTasks[guild.id] = Timer().schedule(3000000) {
+                musicManager.audioHandler.queue.clear()
+                musicManager.audioHandler.nextTrack()
+                clearTasks[guild.id]?.cancel()
+                clearTasks.remove(guild.id)
+            }
+        } else {
+            if (event.channelLeft != guild.selfMember.voiceState?.channel) return
+            if (event.channelLeft.members.size >= 2) return
+            if (event.channelLeft.members[0] != guild.selfMember) return
 
-        musicManager.player.isPaused = true
-        // todo: Wait 5 minutes and if the bot is not in a voice channel by then clear the queue
+            leaveTasks[guild.id] = Timer().schedule(3000000) {
+                guild.audioManager.closeAudioConnection()
+                leaveTasks[guild.id]?.cancel()
+                leaveTasks.remove(guild.id)
+            }
+        }
     }
 
     override fun onGuildVoiceJoin(event: GuildVoiceJoinEvent) {
-        if (event.member.id != bot.jda.selfUser.id) {
-            return
-        }
+        val guild = event.guild
+        if (event.member == guild.selfMember) {
+            val musicManager = bot.getGuildMusicManager(guild)
+            musicManager.player.isPaused = false
 
-        val musicManager = bot.getGuildMusicManager(event.guild)
-        if (!musicManager.player.isPaused) {
-            return
-        }
+            clearTasks[guild.id]?.cancel()
+            clearTasks.remove(guild.id)
+        } else {
+            if (event.channelJoined != guild.selfMember.voiceState?.channel) return
 
-        musicManager.player.isPaused = false
+            leaveTasks[guild.id]?.cancel()
+            leaveTasks.remove(guild.id)
+        }
     }
 }
