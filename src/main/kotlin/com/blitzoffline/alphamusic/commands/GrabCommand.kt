@@ -27,32 +27,10 @@ class GrabCommand(private val bot: AlphaMusic) : BaseCommand() {
         val guild = guild ?: return
 
         val musicManager = bot.getGuildMusicManager(guild)
-        val nowPlaying = musicManager.player.playingTrack
-            ?: return event.terminate("There is no song playing currently!")
+        val playing = musicManager.playing() ?: return event.terminate("There is no song playing currently!")
 
-
-        event.user.openPrivateChannel().flatMap { channel ->
-            channel.sendMessageEmbeds(
-                EmbedBuilder()
-                    .setAuthor("Now Playing ♪", null, bot.jda.selfUser.avatarUrl)
-                    .setTitle(nowPlaying.info.title, nowPlaying.info.uri)
-                    .setThumbnail(nowPlaying.info.artworkUrl)
-                    .setDescription("""
-                    `${progressBar(nowPlaying.position, nowPlaying.duration)}`
-                    
-                    `${formatHMSDouble(Duration.ofMillis(nowPlaying.position), Duration.ofMillis(nowPlaying.duration))}`
-                    
-                    `Requested by:` ${nowPlaying.getUserData(TrackMetadata::class.java).data.name}
-                """.trimIndent())
-                    .build(),
-            )
-        }.queue(
-            {
-                event.terminate("Check your DMs! Currently playing song was listed there.")
-            }
-        )
-        {
-            event.terminate("Something went wrong while grabbing. Make sure your DMs are not closed!")
-        }
+        event.user.openPrivateChannel().flatMap { channel -> channel.sendMessageEmbeds(playing) }
+            .queue({ event.terminate("Check your DMs! Currently playing song was listed there.") })
+            { event.terminate("Something went wrong while grabbing. Make sure your DMs are not closed!") }
     }
 }
