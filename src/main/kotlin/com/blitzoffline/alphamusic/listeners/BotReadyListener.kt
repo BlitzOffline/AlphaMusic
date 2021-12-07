@@ -14,16 +14,13 @@ import com.blitzoffline.alphamusic.commands.RemoveCommand
 import com.blitzoffline.alphamusic.commands.RemoveDupesCommand
 import com.blitzoffline.alphamusic.commands.ReplayCommand
 import com.blitzoffline.alphamusic.commands.ResumeCommand
+import com.blitzoffline.alphamusic.commands.SeekCommand
 import com.blitzoffline.alphamusic.commands.ShuffleCommand
 import com.blitzoffline.alphamusic.commands.SkipCommand
 import com.blitzoffline.alphamusic.commands.StopCommand
 import com.blitzoffline.alphamusic.commands.VolumeCommand
 import com.github.ygimenez.model.PaginatorBuilder
 import com.github.ygimenez.type.Emote
-import dev.triumphteam.cmd.core.BaseCommand
-import dev.triumphteam.cmd.slash.SlashCommandManager
-import dev.triumphteam.cmd.slash.sender.SlashSender
-import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.events.ReadyEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 
@@ -37,7 +34,7 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
             .activate()
 
         val guild = bot.jda.guilds.first() ?: return bot.logger.warn("Couldn't find any guilds!")
-        bot.manager.registerCommands(
+        bot.manager.registerCommand(
             guild,
             PlayCommand(bot),
             LoopCommand(bot),
@@ -55,10 +52,8 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
             ReplayCommand(bot),
             StopCommand(bot),
             RemoveCommand(bot),
-            LeaveCommand(bot)
+            LeaveCommand(bot),
+            SeekCommand(bot)
         )
     }
-
-    private fun SlashCommandManager<SlashSender>.registerCommands(guild: Guild, vararg commands: BaseCommand) =
-        commands.forEach { registerCommand(guild, it) }
 }
