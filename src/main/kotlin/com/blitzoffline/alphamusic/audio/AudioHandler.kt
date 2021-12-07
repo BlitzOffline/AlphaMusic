@@ -38,7 +38,7 @@ class AudioHandler(private val player: AudioPlayer) : AudioEventAdapter(), Audio
     }
 
     fun removeDupes(): Int {
-        val distinct = queue.toList().distinctBy { it.info.identifier }
+        val distinct = queue.distinctBy { it.info.identifier }
         val removed = queue.size - distinct.size
 
         queue.clear()
