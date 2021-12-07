@@ -21,16 +21,16 @@ class ForwardCommand(private val bot: AlphaMusic) : BaseCommand() {
             return
         }
 
-        if (seconds <= 0) {
-            return event.terminate("Seconds can not be <= 0!")
-        }
-
         if (minutes != null && minutes < 0) {
             return event.terminate("Minutes can not be < 0!")
         }
 
         if (hours != null && hours < 0) {
             return event.terminate("Hours can not be < 0!")
+        }
+
+        if (seconds <= 0 && ((minutes == null || minutes == 0) && (hours == null || hours == 0))) {
+            return event.terminate("Seconds can not be <= 0 when hours and minutes are 0!")
         }
 
         val guild = guild ?: return
