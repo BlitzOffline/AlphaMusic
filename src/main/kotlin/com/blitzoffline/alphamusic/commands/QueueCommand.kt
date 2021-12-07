@@ -14,6 +14,7 @@ import dev.triumphteam.cmd.core.annotation.Default
 import dev.triumphteam.cmd.core.annotation.Description
 import dev.triumphteam.cmd.slash.sender.SlashSender
 import java.time.Duration
+import kotlin.math.pow
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
 
@@ -62,7 +63,7 @@ class QueueCommand(private val bot: AlphaMusic) : BaseCommand() {
             for ((trackIndex, track) in page.withIndex()) {
                 embed.appendDescription(
                     """
-                    `${trackIndex + 1}.` [${track.info.title}](${track.info.uri}) | `${formatHMS(Duration.ofMillis(track.duration))} Requested by: ${track.getUserData(TrackMetadata::class.java).data.name}`
+                    `${10 * pageIndex + trackIndex + 1}.` [${track.info.title}](${track.info.uri}) | `${formatHMS(Duration.ofMillis(track.duration))} Requested by: ${track.getUserData(TrackMetadata::class.java).data.name}`
                     ${System.lineSeparator()}
                 """.trimIndent()
                 )
