@@ -15,7 +15,7 @@ import java.util.concurrent.ArrayBlockingQueue
 @Description("Remove a song from the queue!")
 class RemoveCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
-    fun SlashSender.remove(index: Int) {
+    fun SlashSender.remove(@Description("Index of song you want to remove. Starts from 1!") index: Int) {
         if (!process(sameChannel = true, adminBypass = true)) {
             return
         }

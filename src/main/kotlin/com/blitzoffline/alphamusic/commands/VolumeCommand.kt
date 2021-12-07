@@ -14,7 +14,7 @@ import dev.triumphteam.cmd.slash.sender.SlashSender
 @Description("Turn the volume up or down!")
 class VolumeCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
-    fun SlashSender.volume(@Optional volume: Int?) {
+    fun SlashSender.volume(@Description("Number to set the volume of the bot to!") @Optional volume: Int?) {
         if (!process(sameChannel = true, adminBypass = true)) {
             return
         }

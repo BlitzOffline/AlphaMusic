@@ -16,7 +16,11 @@ import java.time.Duration
 @Description("Forward the current song by a certain amount of time!")
 class ForwardCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
-    fun SlashSender.forward(seconds: Int, @Optional minutes: Int?, @Optional hours: Int?) {
+    fun SlashSender.forward(
+        @Description("Amount of seconds to forward by!") seconds: Int,
+        @Description("Amount of minutes to forward by!") @Optional minutes: Int?,
+        @Description("Amount of hours to forward by!") @Optional hours: Int?
+    ) {
         if (!process(sameChannel = true, adminBypass = true)) {
             return
         }

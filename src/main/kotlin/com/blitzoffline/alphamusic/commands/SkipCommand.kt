@@ -14,7 +14,7 @@ import dev.triumphteam.cmd.slash.sender.SlashSender
 @Description("Skip songs!")
 class SkipCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
-    fun SlashSender.skip(@Optional amount: Int?)  {
+    fun SlashSender.skip(@Description("Amount of songs to skip. Defaults to 1!") @Optional amount: Int?)  {
         if (!process(sameChannel = true, adminBypass = true)) {
             return
         }

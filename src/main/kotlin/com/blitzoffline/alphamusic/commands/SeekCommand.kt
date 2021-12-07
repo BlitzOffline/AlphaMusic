@@ -16,7 +16,11 @@ import java.time.Duration
 @Description("Seek to a certain moment in the song!")
 class SeekCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
-    fun SlashSender.seek(seconds: Int, @Optional minutes: Int?, @Optional hours: Int?) {
+    fun SlashSender.seek(
+        @Description("Amount of seconds to seek!") seconds: Int,
+        @Description("Amount of minutes to seek!") @Optional minutes: Int?,
+        @Description("Amount of hours to seek!") @Optional hours: Int?
+    ) {
         if (!process(sameChannel = true, adminBypass = true)) {
             return
         }

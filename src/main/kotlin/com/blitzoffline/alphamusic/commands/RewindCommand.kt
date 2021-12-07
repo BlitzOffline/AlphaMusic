@@ -16,7 +16,11 @@ import java.time.Duration
 @Description("Rewind the current song by a certain amount of time!")
 class RewindCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
-    fun SlashSender.rewind(seconds: Int, @Optional minutes: Int?, @Optional hours: Int?) {
+    fun SlashSender.rewind(
+        @Description("Amount of seconds to rewind by!") seconds: Int,
+        @Description("Amount of minutes to rewind by!") @Optional minutes: Int?,
+        @Description("Amount of hours to rewind by!") @Optional hours: Int?
+    ) {
         if (!process(sameChannel = true, adminBypass = true)) {
             return
         }
