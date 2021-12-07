@@ -29,8 +29,12 @@ class ForwardCommand(private val bot: AlphaMusic) : BaseCommand() {
             return event.terminate("Hours can not be < 0!")
         }
 
-        if (seconds <= 0 && ((minutes == null || minutes == 0) && (hours == null || hours == 0))) {
-            return event.terminate("Seconds can not be <= 0 when hours and minutes are 0!")
+        if (seconds < 0) {
+            return event.terminate("Seconds can not be < 0!")
+        }
+
+        if (seconds == 0 && ((minutes == null || minutes == 0) && (hours == null || hours == 0))) {
+            return event.terminate("Seconds can not be 0 when hours and minutes are 0!")
         }
 
         val guild = guild ?: return
@@ -57,6 +61,6 @@ class ForwardCommand(private val bot: AlphaMusic) : BaseCommand() {
         }
 
         playing.position = playing.position + total
-        event.terminate("Forwarded song to: ${formatHMS(Duration.ofMillis(playing.position))}")
+        event.terminate("Forwarded song to: ${formatHMS(Duration.ofMillis(playing.position))}!")
     }
 }

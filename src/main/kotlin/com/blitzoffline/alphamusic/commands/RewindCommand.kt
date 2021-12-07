@@ -12,11 +12,11 @@ import dev.triumphteam.cmd.core.annotation.Optional
 import dev.triumphteam.cmd.slash.sender.SlashSender
 import java.time.Duration
 
-@Command("seek")
-@Description("Seek to a certain moment in the song!")
-class SeekCommand(private val bot: AlphaMusic) : BaseCommand() {
+@Command("rewind")
+@Description("Rewind the current song by a certain amount of time!")
+class RewindCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
-    fun SlashSender.seek(seconds: Int, @Optional minutes: Int?, @Optional hours: Int?) {
+    fun SlashSender.rewind(seconds: Int, @Optional minutes: Int?, @Optional hours: Int?) {
         if (!process(sameChannel = true, adminBypass = true)) {
             return
         }
@@ -55,11 +55,7 @@ class SeekCommand(private val bot: AlphaMusic) : BaseCommand() {
 
         total *= 1000
 
-        if (total > playing.duration) {
-            return event.terminate("The song is not that long! Song duration: ${formatHMS(Duration.ofMillis(playing.duration))}")
-        }
-
-        playing.position = total
-        event.terminate("Seeked current song to ${formatHMS(Duration.ofMillis(total))}!")
+        playing.position = playing.position - total
+        event.terminate("Rewound song to: ${formatHMS(Duration.ofMillis(playing.position))}!")
     }
 }
