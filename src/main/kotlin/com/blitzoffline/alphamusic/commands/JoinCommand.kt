@@ -13,6 +13,10 @@ import dev.triumphteam.cmd.slash.sender.SlashSender
 class JoinCommand : BaseCommand() {
     @Default
     fun SlashSender.join() {
+        if (event.guild?.selfMember?.voiceState?.channel != null) {
+            return event.terminate("The bot is already in a voice channel!")
+        }
+
         if (!process(join = true)) {
             return
         }
