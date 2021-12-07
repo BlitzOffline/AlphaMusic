@@ -14,6 +14,7 @@ import com.blitzoffline.alphamusic.commands.ReplayCommand
 import com.blitzoffline.alphamusic.commands.ResumeCommand
 import com.blitzoffline.alphamusic.commands.ShuffleCommand
 import com.blitzoffline.alphamusic.commands.SkipCommand
+import com.blitzoffline.alphamusic.commands.StopCommand
 import com.blitzoffline.alphamusic.commands.VolumeCommand
 import com.github.ygimenez.model.PaginatorBuilder
 import com.github.ygimenez.type.Emote
@@ -49,7 +50,8 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
             JoinCommand(),
             RemoveDupesCommand(bot),
             ClearCommand(bot),
-            ReplayCommand(bot)
+            ReplayCommand(bot),
+            StopCommand(bot)
         )
     }
 
