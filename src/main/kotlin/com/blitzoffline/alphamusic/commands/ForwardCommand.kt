@@ -12,11 +12,11 @@ import dev.triumphteam.cmd.core.annotation.Optional
 import dev.triumphteam.cmd.slash.sender.SlashSender
 import java.time.Duration
 
-@Command("seek")
-@Description("Seek to a certain moment in the song!")
-class SeekCommand(private val bot: AlphaMusic) : BaseCommand() {
+@Command("forward")
+@Description("Forward the current song by a certain amount of time!")
+class ForwardCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
-    fun SlashSender.seek(seconds: Int, @Optional minutes: Int?, @Optional hours: Int?) {
+    fun SlashSender.forward(seconds: Int, @Optional minutes: Int?, @Optional hours: Int?) {
         if (!process(sameChannel = true, adminBypass = true)) {
             return
         }
@@ -51,11 +51,12 @@ class SeekCommand(private val bot: AlphaMusic) : BaseCommand() {
 
         total *= 1000
 
-        if (total > playing.duration) {
-            return event.terminate("The song is not that long! Song duration: ${formatHMS(Duration.ofMillis(playing.duration))}")
+        if (playing.position + total > playing.duration) {
+            return event.terminate("The song is not that long! Song Duration: ${formatHMS(Duration.ofMillis(playing.duration))} | " +
+                    "Current timestamp: ${formatHMS(Duration.ofMillis(playing.position))}")
         }
 
-        playing.position = total
-        event.terminate("Seeked current song to ${formatHMS(Duration.ofMillis(total))}!")
+        playing.position = playing.position + total
+        event.terminate("Forwarded song to: ${formatHMS(Duration.ofMillis(playing.position))}")
     }
 }
