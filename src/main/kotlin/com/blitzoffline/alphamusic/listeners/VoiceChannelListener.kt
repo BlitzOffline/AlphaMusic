@@ -3,10 +3,10 @@ package com.blitzoffline.alphamusic.listeners
 import com.blitzoffline.alphamusic.AlphaMusic
 import java.util.Timer
 import java.util.TimerTask
+import kotlin.concurrent.schedule
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import kotlin.concurrent.schedule
 
 class VoiceChannelListener(private val bot: AlphaMusic) : ListenerAdapter() {
     private var clearTasks = hashMapOf<String, TimerTask>()
