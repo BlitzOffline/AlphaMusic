@@ -21,7 +21,7 @@ class GrabCommand(private val bot: AlphaMusic) : BaseCommand() {
 
         val guild = guild ?: return
         val musicManager = bot.getGuildMusicManager(guild)
-        val playing = musicManager.playing() ?: return event.terminate("There is no song playing currently!", deferred = true)
+        val playing = musicManager.audioHandler.nowPlayingAsEmbed() ?: return event.terminate("There is no song playing currently!", deferred = true)
 
         event.user.openPrivateChannel()
             .flatMap { it.sendMessageEmbeds(playing) }

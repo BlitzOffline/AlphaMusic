@@ -8,27 +8,11 @@ import java.time.Duration
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
 
-class GuildMusicManager(private val bot: AlphaMusic) {
+class GuildMusicManager(bot: AlphaMusic) {
     val player: AudioPlayer = bot.playerManager.createPlayer()
-    val audioHandler = AudioHandler(player)
+    val audioHandler = AudioHandler(player, bot.jda)
 
     init {
         player.addListener(audioHandler)
-    }
-
-    fun playing(): MessageEmbed? {
-        val playing = player.playingTrack ?: return null
-        return EmbedBuilder()
-            .setAuthor("Now Playing ♪", null, bot.jda.selfUser.avatarUrl)
-            .setTitle(playing.info.title, playing.info.uri)
-            .setThumbnail(playing.info.artworkUrl)
-            .setDescription("""
-                    `${progressBar(playing.position, playing.duration)}`
-                    
-                    `${formatHMSDouble(Duration.ofMillis(playing.position), Duration.ofMillis(playing.duration))}`
-                    
-                    `Requested by:` ${playing.getUserData(TrackMetadata::class.java).data.name}
-                """.trimIndent())
-            .build()
     }
 }
