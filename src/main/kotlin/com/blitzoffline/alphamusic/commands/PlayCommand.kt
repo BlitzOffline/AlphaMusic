@@ -1,7 +1,7 @@
 package com.blitzoffline.alphamusic.commands
 
 import com.blitzoffline.alphamusic.AlphaMusic
-import com.blitzoffline.alphamusic.audio.AudioLoaderResultHandler
+import com.blitzoffline.alphamusic.audio.LoaderResultHandler
 import com.blitzoffline.alphamusic.utils.process
 import dev.triumphteam.cmd.core.BaseCommand
 import dev.triumphteam.cmd.core.annotation.Command
@@ -26,6 +26,6 @@ class PlayCommand(private val bot: AlphaMusic) : BaseCommand() {
         val musicManager = bot.getGuildMusicManager(guild)
         val track = if (isUrl) identifier else "ytsearch:${identifier}"
 
-        bot.playerManager.loadItemOrdered(musicManager.player, track, AudioLoaderResultHandler(event, musicManager, true, !isUrl))
+        bot.playerManager.loadItemOrdered(musicManager.player, track, LoaderResultHandler(event, musicManager, true))
     }
 }

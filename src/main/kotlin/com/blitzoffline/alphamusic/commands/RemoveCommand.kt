@@ -52,6 +52,6 @@ class RemoveCommand(private val bot: AlphaMusic) : BaseCommand() {
         musicManager.audioHandler.queue.addAll(tempQueue)
         tempQueue.clear()
 
-        event.terminate("Removed track from queue!")
+        event.terminate("Removed song from queue!")
     }
 }

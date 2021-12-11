@@ -34,7 +34,7 @@ class QueueCommand(private val bot: AlphaMusic) : BaseCommand() {
             return event.terminate("The queue is empty!", deferred = true)
         }
 
-        val nowPlaying = musicManager.player.playingTrack
+        val playing = musicManager.player.playingTrack
         val totalPages = musicManager.audioHandler.queue.chunked(10).size
         val pages = mutableListOf<Page>()
 
@@ -42,11 +42,11 @@ class QueueCommand(private val bot: AlphaMusic) : BaseCommand() {
             val embed = EmbedBuilder()
                 .setAuthor("Queue for ${guild.name}")
 
-            if (nowPlaying != null) {
+            if (playing != null) {
                 embed.appendDescription(
                     """
                     __Now Playing:__
-                    [${nowPlaying.info.title}](${nowPlaying.info.uri}) | `${formatHMS(Duration.ofMillis(nowPlaying.duration))} Requested by: ${nowPlaying.getUserData(TrackMetadata::class.java).data.name}`
+                    [${playing.info.title}](${playing.info.uri}) | `${formatHMS(Duration.ofMillis(playing.duration))} Requested by: ${playing.getUserData(TrackMetadata::class.java).data.name}`
                     ${System.lineSeparator()}
                 """.trimIndent()
                 )

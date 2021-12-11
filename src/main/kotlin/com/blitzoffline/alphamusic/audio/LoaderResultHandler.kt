@@ -7,11 +7,10 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
 
-class AudioLoaderResultHandler(
+class LoaderResultHandler(
     private val event: SlashCommandEvent,
     private val musicManager: GuildMusicManager,
-    private val deferred: Boolean = false,
-    private val ytSearch: Boolean = false
+    private val deferred: Boolean = false
 ) : AudioLoadResultHandler {
     override fun trackLoaded(track: AudioTrack) {
         track.userData = TrackMetadata(event.user)
@@ -31,7 +30,7 @@ class AudioLoaderResultHandler(
             return event.terminate("Could not find any songs!", deferred = deferred)
         }
 
-        if (ytSearch) {
+        if (playlist.isSearchResult) {
             val track = playlist.tracks[0]
             track.userData = TrackMetadata(event.user)
 
@@ -50,15 +49,11 @@ class AudioLoaderResultHandler(
             }
         }
 
-        if (count == 1) {
-            event.terminate("Added $count song to the queue.", deferred = deferred)
-        } else {
-            event.terminate("Added $count songs to the queue.", deferred = deferred)
-        }
+        event.terminate("Added $count ${if (count == 1) "song" else "songs"} to the queue.", deferred = deferred)
     }
 
     override fun noMatches() {
-        event.terminate("Could not find any songs!", deferred = deferred)
+        event.terminate("Could not find any songs based on the given identifier!", deferred = deferred)
     }
 
     override fun loadFailed(throwable: FriendlyException) {
@@ -67,7 +62,7 @@ class AudioLoaderResultHandler(
         if (throwable.severity == FriendlyException.Severity.COMMON && message != null) {
             event.terminate(message, deferred = deferred)
         } else {
-            event.terminate("Something went wrong while loading!", deferred = deferred)
+            event.terminate("Something went wrong while loading the song!", deferred = deferred)
         }
     }
 }
