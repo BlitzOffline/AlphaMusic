@@ -8,6 +8,8 @@ import dev.triumphteam.cmd.core.annotation.Command
 import dev.triumphteam.cmd.core.annotation.Default
 import dev.triumphteam.cmd.core.annotation.Description
 import dev.triumphteam.cmd.slash.sender.SlashSender
+import java.util.Timer
+import kotlin.concurrent.schedule
 
 @Command("pause")
 @Description("Pause the audio!")
@@ -26,6 +28,8 @@ class PauseCommand(private val bot: AlphaMusic) : BaseCommand() {
         }
 
         musicManager.player.isPaused = true
+        bot.tasksManager.addLeaveTask(guild)
+
         event.terminate("Paused the audio!")
     }
 }

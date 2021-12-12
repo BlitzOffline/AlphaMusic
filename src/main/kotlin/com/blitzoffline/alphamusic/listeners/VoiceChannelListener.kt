@@ -14,20 +14,13 @@ class VoiceChannelListener(private val bot: AlphaMusic) : ListenerAdapter() {
             val musicManager = bot.getMusicManager(guild)
             musicManager.player.isPaused = true
 
-            bot.tasksManager.addClearTask(guild.id, Timer().schedule(300000) {
-                musicManager.audioHandler.queue.clear()
-                musicManager.audioHandler.nextTrack()
-                bot.tasksManager.removeClearTask(guild.id)
-            })
+            bot.tasksManager.addClearTask(guild, musicManager)
         } else {
             if (event.channelLeft != guild.selfMember.voiceState?.channel) return
             if (event.channelLeft.members.size >= 2) return
             if (event.channelLeft.members[0] != guild.selfMember) return
 
-            bot.tasksManager.addLeaveTask(guild.id, Timer().schedule(300000) {
-                guild.audioManager.closeAudioConnection()
-                bot.tasksManager.removeLeaveTask(guild.id)
-            })
+            bot.tasksManager.addLeaveTask(guild)
         }
     }
 
