@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
 
 class LoaderResultHandler(
     private val event: SlashCommandEvent,
-    private val musicManager: GuildMusicManager,
+    private val musicManager: MusicManager,
     private val deferred: Boolean = false
 ) : AudioLoadResultHandler {
     override fun trackLoaded(track: AudioTrack) {

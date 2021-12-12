@@ -23,7 +23,7 @@ class PlayCommand(private val bot: AlphaMusic) : BaseCommand() {
 
         val guild = guild ?: return
         val isUrl = URL_REGEX.matches(identifier)
-        val musicManager = bot.getGuildMusicManager(guild)
+        val musicManager = bot.getMusicManager(guild)
         val track = if (isUrl) identifier else "ytsearch:${identifier}"
 
         bot.playerManager.loadItemOrdered(musicManager.player, track, LoaderResultHandler(event, musicManager, true))

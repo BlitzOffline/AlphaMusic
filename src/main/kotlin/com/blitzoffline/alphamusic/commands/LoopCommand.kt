@@ -19,7 +19,7 @@ class LoopCommand(private val bot: AlphaMusic) : BaseCommand() {
         }
 
         val guild = guild ?: return
-        val musicManager = bot.getGuildMusicManager(guild)
+        val musicManager = bot.getMusicManager(guild)
         musicManager.audioHandler.loop = !musicManager.audioHandler.loop
 
         if (musicManager.audioHandler.loop) {

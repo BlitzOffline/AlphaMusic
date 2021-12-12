@@ -42,7 +42,7 @@ class ForwardCommand(private val bot: AlphaMusic) : BaseCommand() {
         }
 
         val guild = guild ?: return
-        val musicManager = bot.getGuildMusicManager(guild)
+        val musicManager = bot.getMusicManager(guild)
 
         val playing = musicManager.player.playingTrack
             ?: return event.terminate("There is no song playing currently!")

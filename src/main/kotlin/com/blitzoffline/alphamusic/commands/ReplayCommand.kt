@@ -19,7 +19,7 @@ class ReplayCommand(private val bot: AlphaMusic) : BaseCommand() {
         }
 
         val guild = guild ?: return
-        val musicManager = bot.getGuildMusicManager(guild)
+        val musicManager = bot.getMusicManager(guild)
 
         if (musicManager.player.playingTrack == null) {
             return event.terminate("There is no song currently playing to be replayed!")

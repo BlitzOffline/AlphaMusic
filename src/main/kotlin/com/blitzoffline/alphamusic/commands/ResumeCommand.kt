@@ -19,7 +19,7 @@ class ResumeCommand(private val bot: AlphaMusic) : BaseCommand() {
         }
 
         val guild = guild ?: return
-        val musicManager = bot.getGuildMusicManager(guild)
+        val musicManager = bot.getMusicManager(guild)
 
         if (!musicManager.player.isPaused) {
             return event.terminate("The audio is not paused. Use \"/pause\" to pause!")

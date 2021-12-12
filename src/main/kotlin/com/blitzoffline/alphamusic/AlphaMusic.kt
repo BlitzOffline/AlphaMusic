@@ -1,6 +1,6 @@
 package com.blitzoffline.alphamusic
 
-import com.blitzoffline.alphamusic.audio.GuildMusicManager
+import com.blitzoffline.alphamusic.audio.MusicManager
 import com.blitzoffline.alphamusic.audio.PlayerManager
 import com.blitzoffline.alphamusic.listeners.BotReadyListener
 import com.blitzoffline.alphamusic.listeners.VoiceChannelListener
@@ -19,7 +19,7 @@ class AlphaMusic(private val token: String) {
 
     val playerManager = PlayerManager()
 
-    private val musicManagers = HashMap<String, GuildMusicManager>()
+    private val musicManagers = HashMap<String, MusicManager>()
 
     lateinit var manager: SlashCommandManager<SlashSender>
 
@@ -52,11 +52,11 @@ class AlphaMusic(private val token: String) {
         )
         .build()
 
-    @Synchronized fun getGuildMusicManager(guild: Guild): GuildMusicManager {
+    @Synchronized fun getMusicManager(guild: Guild): MusicManager {
         var musicManager = musicManagers[guild.id]
 
         if (musicManager == null) {
-            musicManager = GuildMusicManager(this)
+            musicManager = MusicManager(this)
             musicManagers[guild.id] = musicManager
         }
 

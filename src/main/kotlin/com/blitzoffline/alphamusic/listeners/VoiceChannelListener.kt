@@ -15,7 +15,7 @@ class VoiceChannelListener(private val bot: AlphaMusic) : ListenerAdapter() {
     override fun onGuildVoiceLeave(event: GuildVoiceLeaveEvent) {
         val guild = event.guild
         if (event.member == guild.selfMember) {
-            val musicManager = bot.getGuildMusicManager(guild)
+            val musicManager = bot.getMusicManager(guild)
             musicManager.player.isPaused = true
 
             clearTasks[guild.id] = Timer().schedule(300000) {
@@ -40,7 +40,7 @@ class VoiceChannelListener(private val bot: AlphaMusic) : ListenerAdapter() {
     override fun onGuildVoiceJoin(event: GuildVoiceJoinEvent) {
         val guild = event.guild
         if (event.member == guild.selfMember) {
-            val musicManager = bot.getGuildMusicManager(guild)
+            val musicManager = bot.getMusicManager(guild)
             musicManager.player.isPaused = false
 
             clearTasks[guild.id]?.cancel()
