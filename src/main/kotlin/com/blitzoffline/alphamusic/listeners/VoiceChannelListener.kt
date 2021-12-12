@@ -1,8 +1,6 @@
 package com.blitzoffline.alphamusic.listeners
 
 import com.blitzoffline.alphamusic.AlphaMusic
-import java.util.Timer
-import kotlin.concurrent.schedule
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
