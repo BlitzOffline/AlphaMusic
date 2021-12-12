@@ -26,15 +26,15 @@ class TasksManager {
         leaveTasks.remove(guildId)
     }
 
-    fun addClearTask(guild: Guild, musicManager: MusicManager) {
-        if (clearTasks[guild.id] != null) {
-            removeClearTask(guild.id)
+    fun addClearTask(musicManager: MusicManager) {
+        if (clearTasks[musicManager.guild.id] != null) {
+            removeClearTask(musicManager.guild.id)
         }
 
-        clearTasks[guild.id] = Timer().schedule(300000) {
+        clearTasks[musicManager.guild.id] = Timer().schedule(300000) {
             musicManager.audioHandler.queue.clear()
             musicManager.audioHandler.nextTrack()
-            removeClearTask(guild.id)
+            removeClearTask(musicManager.guild.id)
         }
     }
 

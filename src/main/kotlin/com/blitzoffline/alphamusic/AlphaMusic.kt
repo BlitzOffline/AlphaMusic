@@ -55,7 +55,7 @@ class AlphaMusic(private val token: String) {
         var musicManager = musicManagers[guild.id]
 
         if (musicManager == null) {
-            musicManager = MusicManager(this)
+            musicManager = MusicManager(this, guild)
             musicManagers[guild.id] = musicManager
         }
 
