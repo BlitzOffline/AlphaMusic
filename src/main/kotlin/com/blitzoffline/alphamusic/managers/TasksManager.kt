@@ -1,4 +1,4 @@
-package com.blitzoffline.alphamusic.tasks
+package com.blitzoffline.alphamusic.managers
 
 import com.blitzoffline.alphamusic.audio.MusicManager
 import java.util.Timer
