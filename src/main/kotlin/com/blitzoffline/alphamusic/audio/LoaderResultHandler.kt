@@ -30,7 +30,7 @@ class LoaderResultHandler(
             return event.terminate("Queue is full. Could not add any more songs.", deferred = deferred)
         }
 
-        if (playlist.isSearchResult) {
+        if (playlist.isSearchResult || playlist.tracks.size == 1) {
             val track = playlist.tracks[0]
             track.userData = TrackMetadata(event.user)
 
@@ -38,7 +38,7 @@ class LoaderResultHandler(
                 return event.terminate("Added song to queue.", deferred = deferred)
             }
 
-            return event.terminate("Queue is full. Could not add song.", deferred = deferred)
+            return event.terminate("Something went wrong while adding song to queue.", deferred = deferred)
         }
 
         var count = 0
@@ -47,6 +47,14 @@ class LoaderResultHandler(
             if (musicManager.audioHandler.queue(track)) {
                 count++
             }
+        }
+
+        if (count == 0) {
+            return event.terminate("Something went wrong while adding songs to queue.")
+        }
+
+        if (count != playlist.tracks.size) {
+            return event.terminate("Could only add $count $count ${if (count == 1) "song" else "songs"} to the queue because it is full!")
         }
 
         event.terminate("Added $count ${if (count == 1) "song" else "songs"} to the queue.", deferred = deferred)
