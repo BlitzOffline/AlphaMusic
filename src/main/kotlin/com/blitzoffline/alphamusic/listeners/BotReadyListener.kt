@@ -54,7 +54,7 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
             ReplayCommand(bot),
             StopCommand(bot),
             RemoveCommand(bot),
-            LeaveCommand(bot),
+            LeaveCommand(),
             SeekCommand(bot),
             ForwardCommand(bot),
             RewindCommand(bot),
