@@ -1,5 +1,6 @@
 package com.blitzoffline.alphamusic.audio
 
+import com.blitzoffline.alphamusic.AlphaMusic
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
@@ -9,8 +10,9 @@ import java.nio.Buffer
 import java.nio.ByteBuffer
 import java.util.concurrent.ArrayBlockingQueue
 import net.dv8tion.jda.api.audio.AudioSendHandler
+import net.dv8tion.jda.api.entities.Guild
 
-class AudioHandler(private val player: AudioPlayer) : AudioEventAdapter(), AudioSendHandler {
+class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer, private val guild: Guild) : AudioEventAdapter(), AudioSendHandler {
     private val buffer: ByteBuffer = ByteBuffer.allocate(1024)
     private val frame: MutableAudioFrame = MutableAudioFrame()
 
@@ -28,7 +30,12 @@ class AudioHandler(private val player: AudioPlayer) : AudioEventAdapter(), Audio
     }
 
     fun nextTrack() {
-        player.startTrack(queue.poll(), false)
+        if (player.startTrack(queue.poll(), false)) {
+            bot.tasksManager.removeLeaveTask(guild.id)
+        } else {
+            bot.tasksManager.addLeaveTask(guild)
+        }
+        
     }
 
     fun shuffle() {
