@@ -5,7 +5,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 
 class MusicManager(bot: AlphaMusic) {
     val player: AudioPlayer = bot.playerManager.createPlayer()
-    val audioHandler = AudioHandler(player, bot.jda)
+    val audioHandler = AudioHandler(player)
 
     init {
         player.addListener(audioHandler)

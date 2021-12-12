@@ -8,10 +8,9 @@ import com.sedmelluq.discord.lavaplayer.track.playback.MutableAudioFrame
 import java.nio.Buffer
 import java.nio.ByteBuffer
 import java.util.concurrent.ArrayBlockingQueue
-import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.audio.AudioSendHandler
 
-class AudioHandler(private val player: AudioPlayer, private val jda: JDA) : AudioEventAdapter(), AudioSendHandler {
+class AudioHandler(private val player: AudioPlayer) : AudioEventAdapter(), AudioSendHandler {
     private val buffer: ByteBuffer = ByteBuffer.allocate(1024)
     private val frame: MutableAudioFrame = MutableAudioFrame()
 
