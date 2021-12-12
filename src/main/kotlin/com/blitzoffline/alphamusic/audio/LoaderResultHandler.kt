@@ -10,10 +10,14 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
 class LoaderResultHandler(
     private val event: SlashCommandEvent,
     private val musicManager: MusicManager,
+    private val trackService: TrackService,
+    private val trackURL: String,
     private val deferred: Boolean = false
 ) : AudioLoadResultHandler {
     override fun trackLoaded(track: AudioTrack) {
         track.userData = TrackMetadata(event.user)
+        trackService.audioItemCache.put(trackURL, track)
+
         if (musicManager.audioHandler.queue(track)) {
             event.terminate("Added song to queue.", deferred = deferred)
         } else {
@@ -29,6 +33,8 @@ class LoaderResultHandler(
         if (musicManager.audioHandler.queue.remainingCapacity() == 0) {
             return event.terminate("Queue is full. Could not add any more songs.", deferred = deferred)
         }
+
+        trackService.audioItemCache.put(trackURL, playlist)
 
         if (playlist.isSearchResult || playlist.tracks.size == 1) {
             val track = playlist.tracks[0]
