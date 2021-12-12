@@ -18,7 +18,7 @@ class LoaderResultHandler(
         track.userData = TrackMetadata(event.user)
         trackService.audioItemCache.put(trackURL, track)
 
-        if (musicManager.audioHandler.queue(track)) {
+        if (musicManager.audioHandler.queue(track.makeClone())) {
             event.terminate("Added song to queue.", deferred = deferred)
         } else {
             event.terminate("Queue is full. Could not add song.", deferred = deferred)
@@ -40,7 +40,7 @@ class LoaderResultHandler(
             val track = playlist.tracks[0]
             track.userData = TrackMetadata(event.user)
 
-            if (musicManager.audioHandler.queue(track)) {
+            if (musicManager.audioHandler.queue(track.makeClone())) {
                 return event.terminate("Added song to queue.", deferred = deferred)
             }
 
@@ -50,17 +50,17 @@ class LoaderResultHandler(
         var count = 0
         for (track in playlist.tracks) {
             track.userData = TrackMetadata(event.user)
-            if (musicManager.audioHandler.queue(track)) {
+            if (musicManager.audioHandler.queue(track.makeClone())) {
                 count++
             }
         }
 
         if (count == 0) {
-            return event.terminate("Something went wrong while adding songs to queue.")
+            return event.terminate("Something went wrong while adding songs to queue.", deferred = deferred)
         }
 
         if (count != playlist.tracks.size) {
-            return event.terminate("Could only add $count $count ${if (count == 1) "song" else "songs"} to the queue because it is full!")
+            return event.terminate("Could only add $count ${if (count == 1) "song" else "songs"} to the queue because it is full!", deferred =deferred)
         }
 
         event.terminate("Added $count ${if (count == 1) "song" else "songs"} to the queue.", deferred = deferred)
