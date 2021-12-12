@@ -2,6 +2,7 @@ package com.blitzoffline.alphamusic.listeners
 
 import com.blitzoffline.alphamusic.AlphaMusic
 import com.blitzoffline.alphamusic.commands.ClearCommand
+import com.blitzoffline.alphamusic.commands.DebugCommand
 import com.blitzoffline.alphamusic.commands.ForwardCommand
 import com.blitzoffline.alphamusic.commands.GrabCommand
 import com.blitzoffline.alphamusic.commands.JoinCommand
@@ -92,6 +93,7 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
             SeekCommand(bot),
             ForwardCommand(bot),
             RewindCommand(bot),
+            DebugCommand(bot)
         )
     }
 }

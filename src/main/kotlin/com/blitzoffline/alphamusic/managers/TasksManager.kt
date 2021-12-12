@@ -14,7 +14,7 @@ class TasksManager {
         return leaveTasks
     }
 
-    fun addLeaveTask(guild: Guild) {
+    @Synchronized fun addLeaveTask(guild: Guild) {
         if (leaveTasks[guild.id] != null) {
             return
         }
@@ -25,7 +25,7 @@ class TasksManager {
         }
     }
 
-    fun removeLeaveTask(guildId: String) {
+    @Synchronized fun removeLeaveTask(guildId: String) {
         leaveTasks[guildId]?.cancel()
         leaveTasks.remove(guildId)
     }
@@ -34,7 +34,7 @@ class TasksManager {
         return clearTasks
     }
 
-    fun addClearTask(musicManager: MusicManager) {
+    @Synchronized fun addClearTask(musicManager: MusicManager) {
         if (clearTasks[musicManager.guild.id] != null) {
             return
         }
@@ -46,7 +46,7 @@ class TasksManager {
         }
     }
 
-    fun removeClearTask(guildId: String) {
+    @Synchronized fun removeClearTask(guildId: String) {
         clearTasks[guildId]?.cancel()
         clearTasks.remove(guildId)
     }
