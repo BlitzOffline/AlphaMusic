@@ -24,6 +24,7 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
     fun queue(track: AudioTrack): Boolean {
         if (player.playingTrack == null) {
             player.playTrack(track)
+            bot.tasksManager.removeLeaveTask(guild.id)
             return true
         }
         return queue.offer(track)
