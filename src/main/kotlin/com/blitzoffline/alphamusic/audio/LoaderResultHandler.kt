@@ -22,12 +22,12 @@ class LoaderResultHandler(
     }
 
     override fun playlistLoaded(playlist: AudioPlaylist) {
-        if (musicManager.audioHandler.queue.remainingCapacity() == 0) {
-            return event.terminate("Queue is full. Could not add any more songs.", deferred = deferred)
-        }
-
         if (playlist.tracks.isEmpty()) {
             return event.terminate("Could not find any songs!", deferred = deferred)
+        }
+
+        if (musicManager.audioHandler.queue.remainingCapacity() == 0) {
+            return event.terminate("Queue is full. Could not add any more songs.", deferred = deferred)
         }
 
         if (playlist.isSearchResult) {
