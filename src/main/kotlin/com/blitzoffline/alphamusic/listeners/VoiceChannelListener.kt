@@ -31,7 +31,9 @@ class VoiceChannelListener(private val bot: AlphaMusic) : ListenerAdapter() {
             val musicManager = bot.getMusicManager(guild)
             musicManager.player.isPaused = false
 
-            bot.tasksManager.addLeaveTask(guild)
+            if (musicManager.player.playingTrack == null) {
+                bot.tasksManager.addLeaveTask(guild)
+            }
             bot.tasksManager.removeClearTask(guild.id)
         } else {
             if (event.channelJoined != guild.selfMember.voiceState?.channel) return

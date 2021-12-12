@@ -7,12 +7,16 @@ import kotlin.concurrent.schedule
 import net.dv8tion.jda.api.entities.Guild
 
 class TasksManager {
-    private var clearTasks = hashMapOf<String, TimerTask>()
-    private var leaveTasks = hashMapOf<String, TimerTask>()
+    private val clearTasks = hashMapOf<String, TimerTask>()
+    private val leaveTasks = hashMapOf<String, TimerTask>()
+
+    fun getLeaveTasks(): HashMap<String, TimerTask> {
+        return leaveTasks
+    }
 
     fun addLeaveTask(guild: Guild) {
         if (leaveTasks[guild.id] != null) {
-            removeLeaveTask(guild.id)
+            return
         }
 
         leaveTasks[guild.id] = Timer().schedule(300000) {
@@ -26,9 +30,13 @@ class TasksManager {
         leaveTasks.remove(guildId)
     }
 
+    fun getClearTasks() : HashMap<String, TimerTask> {
+        return clearTasks
+    }
+
     fun addClearTask(musicManager: MusicManager) {
         if (clearTasks[musicManager.guild.id] != null) {
-            removeClearTask(musicManager.guild.id)
+            return
         }
 
         clearTasks[musicManager.guild.id] = Timer().schedule(300000) {

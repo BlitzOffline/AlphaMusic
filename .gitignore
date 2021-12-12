@@ -2,3 +2,4 @@
 /.idea/
 /build/
 /.test/
+/src/main/kotlin/com/blitzoffline/alphamusic/commands/DebugCommand.kt
