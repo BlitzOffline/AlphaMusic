@@ -10,7 +10,6 @@ import dev.triumphteam.cmd.core.annotation.Description
 import dev.triumphteam.cmd.core.annotation.Requirement
 import dev.triumphteam.cmd.core.annotation.Requirements
 import dev.triumphteam.cmd.slash.sender.SlashSender
-import kotlin.math.ceil
 import net.dv8tion.jda.api.Permission
 
 @Command("clear")
@@ -50,7 +49,7 @@ class ClearCommand(private val bot: AlphaMusic) : BaseCommand() {
             return event.terminate("You have already voted for the queue to be cleared!")
         }
 
-        val required = if (participants.size <= 4) 2 else ceil(participants.size * 0.5).toInt()
+        val required = voteManager.getRequiredVotes(participants.size)
 
         if (voteManager.votes.size + 1 == required) {
             voteManager.votes.clear()

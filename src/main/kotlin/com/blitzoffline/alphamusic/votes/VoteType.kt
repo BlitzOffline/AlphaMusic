@@ -1,16 +1,16 @@
 package com.blitzoffline.alphamusic.votes
 
-enum class VoteType {
-    CLEAR,
-    LEAVE,
-    LOOP,
-    PAUSE,
-    REMOVE_DUPES,
-    REPLAY,
-    RESUME,
-    SHUFFLE,
-    SKIP,
-    STOP;
+enum class VoteType(val requiredPercentage: Double) {
+    CLEAR(0.3),
+    LEAVE(0.3),
+    LOOP(0.3),
+    PAUSE(0.3),
+    REMOVE_DUPES(0.3),
+    REPLAY(0.3),
+    RESUME(0.3),
+    SHUFFLE(0.3),
+    SKIP(0.3),
+    STOP(0.3);
 
     companion object {
         val values = values()
