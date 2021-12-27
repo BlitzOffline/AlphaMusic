@@ -2,7 +2,6 @@ package com.blitzoffline.alphamusic.commands
 
 import com.blitzoffline.alphamusic.AlphaMusic
 import com.blitzoffline.alphamusic.utils.asEmbed
-import com.blitzoffline.alphamusic.utils.process
 import com.blitzoffline.alphamusic.utils.terminate
 import dev.triumphteam.cmd.core.BaseCommand
 import dev.triumphteam.cmd.core.annotation.Command

@@ -46,7 +46,7 @@ class ClearCommand(private val bot: AlphaMusic) : BaseCommand() {
             ?: return event.terminate("Could not process your vote!")
 
         if (voteManager.votes.contains(member.id)) {
-            return event.terminate("You have already voted for the queue to be cleared!")
+            return event.terminate("You have already voted!")
         }
 
         val required = voteManager.getRequiredVotes(participants.size)
@@ -58,6 +58,6 @@ class ClearCommand(private val bot: AlphaMusic) : BaseCommand() {
         }
 
         voteManager.votes.add(member.id)
-        return event.terminate("Added vote for queue clear. Total votes: ${voteManager.votes.size}/$required!")
+        return event.terminate("Added vote for the queue to be cleared. Total votes: ${voteManager.votes.size}/$required!")
     }
 }
