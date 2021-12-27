@@ -48,6 +48,14 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
             sender.guild?.selfMember?.voiceState?.channel != null
         }
 
+        bot.manager.registerRequirement(RequirementKey.of("BOT_IS_NOT_IN_VC")) { sender ->
+            sender.guild?.selfMember?.voiceState?.channel == null
+        }
+
+        bot.manager.registerRequirement(RequirementKey.of("MEMBER_IS_IN_VC")) { sender ->
+            sender.member?.voiceState?.channel != null
+        }
+
         bot.manager.registerRequirement(RequirementKey.of("SAME_CHANNEL_OR_ADMIN")) { sender ->
             val member = sender.member
 
@@ -64,6 +72,14 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
 
         bot.manager.registerMessage(MessageKey.of("BOT_IS_IN_VC", MessageContext::class.java)) { sender, _ ->
             sender.reply("The bot is currently not connected to a voice channel!").queue()
+        }
+
+        bot.manager.registerMessage(MessageKey.of("BOT_IS_NOT_IN_VC", MessageContext::class.java)) { sender, _ ->
+            sender.reply("The bot is already connected to a voice channel!").queue()
+        }
+
+        bot.manager.registerMessage(MessageKey.of("MEMBER_IS_IN_VC", MessageContext::class.java)) { sender, _ ->
+            sender.reply("You need to be connected to a voice channel!").queue()
         }
 
         bot.manager.registerMessage(MessageKey.of("SAME_CHANNEL_OR_ADMIN", MessageContext::class.java)) { sender, _ ->
@@ -89,7 +105,7 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
             ReplayCommand(bot),
             StopCommand(bot),
             RemoveCommand(bot),
-            LeaveCommand(),
+            LeaveCommand(bot),
             SeekCommand(bot),
             ForwardCommand(bot),
             RewindCommand(bot),
