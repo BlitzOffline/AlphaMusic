@@ -1,29 +1,35 @@
 package com.blitzoffline.alphamusic.commands
 
 import com.blitzoffline.alphamusic.AlphaMusic
+import com.blitzoffline.alphamusic.audio.TrackMetadata
 import com.blitzoffline.alphamusic.utils.formatHMS
-import com.blitzoffline.alphamusic.utils.process
 import com.blitzoffline.alphamusic.utils.terminate
 import dev.triumphteam.cmd.core.BaseCommand
 import dev.triumphteam.cmd.core.annotation.Command
 import dev.triumphteam.cmd.core.annotation.Default
 import dev.triumphteam.cmd.core.annotation.Description
 import dev.triumphteam.cmd.core.annotation.Optional
+import dev.triumphteam.cmd.core.annotation.Requirement
+import dev.triumphteam.cmd.core.annotation.Requirements
 import dev.triumphteam.cmd.slash.sender.SlashSender
 import java.time.Duration
+import net.dv8tion.jda.api.Permission
 
 @Command("forward")
 @Description("Forward the current song by a certain amount of time!")
 class ForwardCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
+    @Requirements(
+        Requirement("IN_GUILD", messageKey = "IN_GUILD"),
+        Requirement("BOT_IS_IN_VC", messageKey = "BOT_IS_IN_VC"),
+        Requirement("SAME_CHANNEL_OR_ADMIN", messageKey = "SAME_CHANNEL_OR_ADMIN")
+    )
     fun SlashSender.forward(
         @Description("Amount of seconds to forward by!") seconds: Int,
         @Description("Amount of minutes to forward by!") @Optional minutes: Int?,
         @Description("Amount of hours to forward by!") @Optional hours: Int?
     ) {
-        if (!process(sameChannel = true, adminBypass = true)) {
-            return
-        }
+        val member = event.member ?: return
 
         if (minutes != null && minutes < 0) {
             return event.terminate("Minutes can not be < 0!")
@@ -46,6 +52,11 @@ class ForwardCommand(private val bot: AlphaMusic) : BaseCommand() {
 
         val playing = musicManager.player.playingTrack
             ?: return event.terminate("There is no song playing currently!")
+
+        val trackData = playing.userData as TrackMetadata
+        if (trackData.data.id != member.id && !member.hasPermission(Permission.ADMINISTRATOR)) {
+            return event.terminate("Only admins and the user that played the song can forward it!")
+        }
 
         var total = seconds.toLong()
 
