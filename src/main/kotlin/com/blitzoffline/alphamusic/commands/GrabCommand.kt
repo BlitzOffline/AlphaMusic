@@ -8,17 +8,20 @@ import dev.triumphteam.cmd.core.BaseCommand
 import dev.triumphteam.cmd.core.annotation.Command
 import dev.triumphteam.cmd.core.annotation.Default
 import dev.triumphteam.cmd.core.annotation.Description
+import dev.triumphteam.cmd.core.annotation.Requirement
+import dev.triumphteam.cmd.core.annotation.Requirements
 import dev.triumphteam.cmd.slash.sender.SlashSender
 
 @Command("grab")
 @Description("Get a DM listing the currently playing song!")
 class GrabCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
+    @Requirements(
+        Requirement("IN_GUILD", messageKey = "IN_GUILD"),
+        Requirement("BOT_IS_IN_VC", messageKey = "BOT_IS_IN_VC"),
+    )
     fun SlashSender.grab() {
         deferReply().queue()
-        if (!process(deferred = true)) {
-            return
-        }
 
         val guild = guild ?: return
         val musicManager = bot.getMusicManager(guild)
