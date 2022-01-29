@@ -28,6 +28,7 @@ import dev.triumphteam.cmd.core.message.MessageKey
 import dev.triumphteam.cmd.core.message.context.MessageContext
 import dev.triumphteam.cmd.core.requirement.RequirementKey
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.events.ReadyEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 
@@ -86,7 +87,12 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
             sender.reply("You need to be in the same Voice Channel as the bot to do this!").queue()
         }
 
-        val guild = bot.jda.guilds.first() ?: return bot.logger.warn("Couldn't find any guilds!")
+        bot.jda.guilds.forEach { guild ->
+            registerCommands(bot, guild)
+        }
+    }
+
+    fun registerCommands(bot: AlphaMusic, guild: Guild) {
         bot.manager.registerCommand(
             guild,
             PlayCommand(bot),

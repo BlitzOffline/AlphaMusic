@@ -18,16 +18,16 @@ repositories {
     mavenCentral()
     maven("https://jitpack.io")
     maven("https://m2.dv8tion.net/releases")
-    maven("https://repo.triumphteam.dev/artifactory/public/")
+    maven("https://repo.triumphteam.dev/snapshots/")
 }
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.0")
     implementation("commons-cli:commons-cli:1.5.0")
-    implementation("org.slf4j:slf4j-log4j12:1.7.32")
-    implementation("net.dv8tion:JDA:5.0.0-alpha1")
+    implementation("org.slf4j:slf4j-log4j12:1.7.33")
+    implementation("net.dv8tion:JDA:5.0.0-alpha.4")
     implementation("com.github.walkyst:lavaplayer-fork:custom-SNAPSHOT")
-    implementation("com.github.ygimenez:Pagination-Utils:3.0.4")
+    implementation("com.github.ygimenez:Pagination-Utils:3.0.6")
     implementation("dev.triumphteam:triumph-cmd-jda-slash:2.0.0-SNAPSHOT")
 }
 
