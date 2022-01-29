@@ -1,6 +1,7 @@
 package com.blitzoffline.alphamusic.listeners
 
 import com.blitzoffline.alphamusic.AlphaMusic
+import com.blitzoffline.alphamusic.audio.TrackMetadata
 import com.blitzoffline.alphamusic.commands.ClearCommand
 import com.blitzoffline.alphamusic.commands.DebugCommand
 import com.blitzoffline.alphamusic.commands.ForwardCommand
@@ -67,6 +68,48 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
             }
         }
 
+        bot.manager.registerRequirement(RequirementKey.of("IS_PAUSED")) { sender ->
+            val guild = sender.guild
+            if (guild == null) {
+                true
+            } else {
+                bot.getMusicManager(guild).player.isPaused
+            }
+        }
+
+        bot.manager.registerRequirement(RequirementKey.of("IS_NOT_PAUSED")) { sender ->
+            val guild = sender.guild
+            if (guild == null) {
+                false
+            } else {
+                !bot.getMusicManager(guild).player.isPaused
+            }
+        }
+
+        bot.manager.registerRequirement(RequirementKey.of("IS_REQUESTER_OR_ADMIN")) { sender ->
+            val guild = sender.guild
+            if (guild == null) {
+                false
+            } else {
+                val member = sender.member
+                if (member == null) {
+                    false
+                } else {
+                    if (member.hasPermission(Permission.ADMINISTRATOR)) {
+                        true
+                    } else {
+                        val playing = bot.getMusicManager(guild).player.playingTrack
+                        if (playing == null) {
+                            true
+                        } else {
+                            val meta = playing.userData as TrackMetadata
+                            meta.data.id == member.id
+                        }
+                    }
+                }
+            }
+        }
+
         bot.manager.registerMessage(MessageKey.of("IN_GUILD", MessageContext::class.java)) { sender, _ ->
             sender.reply("This command can only be used in a guild!").queue()
         }
@@ -85,6 +128,23 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
 
         bot.manager.registerMessage(MessageKey.of("SAME_CHANNEL_OR_ADMIN", MessageContext::class.java)) { sender, _ ->
             sender.reply("You need to be in the same Voice Channel as the bot to do this!").queue()
+        }
+
+        bot.manager.registerMessage(MessageKey.of("IS_PAUSED", MessageContext::class.java)) { sender, _ ->
+            sender.reply("The audio is not paused. Use \"/pause\" to pause!").queue()
+        }
+
+        bot.manager.registerMessage(MessageKey.of("IS_NOT_PAUSED", MessageContext::class.java)) { sender, _ ->
+            sender.reply("The audio is already paused. Use \"/resume\" to resume!").queue()
+        }
+
+        bot.manager.registerMessage(MessageKey.of("IS_REQUESTER_OR_ADMIN", MessageContext::class.java)) { sender, _ ->
+            val guild = sender.guild ?: return@registerMessage
+            val manager = bot.getMusicManager(guild)
+            val playing = manager.player.playingTrack ?: return@registerMessage
+            val meta = playing.userData as TrackMetadata
+
+            sender.reply("Only the requester or admins can do this. Requester: ${meta.data.name}#${meta.data.discriminator}").queue()
         }
 
         bot.jda.guilds.forEach { guild ->
