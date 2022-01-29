@@ -92,7 +92,7 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
         }
     }
 
-    fun registerCommands(bot: AlphaMusic, guild: Guild) {
+    private fun registerCommands(bot: AlphaMusic, guild: Guild) {
         bot.manager.registerCommand(
             guild,
             PlayCommand(bot),

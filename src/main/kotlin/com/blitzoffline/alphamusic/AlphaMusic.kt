@@ -16,9 +16,9 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-class AlphaMusic(private val token: String) {
+class AlphaMusic(private val token: String, youtubeEmail: String?, youtubePass: String?) {
     val logger: Logger = LoggerFactory.getLogger(this::class.java)
-    val playerManager = PlayerManager()
+    val playerManager = PlayerManager(youtubeEmail, youtubePass)
     val trackService = TrackService(this)
     val tasksManager = TasksManager()
     private val musicManagers = HashMap<String, MusicManager>()
