@@ -1,11 +1,11 @@
 package com.blitzoffline.alphamusic
 
-import com.blitzoffline.alphamusic.audio.MusicManager
+import com.blitzoffline.alphamusic.audio.GuildMusicManager
 import com.blitzoffline.alphamusic.audio.PlayerManager
 import com.blitzoffline.alphamusic.audio.TrackService
 import com.blitzoffline.alphamusic.listeners.BotReadyListener
 import com.blitzoffline.alphamusic.listeners.VoiceChannelListener
-import com.blitzoffline.alphamusic.managers.TasksManager
+import com.blitzoffline.alphamusic.tasks.TaskManager
 import dev.triumphteam.cmd.slash.SlashCommandManager
 import dev.triumphteam.cmd.slash.sender.SlashSender
 import net.dv8tion.jda.api.JDA
@@ -20,16 +20,17 @@ class AlphaMusic(private val token: String, youtubeEmail: String?, youtubePass: 
     val logger: Logger = LoggerFactory.getLogger(this::class.java)
     val playerManager = PlayerManager(youtubeEmail, youtubePass)
     val trackService = TrackService(this)
-    val tasksManager = TasksManager()
-    private val musicManagers = HashMap<String, MusicManager>()
+    val taskManager = TaskManager()
+    private val musicManagers = HashMap<String, GuildMusicManager>()
 
-    lateinit var manager: SlashCommandManager<SlashSender>
+    lateinit var commandManager: SlashCommandManager<SlashSender>
+        private set
     lateinit var jda: JDA
         private set
 
     fun run() {
         jda = createJDAInstance()
-        manager = SlashCommandManager.create(jda)
+        commandManager = SlashCommandManager.create(jda)
     }
 
     private fun createJDAInstance() = JDABuilder
@@ -53,11 +54,11 @@ class AlphaMusic(private val token: String, youtubeEmail: String?, youtubePass: 
         )
         .build()
 
-    @Synchronized fun getMusicManager(guild: Guild): MusicManager {
+    @Synchronized fun getMusicManager(guild: Guild): GuildMusicManager {
         var musicManager = musicManagers[guild.id]
 
         if (musicManager == null) {
-            musicManager = MusicManager(this, guild)
+            musicManager = GuildMusicManager(this, guild)
             musicManagers[guild.id] = musicManager
         }
 

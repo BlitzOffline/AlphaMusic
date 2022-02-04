@@ -28,7 +28,7 @@ class StopCommand(private val bot: AlphaMusic) : BaseCommand() {
 
         musicManager.audioHandler.queue.clear()
         musicManager.player.stopTrack()
-        bot.tasksManager.addLeaveTask(guild)
+        bot.taskManager.addLeaveTask(guild)
 
         event.terminate("Stopped the audio!")
     }

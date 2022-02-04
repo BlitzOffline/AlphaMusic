@@ -42,23 +42,23 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
             .setEmote(Emote.CANCEL, "✖️")
             .activate()
 
-        bot.manager.registerRequirement(RequirementKey.of("IN_GUILD")) { sender ->
+        bot.commandManager.registerRequirement(RequirementKey.of("IN_GUILD")) { sender ->
             sender.guild != null && sender.member != null
         }
 
-        bot.manager.registerRequirement(RequirementKey.of("BOT_IS_IN_VC")) { sender ->
+        bot.commandManager.registerRequirement(RequirementKey.of("BOT_IS_IN_VC")) { sender ->
             sender.guild?.selfMember?.voiceState?.channel != null
         }
 
-        bot.manager.registerRequirement(RequirementKey.of("BOT_IS_NOT_IN_VC")) { sender ->
+        bot.commandManager.registerRequirement(RequirementKey.of("BOT_IS_NOT_IN_VC")) { sender ->
             sender.guild?.selfMember?.voiceState?.channel == null
         }
 
-        bot.manager.registerRequirement(RequirementKey.of("MEMBER_IS_IN_VC")) { sender ->
+        bot.commandManager.registerRequirement(RequirementKey.of("MEMBER_IS_IN_VC")) { sender ->
             sender.member?.voiceState?.channel != null
         }
 
-        bot.manager.registerRequirement(RequirementKey.of("SAME_CHANNEL_OR_ADMIN")) { sender ->
+        bot.commandManager.registerRequirement(RequirementKey.of("SAME_CHANNEL_OR_ADMIN")) { sender ->
             val member = sender.member
 
             if (member == null) {
@@ -68,7 +68,7 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
             }
         }
 
-        bot.manager.registerRequirement(RequirementKey.of("IS_PAUSED")) { sender ->
+        bot.commandManager.registerRequirement(RequirementKey.of("IS_PAUSED")) { sender ->
             val guild = sender.guild
             if (guild == null) {
                 true
@@ -77,7 +77,7 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
             }
         }
 
-        bot.manager.registerRequirement(RequirementKey.of("IS_NOT_PAUSED")) { sender ->
+        bot.commandManager.registerRequirement(RequirementKey.of("IS_NOT_PAUSED")) { sender ->
             val guild = sender.guild
             if (guild == null) {
                 false
@@ -86,7 +86,7 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
             }
         }
 
-        bot.manager.registerRequirement(RequirementKey.of("IS_REQUESTER_OR_ADMIN")) { sender ->
+        bot.commandManager.registerRequirement(RequirementKey.of("IS_REQUESTER_OR_ADMIN")) { sender ->
             val guild = sender.guild
             if (guild == null) {
                 false
@@ -110,35 +110,35 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
             }
         }
 
-        bot.manager.registerMessage(MessageKey.of("IN_GUILD", MessageContext::class.java)) { sender, _ ->
+        bot.commandManager.registerMessage(MessageKey.of("IN_GUILD", MessageContext::class.java)) { sender, _ ->
             sender.reply("This command can only be used in a guild!").queue()
         }
 
-        bot.manager.registerMessage(MessageKey.of("BOT_IS_IN_VC", MessageContext::class.java)) { sender, _ ->
+        bot.commandManager.registerMessage(MessageKey.of("BOT_IS_IN_VC", MessageContext::class.java)) { sender, _ ->
             sender.reply("The bot is currently not connected to a voice channel!").queue()
         }
 
-        bot.manager.registerMessage(MessageKey.of("BOT_IS_NOT_IN_VC", MessageContext::class.java)) { sender, _ ->
+        bot.commandManager.registerMessage(MessageKey.of("BOT_IS_NOT_IN_VC", MessageContext::class.java)) { sender, _ ->
             sender.reply("The bot is already connected to a voice channel!").queue()
         }
 
-        bot.manager.registerMessage(MessageKey.of("MEMBER_IS_IN_VC", MessageContext::class.java)) { sender, _ ->
+        bot.commandManager.registerMessage(MessageKey.of("MEMBER_IS_IN_VC", MessageContext::class.java)) { sender, _ ->
             sender.reply("You need to be connected to a voice channel!").queue()
         }
 
-        bot.manager.registerMessage(MessageKey.of("SAME_CHANNEL_OR_ADMIN", MessageContext::class.java)) { sender, _ ->
+        bot.commandManager.registerMessage(MessageKey.of("SAME_CHANNEL_OR_ADMIN", MessageContext::class.java)) { sender, _ ->
             sender.reply("You need to be in the same Voice Channel as the bot to do this!").queue()
         }
 
-        bot.manager.registerMessage(MessageKey.of("IS_PAUSED", MessageContext::class.java)) { sender, _ ->
+        bot.commandManager.registerMessage(MessageKey.of("IS_PAUSED", MessageContext::class.java)) { sender, _ ->
             sender.reply("The audio is not paused. Use \"/pause\" to pause!").queue()
         }
 
-        bot.manager.registerMessage(MessageKey.of("IS_NOT_PAUSED", MessageContext::class.java)) { sender, _ ->
+        bot.commandManager.registerMessage(MessageKey.of("IS_NOT_PAUSED", MessageContext::class.java)) { sender, _ ->
             sender.reply("The audio is already paused. Use \"/resume\" to resume!").queue()
         }
 
-        bot.manager.registerMessage(MessageKey.of("IS_REQUESTER_OR_ADMIN", MessageContext::class.java)) { sender, _ ->
+        bot.commandManager.registerMessage(MessageKey.of("IS_REQUESTER_OR_ADMIN", MessageContext::class.java)) { sender, _ ->
             val guild = sender.guild ?: return@registerMessage
             val manager = bot.getMusicManager(guild)
             val playing = manager.player.playingTrack ?: return@registerMessage
@@ -153,7 +153,7 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
     }
 
     private fun registerCommands(bot: AlphaMusic, guild: Guild) {
-        bot.manager.registerCommand(
+        bot.commandManager.registerCommand(
             guild,
             PlayCommand(bot),
             LoopCommand(bot),

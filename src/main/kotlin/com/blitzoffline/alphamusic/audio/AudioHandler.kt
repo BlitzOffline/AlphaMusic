@@ -24,7 +24,7 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
     fun queue(track: AudioTrack): Boolean {
         if (player.playingTrack == null) {
             player.playTrack(track)
-            bot.tasksManager.removeLeaveTask(guild.id)
+            bot.taskManager.removeLeaveTask(guild.id)
             return true
         }
         return queue.offer(track)
@@ -32,9 +32,9 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
 
     fun nextTrack() {
         if (player.startTrack(queue.poll(), false)) {
-            bot.tasksManager.removeLeaveTask(guild.id)
+            bot.taskManager.removeLeaveTask(guild.id)
         } else {
-            bot.tasksManager.addLeaveTask(guild)
+            bot.taskManager.addLeaveTask(guild)
         }
         
     }

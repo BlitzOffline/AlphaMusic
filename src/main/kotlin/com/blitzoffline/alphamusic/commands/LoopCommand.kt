@@ -46,7 +46,7 @@ class LoopCommand(private val bot: AlphaMusic) : BaseCommand() {
             }
         }
 
-        val voteManager = musicManager.votesManager.getVoteManager(VoteType.LOOP)
+        val voteManager = musicManager.voteHandler.getVoteManager(VoteType.LOOP)
             ?: return event.terminate("Could not process your vote!")
 
         if (voteManager.votes.contains(member.id)) {

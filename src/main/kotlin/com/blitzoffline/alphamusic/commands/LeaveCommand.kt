@@ -38,7 +38,7 @@ class LeaveCommand(private val bot: AlphaMusic) : BaseCommand() {
             return event.terminate("Left the voice channel!")
         }
 
-        val voteManager = musicManager.votesManager.getVoteManager(VoteType.LEAVE)
+        val voteManager = musicManager.voteHandler.getVoteManager(VoteType.LEAVE)
             ?: return event.terminate("Could not process your vote!")
 
         if (voteManager.votes.contains(member.id)) {

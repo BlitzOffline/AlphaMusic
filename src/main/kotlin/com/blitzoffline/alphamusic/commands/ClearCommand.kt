@@ -42,7 +42,7 @@ class ClearCommand(private val bot: AlphaMusic) : BaseCommand() {
             return event.terminate("Cleared the queue!")
         }
 
-        val voteManager = musicManager.votesManager.getVoteManager(VoteType.CLEAR)
+        val voteManager = musicManager.voteHandler.getVoteManager(VoteType.CLEAR)
             ?: return event.terminate("Could not process your vote!")
 
         if (voteManager.votes.contains(member.id)) {

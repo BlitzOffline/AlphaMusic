@@ -1,12 +1,12 @@
-package com.blitzoffline.alphamusic.managers
+package com.blitzoffline.alphamusic.tasks
 
-import com.blitzoffline.alphamusic.audio.MusicManager
+import com.blitzoffline.alphamusic.audio.GuildMusicManager
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.schedule
 import net.dv8tion.jda.api.entities.Guild
 
-class TasksManager {
+class TaskManager {
     private val clearTasks = hashMapOf<String, TimerTask>()
     private val leaveTasks = hashMapOf<String, TimerTask>()
 
@@ -34,7 +34,7 @@ class TasksManager {
         return clearTasks
     }
 
-    @Synchronized fun addClearTask(musicManager: MusicManager) {
+    @Synchronized fun addClearTask(musicManager: GuildMusicManager) {
         if (clearTasks[musicManager.guild.id] != null) {
             return
         }
