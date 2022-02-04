@@ -8,7 +8,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import java.util.concurrent.TimeUnit
 import net.dv8tion.jda.api.entities.Guild
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 
 class TrackService(private val bot: AlphaMusic) {
     val audioItemCache: Cache<String, AudioItem> = CacheBuilder
@@ -17,7 +17,7 @@ class TrackService(private val bot: AlphaMusic) {
         .expireAfterWrite(25, TimeUnit.MINUTES)
         .build()
 
-    fun loadTrack(identifier: String, guild: Guild, event: SlashCommandEvent, deferred: Boolean = false) {
+    fun loadTrack(identifier: String, guild: Guild, event: SlashCommandInteractionEvent, deferred: Boolean = false) {
         val isUrl = URL_REGEX.matches(identifier)
         val musicManager = bot.getMusicManager(guild)
         val trackUrl = if (isUrl) identifier else "ytsearch:${identifier}"

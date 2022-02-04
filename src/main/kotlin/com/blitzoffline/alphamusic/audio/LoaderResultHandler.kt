@@ -5,10 +5,11 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
+import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 
 class LoaderResultHandler(
-    private val event: SlashCommandEvent,
+    private val event: SlashCommandInteractionEvent,
     private val musicManager: GuildMusicManager,
     private val trackService: TrackService,
     private val trackURL: String,
@@ -19,7 +20,11 @@ class LoaderResultHandler(
         trackService.audioItemCache.put(trackURL, track)
 
         if (musicManager.audioHandler.queue(track.makeClone())) {
-            event.terminate("Added song to queue.", deferred = deferred)
+            event.terminate(EmbedBuilder()
+                .setAuthor("Added song to queue ♪", null, null)
+                .setTitle(track.info.title, track.info.uri)
+                .setThumbnail(track.info.artworkUrl)
+                .build(), deferred = deferred)
         } else {
             event.terminate("Queue is full. Could not add song.", deferred = deferred)
         }
@@ -41,7 +46,11 @@ class LoaderResultHandler(
             track.userData = TrackMetadata(event.user)
 
             if (musicManager.audioHandler.queue(track.makeClone())) {
-                return event.terminate("Added song to queue.", deferred = deferred)
+                return event.terminate(EmbedBuilder()
+                    .setAuthor("Added song to queue ♪", null, null)
+                    .setTitle(track.info.title, track.info.uri)
+                    .setThumbnail(track.info.artworkUrl)
+                    .build(), deferred = deferred)
             }
 
             return event.terminate("Something went wrong while adding song to queue.", deferred = deferred)
