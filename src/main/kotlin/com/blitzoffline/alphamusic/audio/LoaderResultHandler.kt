@@ -112,12 +112,12 @@ class LoaderResultHandler(
     }
 
     private fun terminate(event: SlashCommandInteractionEvent?, message: String, deferred: Boolean) {
-        if (event == null) return println("Event is null, Message: $message")
+        if (event == null) return
         event.terminate(message, false, deferred)
     }
 
     private fun terminate(event: SlashCommandInteractionEvent?, message: MessageEmbed, deferred: Boolean) {
-        if (event == null) return println("Event is null, Message: $message")
+        if (event == null) return
         event.terminate(message, false, deferred)
     }
 }
