@@ -17,16 +17,19 @@ class TrackService(private val bot: AlphaMusic) {
         .expireAfterWrite(25, TimeUnit.MINUTES)
         .build()
 
-    fun loadTrack(identifier: String, guild: Guild, event: SlashCommandInteractionEvent, deferred: Boolean = false) {
+    fun loadTrack(identifier: String, guild: Guild, event: SlashCommandInteractionEvent?, isRadio: Boolean, deferred: Boolean = false) {
         val isUrl = URL_REGEX.matches(identifier)
         val musicManager = bot.getMusicManager(guild)
-        val trackUrl = if (isUrl) identifier else "ytsearch:${identifier}"
+        val trackUrl = when {
+            isUrl -> identifier
+            else -> "ytsearch:${identifier}"
+        }
 
-        val resultHandler = LoaderResultHandler(event, musicManager, this, trackUrl, deferred)
+        val resultHandler = LoaderResultHandler(event, musicManager, this, trackUrl, bot.jda, isRadio, deferred)
 
         val track = audioItemCache.getIfPresent(trackUrl)
             ?: run {
-                bot.playerManager.loadItemOrdered(musicManager.player, trackUrl, LoaderResultHandler(event, musicManager, this, trackUrl, deferred))
+                bot.playerManager.loadItemOrdered(musicManager.player, trackUrl, resultHandler)
                 return
             }
 

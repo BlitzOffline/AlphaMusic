@@ -24,7 +24,7 @@ repositories {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.0")
     implementation("commons-cli:commons-cli:1.5.0")
-    implementation("org.slf4j:slf4j-log4j12:1.7.33")
+    implementation("org.slf4j:slf4j-log4j12:1.7.35")
     implementation("net.dv8tion:JDA:5.0.0-alpha.5")
     implementation("com.github.walkyst:lavaplayer-fork:custom-SNAPSHOT")
     implementation("com.github.BlitzOffline:Pagination-Utils:-SNAPSHOT")

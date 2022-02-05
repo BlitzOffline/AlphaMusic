@@ -79,6 +79,8 @@ class QueueCommand(private val bot: AlphaMusic) : BaseCommand() {
             val footer = StringBuilder()
             footer.append("Page ${pageIndex+1}/${totalPages} | Loop: ")
             footer.append(if (musicManager.audioHandler.loop) "✅" else "❌")
+            footer.append(" | Radio: ")
+            footer.append(if (musicManager.audioHandler.radio) "✅" else "❌")
             footer.append(" | Paused: ")
             footer.append(if (musicManager.player.isPaused) "✅" else "❌")
 

@@ -22,25 +22,28 @@ class SkipCommand(private val bot: AlphaMusic) : BaseCommand() {
         val guild = guild ?: return
         val finalAmount = amount ?: 1
         val musicManager = bot.getMusicManager(guild)
+        val playing = musicManager.player.playingTrack ?: run {
+            return event.terminate("There are no songs currently playing")
+        }
 
         if (finalAmount <= 0) {
             return event.terminate("Make sure you enter a positive integer!")
         }
 
         if (finalAmount == 1 && musicManager.player.playingTrack != null) {
-            musicManager.audioHandler.nextTrack()
+            musicManager.audioHandler.nextTrack(playing)
             return event.terminate("Skipped currently playing song!")
         }
 
         val available = if (musicManager.player.playingTrack != null) musicManager.audioHandler.queue.size + 1 else musicManager.audioHandler.queue.size
         if (finalAmount > available) {
             musicManager.audioHandler.queue.clear()
-            musicManager.audioHandler.nextTrack()
+            musicManager.audioHandler.nextTrack(playing)
             return event.terminate("Skipped $available song(s). No songs left in the queue!")
         }
 
         repeat(finalAmount) {
-            musicManager.audioHandler.nextTrack()
+            musicManager.audioHandler.nextTrack(playing)
         }
         event.terminate("Skipped $finalAmount song(s)!")
     }

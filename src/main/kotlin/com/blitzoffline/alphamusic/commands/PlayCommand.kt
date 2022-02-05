@@ -1,7 +1,6 @@
 package com.blitzoffline.alphamusic.commands
 
 import com.blitzoffline.alphamusic.AlphaMusic
-import com.blitzoffline.alphamusic.utils.process
 import com.blitzoffline.alphamusic.utils.terminate
 import dev.triumphteam.cmd.core.BaseCommand
 import dev.triumphteam.cmd.core.annotation.Command
@@ -21,9 +20,7 @@ class PlayCommand(private val bot: AlphaMusic) : BaseCommand() {
     )
     fun SlashSender.play(@Description("Link or keywords to find the song(s) by!") identifier: String) {
         event.deferReply().queue()
-        if (!process(join = true, sameChannel = true, adminBypass = true, deferred = true)) {
-            return
-        }
+        // todo: Make bot not join the voice channel unless there was a song found.
 
         val guild = guild ?: return
         val member = member ?: return
@@ -43,6 +40,6 @@ class PlayCommand(private val bot: AlphaMusic) : BaseCommand() {
             return event.terminate("You need to be in the same Voice Channel as the bot to do this!", deferred = true)
         }
 
-        bot.trackService.loadTrack(identifier, guild, event, true)
+        bot.trackService.loadTrack(identifier, guild, event, isRadio = true, deferred = true)
     }
 }

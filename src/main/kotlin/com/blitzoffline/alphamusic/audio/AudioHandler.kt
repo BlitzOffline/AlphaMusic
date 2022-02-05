@@ -18,6 +18,7 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
 
     val queue = ArrayBlockingQueue<AudioTrack>(250)
 
+    var radio = false
     var replay = false
     var loop = false
 
@@ -30,13 +31,16 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
         return queue.offer(track)
     }
 
-    fun nextTrack() {
-        if (player.startTrack(queue.poll(), false)) {
-            bot.taskManager.removeLeaveTask(guild.id)
-        } else {
-            bot.taskManager.addLeaveTask(guild)
+    fun nextTrack(previous: AudioTrack? = null) {
+        if (previous != null && radio && queue.size == 0) {
+            val identifier = "https://www.youtube.com/watch?v=${previous.identifier}&list=RD${previous.identifier}"
+            return bot.trackService.loadTrack(identifier, guild, event = null, isRadio = true)
         }
-        
+
+        if (player.startTrack(queue.poll(), false)) {
+            return bot.taskManager.removeLeaveTask(guild.id)
+        }
+        bot.taskManager.addLeaveTask(guild)
     }
 
     fun shuffle() {
@@ -69,7 +73,7 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
             return player.playTrack(track.makeClone())
         }
 
-        nextTrack()
+        nextTrack(track)
     }
 
     override fun canProvide(): Boolean {
