@@ -1,11 +1,11 @@
 package com.blitzoffline.alphamusic.audio
 
+import com.blitzoffline.alphamusic.utils.asEmbed
 import com.blitzoffline.alphamusic.utils.terminate
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
-import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
@@ -28,11 +28,7 @@ class LoaderResultHandler(
         trackService.audioItemCache.put(trackURL, track)
 
         if (musicManager.audioHandler.queue(track.makeClone())) {
-            terminate(event, EmbedBuilder()
-                .setAuthor("Added song to queue ♪", null, null)
-                .setTitle(track.info.title, track.info.uri)
-                .setThumbnail(track.info.artworkUrl)
-                .build(), deferred = deferred)
+            terminate(event, track.asEmbed("Added song to queue ♪", event?.user?.avatarUrl, showTimestamp = false)!!, deferred = deferred)
         } else {
             terminate(event, "Queue is full. Could not add song.", deferred = deferred)
         }
@@ -62,11 +58,7 @@ class LoaderResultHandler(
             }
 
             if (musicManager.audioHandler.queue(track.makeClone())) {
-                return terminate(event, EmbedBuilder()
-                    .setAuthor("Added song to queue ♪", null, null)
-                    .setTitle(track.info.title, track.info.uri)
-                    .setThumbnail(track.info.artworkUrl)
-                    .build(), deferred = deferred)
+                terminate(event, track.asEmbed("Added song to queue ♪", event?.user?.avatarUrl, showTimestamp = false)!!, deferred = deferred)
             }
 
             return terminate(event, "Something went wrong while adding song to queue.", deferred = deferred)
