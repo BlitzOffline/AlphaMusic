@@ -156,6 +156,7 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
             sender.reply("Only the requester or admins can do this. Requester: ${meta.data.name}#${meta.data.discriminator}").queue()
         }
 
+        // todo: register the commands globally
         bot.jda.guilds.forEach { guild ->
             registerCommands(bot, guild)
         }
@@ -164,6 +165,7 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
     private fun registerCommands(bot: AlphaMusic, guild: Guild) {
         bot.commandManager.registerCommand(
             guild,
+            // todo: add a Help command
             PlayCommand(bot),
             LoopCommand(bot),
             QueueCommand(bot),
