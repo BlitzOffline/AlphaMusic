@@ -20,7 +20,7 @@ class SeekCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
         Requirement("bot_in_vc", messageKey = "bot_not_in_vc"),
-        Requirement("same_channel_or_admin", messageKey = "not_same_channel_or_admin"),
+        Requirement("requester_or_admin", messageKey = "not_requester_or_admin"),
     )
     fun SlashSender.seek(
         @Description("Amount of seconds to seek!") seconds: Int,
