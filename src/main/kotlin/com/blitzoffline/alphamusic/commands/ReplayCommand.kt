@@ -13,7 +13,7 @@ import dev.triumphteam.cmd.slash.sender.SlashSender
 import net.dv8tion.jda.api.Permission
 
 @Command("replay")
-@Description("Toggle replay for playing song!")
+@Description("Toggle replay for the currently playing song!")
 class ReplayCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
     @Requirements(

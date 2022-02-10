@@ -6,6 +6,7 @@ import com.blitzoffline.alphamusic.commands.ClearCommand
 import com.blitzoffline.alphamusic.commands.DebugCommand
 import com.blitzoffline.alphamusic.commands.ForwardCommand
 import com.blitzoffline.alphamusic.commands.GrabCommand
+import com.blitzoffline.alphamusic.commands.HelpCommand
 import com.blitzoffline.alphamusic.commands.JoinCommand
 import com.blitzoffline.alphamusic.commands.LeaveCommand
 import com.blitzoffline.alphamusic.commands.LoopCommand
@@ -165,7 +166,7 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
     private fun registerCommands(bot: AlphaMusic, guild: Guild) {
         bot.commandManager.registerCommand(
             guild,
-            // todo: add a Help command
+            HelpCommand(),
             PlayCommand(bot),
             LoopCommand(bot),
             QueueCommand(bot),

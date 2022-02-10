@@ -13,7 +13,7 @@ import dev.triumphteam.cmd.slash.sender.SlashSender
 import net.dv8tion.jda.api.Permission
 
 @Command("stop")
-@Description("Stop the audio!")
+@Description("Stop the audio and clear the queue!")
 class StopCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
     @Requirements(

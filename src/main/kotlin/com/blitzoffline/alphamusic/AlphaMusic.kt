@@ -68,4 +68,8 @@ class AlphaMusic(private val token: String, youtubeEmail: String?, youtubePass: 
         guild.audioManager.sendingHandler = musicManager.audioHandler
         return musicManager
     }
+
+    companion object {
+        const val EMBED_COLOR = 0x70BB2B
+    }
 }

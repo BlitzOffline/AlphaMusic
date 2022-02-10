@@ -16,7 +16,7 @@ import java.time.Duration
 import net.dv8tion.jda.api.Permission
 
 @Command("seek")
-@Description("Seek to a certain moment in the song!")
+@Description("Seek to a certain moment in the currently playing song!")
 class SeekCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
     @Requirements(

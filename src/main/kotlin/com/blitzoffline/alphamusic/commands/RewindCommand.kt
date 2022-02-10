@@ -16,7 +16,7 @@ import java.time.Duration
 import net.dv8tion.jda.api.Permission
 
 @Command("rewind")
-@Description("Rewind the current song by a certain amount of time!")
+@Description("Rewind the currently playing song by a certain amount of time!")
 class RewindCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
     @Requirements(

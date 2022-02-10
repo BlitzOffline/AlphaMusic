@@ -1,5 +1,6 @@
 package com.blitzoffline.alphamusic.utils
 
+import com.blitzoffline.alphamusic.AlphaMusic
 import com.blitzoffline.alphamusic.audio.TrackMetadata
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import java.time.Duration
@@ -15,6 +16,7 @@ fun AudioTrack?.asEmbed(author: String = "Now Playing ♪", icon: String? = null
         .setAuthor(author, null, icon)
         .setTitle(info.title, info.uri)
         .setThumbnail(info.artworkUrl)
+        .setColor(AlphaMusic.EMBED_COLOR)
 
     if (showTimestamp) {
         embed.appendDescription("""

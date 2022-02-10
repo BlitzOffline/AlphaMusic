@@ -85,6 +85,7 @@ class QueueCommand(private val bot: AlphaMusic) : BaseCommand() {
             footer.append(if (musicManager.player.isPaused) "✅" else "❌")
 
             embed.setFooter(footer.toString())
+            embed.setColor(AlphaMusic.EMBED_COLOR)
             pages.add(InteractPage(embed.build()))
         }
 

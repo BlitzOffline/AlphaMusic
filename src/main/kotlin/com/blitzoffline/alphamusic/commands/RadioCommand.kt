@@ -13,7 +13,7 @@ import dev.triumphteam.cmd.slash.sender.SlashSender
 import net.dv8tion.jda.api.Permission
 
 @Command("radio")
-@Description("Toggle radio!")
+@Description("Toggle the radio!")
 class RadioCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
     @Requirements(

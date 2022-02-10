@@ -13,7 +13,7 @@ import dev.triumphteam.cmd.slash.sender.SlashSender
 import net.dv8tion.jda.api.Permission
 
 @Command("skip")
-@Description("Skip currently playing song!")
+@Description("Skip the currently playing song!")
 class SkipCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
     @Requirements(

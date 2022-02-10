@@ -12,7 +12,7 @@ import dev.triumphteam.cmd.core.annotation.Requirements
 import dev.triumphteam.cmd.slash.sender.SlashSender
 
 @Command("np")
-@Description("List currently playing song!")
+@Description("List the currently playing song!")
 class NowPlayingCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
     @Requirements(

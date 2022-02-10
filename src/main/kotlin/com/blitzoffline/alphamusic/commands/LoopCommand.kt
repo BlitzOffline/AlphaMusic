@@ -13,7 +13,7 @@ import dev.triumphteam.cmd.slash.sender.SlashSender
 import net.dv8tion.jda.api.Permission
 
 @Command("loop")
-@Description("Toggle looping for playing song!")
+@Description("Toggle looping for the currently playing song!")
 class LoopCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
     @Requirements(

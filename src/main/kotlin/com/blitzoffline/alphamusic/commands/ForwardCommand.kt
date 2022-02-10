@@ -16,7 +16,7 @@ import java.time.Duration
 import net.dv8tion.jda.api.Permission
 
 @Command("forward")
-@Description("Forward the current song by a certain amount of time!")
+@Description("Forward the currently playing song by a certain amount of time!")
 class ForwardCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
     @Requirements(
