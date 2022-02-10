@@ -42,7 +42,7 @@ class RadioCommand(private val bot: AlphaMusic) : BaseCommand() {
 
         if (participants.size <= 2) {
             voteManager?.votes?.clear()
-            musicManager.audioHandler.queue.clear()
+            musicManager.audioHandler.radio = !musicManager.audioHandler.radio
             return event.terminate("Cleared the queue!")
         }
 

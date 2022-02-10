@@ -2,7 +2,6 @@ package com.blitzoffline.alphamusic.commands
 
 import com.blitzoffline.alphamusic.AlphaMusic
 import com.blitzoffline.alphamusic.utils.terminate
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import dev.triumphteam.cmd.core.BaseCommand
 import dev.triumphteam.cmd.core.annotation.Command
 import dev.triumphteam.cmd.core.annotation.Default
@@ -10,7 +9,6 @@ import dev.triumphteam.cmd.core.annotation.Description
 import dev.triumphteam.cmd.core.annotation.Requirement
 import dev.triumphteam.cmd.core.annotation.Requirements
 import dev.triumphteam.cmd.slash.sender.SlashSender
-import java.util.concurrent.ArrayBlockingQueue
 
 @Command("remove")
 @Description("Remove a song from the queue!")
