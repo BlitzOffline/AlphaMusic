@@ -18,7 +18,7 @@ class VolumeCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
         Requirement("bot_in_vc", messageKey = "bot_not_in_vc"),
-        Requirement("same_channel_or_admin", messageKey = "not_same_channel_or_admin"),
+        Requirement("admin", messageKey = "not_admin"),
     )
     fun SlashSender.volume(@Description("Number to set the volume of the bot to!") @Optional volume: Int?) {
         val guild = guild ?: return

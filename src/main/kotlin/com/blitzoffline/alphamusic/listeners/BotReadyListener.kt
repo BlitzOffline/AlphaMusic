@@ -59,6 +59,10 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
             sender.member?.voiceState?.channel != null
         }
 
+        bot.commandManager.registerRequirement(RequirementKey.of("admin")) { sender ->
+            sender.member?.permissions?.contains(Permission.ADMINISTRATOR) ?: false
+        }
+
         bot.commandManager.registerRequirement(RequirementKey.of("same_channel_or_admin")) { sender ->
             val member = sender.member
 
@@ -129,6 +133,10 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
 
         bot.commandManager.registerMessage(MessageKey.of("not_same_channel_or_admin", MessageContext::class.java)) { sender, _ ->
             sender.reply("You need to be in the same Voice Channel as the bot to do this!").queue()
+        }
+
+        bot.commandManager.registerMessage(MessageKey.of("not_admin", MessageContext::class.java)) { sender, _ ->
+            sender.reply("You can't do this!").queue()
         }
 
         bot.commandManager.registerMessage(MessageKey.of("not_paused", MessageContext::class.java)) { sender, _ ->
