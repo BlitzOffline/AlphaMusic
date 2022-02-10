@@ -19,6 +19,7 @@ class RemoveCommand(private val bot: AlphaMusic) : BaseCommand() {
         Requirement("bot_in_vc", messageKey = "bot_not_in_vc"),
         Requirement("same_channel_or_admin", messageKey = "not_same_channel_or_admin"),
     )
+    // todo: Add a voting system or only allow users to remove their own songs.
     fun SlashSender.remove(@Description("Amount of songs you want to remove. Starts from the first one in the queue!") amount: Int) {
         if (amount <= 0) {
             return event.terminate("The amount needs to be greater than 0!")
