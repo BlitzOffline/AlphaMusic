@@ -21,10 +21,9 @@ class RemoveCommand(private val bot: AlphaMusic) : BaseCommand() {
         Requirement("bot_in_vc", messageKey = "bot_not_in_vc"),
         Requirement("same_channel_or_admin", messageKey = "not_same_channel_or_admin"),
     )
-    // todo: change index to amount to remove the need of cloning the queue.
-    fun SlashSender.remove(@Description("Index of song you want to remove. Starts from 1!") index: Int) {
-        if (index <= 0) {
-            return event.terminate("The index needs to be greater than 0!")
+    fun SlashSender.remove(@Description("Amount of songs you want to remove. Starts from the first one in the queue!") amount: Int) {
+        if (amount <= 0) {
+            return event.terminate("The amount needs to be greater than 0!")
         }
 
         val guild = guild ?: return
@@ -34,27 +33,14 @@ class RemoveCommand(private val bot: AlphaMusic) : BaseCommand() {
             return event.terminate("The queue is empty!")
         }
 
-        val size = musicManager.audioHandler.queue.size
-        if (index > size) {
-            return event.terminate("There are only $size songs queued!")
+        if (amount >= musicManager.audioHandler.queue.size) {
+            val removed = musicManager.audioHandler.clear()
+            return event.terminate("Removed all $removed songs from the queue!")
         }
 
-        var count = 0
-        val tempQueue = ArrayBlockingQueue<AudioTrack>(size - 1)
-        for (track in musicManager.audioHandler.queue) {
-            if (count + 1 == index) {
-                count++
-                continue
-            }
-
-            tempQueue.add(track)
-            count++
+        repeat(amount) {
+            musicManager.audioHandler.nextTrack(musicManager.player.playingTrack)
         }
-
-        musicManager.audioHandler.queue.clear()
-        musicManager.audioHandler.queue.addAll(tempQueue)
-        tempQueue.clear()
-
-        event.terminate("Removed song from queue!")
+        event.terminate("Removed $amount songs from the queue. ${musicManager.audioHandler.queue.size} songs left.")
     }
 }

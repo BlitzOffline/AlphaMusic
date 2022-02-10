@@ -34,7 +34,7 @@ class ClearCommand(private val bot: AlphaMusic) : BaseCommand() {
 
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
             voteManager?.votes?.clear()
-            musicManager.audioHandler.queue.clear()
+            musicManager.audioHandler.clear()
             return event.terminate("Cleared the queue!")
         }
 
@@ -42,7 +42,7 @@ class ClearCommand(private val bot: AlphaMusic) : BaseCommand() {
 
         if (participants.size <= 2) {
             voteManager?.votes?.clear()
-            musicManager.audioHandler.queue.clear()
+            musicManager.audioHandler.clear()
             return event.terminate("Cleared the queue!")
         }
 
@@ -58,7 +58,7 @@ class ClearCommand(private val bot: AlphaMusic) : BaseCommand() {
 
         if (voteManager.votes.size + 1 == required) {
             voteManager.votes.clear()
-            musicManager.audioHandler.queue.clear()
+            musicManager.audioHandler.clear()
             return event.terminate("Cleared the queue!")
         }
 

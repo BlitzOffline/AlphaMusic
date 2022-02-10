@@ -59,6 +59,12 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
         return removed
     }
 
+    fun clear(): Int {
+        val amount = queue.size
+        queue.clear()
+        return amount
+    }
+
     override fun onTrackEnd(player: AudioPlayer, track: AudioTrack, endReason: AudioTrackEndReason) {
         if (!endReason.mayStartNext) {
             return
