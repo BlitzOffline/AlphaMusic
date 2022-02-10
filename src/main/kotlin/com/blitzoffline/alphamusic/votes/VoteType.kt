@@ -7,7 +7,6 @@ enum class VoteType(val requiredPercentage: Double) {
     RADIO(0.3),
     REMOVE_DUPES(0.3),
     REPLAY(0.3),
-    RESUME(0.3),
     SHUFFLE(0.3),
     SKIP(0.3),
     STOP(0.3);
