@@ -1,6 +1,7 @@
 package com.blitzoffline.alphamusic.commands
 
 import com.blitzoffline.alphamusic.AlphaMusic
+import com.blitzoffline.alphamusic.audio.TrackMetadata
 import com.blitzoffline.alphamusic.utils.formatHMS
 import com.blitzoffline.alphamusic.utils.terminate
 import dev.triumphteam.cmd.core.BaseCommand
@@ -12,6 +13,7 @@ import dev.triumphteam.cmd.core.annotation.Requirement
 import dev.triumphteam.cmd.core.annotation.Requirements
 import dev.triumphteam.cmd.slash.sender.SlashSender
 import java.time.Duration
+import net.dv8tion.jda.api.Permission
 
 @Command("seek")
 @Description("Seek to a certain moment in the song!")
@@ -20,8 +22,6 @@ class SeekCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
         Requirement("bot_in_vc", messageKey = "bot_not_in_vc"),
-        // todo: skip this check if there's only the command caller with the bot in vc
-        Requirement("requester_or_admin", messageKey = "not_requester_or_admin"),
     )
     fun SlashSender.seek(
         @Description("Amount of seconds to seek!") seconds: Int,
@@ -45,10 +45,17 @@ class SeekCommand(private val bot: AlphaMusic) : BaseCommand() {
         }
 
         val guild = guild ?: return
+        val member = member ?: return
         val musicManager = bot.getMusicManager(guild)
 
         val playing = musicManager.player.playingTrack
             ?: return event.terminate("There is no song playing currently!")
+
+        val meta = playing.userData as TrackMetadata
+        val channel = guild.selfMember.voiceState?.channel ?: return
+        if (!member.hasPermission(Permission.ADMINISTRATOR) && meta.data.id != member.id && channel.members.size > 2) {
+            return event.terminate("Only the requester of the song can do this. Requester: ${meta.data.name}#${meta.data.discriminator}")
+        }
 
         var total = seconds.toLong()
 

@@ -22,15 +22,12 @@ class ForwardCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
         Requirement("bot_in_vc", messageKey = "bot_not_in_vc"),
-        Requirement("requester_or_admin", messageKey = "not_requester_or_admin"),
     )
     fun SlashSender.forward(
         @Description("Amount of seconds to forward by!") seconds: Int,
         @Description("Amount of minutes to forward by!") @Optional minutes: Int?,
         @Description("Amount of hours to forward by!") @Optional hours: Int?
     ) {
-        val member = event.member ?: return
-
         if (minutes != null && minutes < 0) {
             return event.terminate("Minutes can not be < 0!")
         }
@@ -48,14 +45,16 @@ class ForwardCommand(private val bot: AlphaMusic) : BaseCommand() {
         }
 
         val guild = guild ?: return
+        val member = member ?: return
         val musicManager = bot.getMusicManager(guild)
 
         val playing = musicManager.player.playingTrack
             ?: return event.terminate("There is no song playing currently!")
 
-        val trackData = playing.userData as TrackMetadata
-        if (trackData.data.id != member.id && !member.hasPermission(Permission.ADMINISTRATOR)) {
-            return event.terminate("Only admins and the user that played the song can forward it!")
+        val meta = playing.userData as TrackMetadata
+        val channel = guild.selfMember.voiceState?.channel ?: return
+        if (!member.hasPermission(Permission.ADMINISTRATOR) && meta.data.id != member.id && channel.members.size > 2) {
+            return event.terminate("Only the requester of the song can do this. Requester: ${meta.data.name}#${meta.data.discriminator}")
         }
 
         var total = seconds.toLong()
