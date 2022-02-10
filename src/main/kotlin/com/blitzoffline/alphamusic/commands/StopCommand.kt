@@ -61,7 +61,7 @@ class StopCommand(private val bot: AlphaMusic) : BaseCommand() {
         val required = voteManager.getRequiredVotes(participants.size)
 
         if (voteManager.votes.size + 1 == required) {
-            voteManager?.votes?.clear()
+            voteManager.votes.clear()
             musicManager.audioHandler.clear()
             musicManager.player.stopTrack()
             bot.taskManager.addLeaveTask(guild)
