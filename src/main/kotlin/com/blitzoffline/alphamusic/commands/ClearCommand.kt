@@ -30,7 +30,10 @@ class ClearCommand(private val bot: AlphaMusic) : BaseCommand() {
             return event.terminate("The queue is already empty!")
         }
 
+        val voteManager = musicManager.voteHandler.getVoteManager(VoteType.CLEAR)
+
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
+            voteManager?.votes?.clear()
             musicManager.audioHandler.queue.clear()
             return event.terminate("Cleared the queue!")
         }
@@ -38,12 +41,14 @@ class ClearCommand(private val bot: AlphaMusic) : BaseCommand() {
         val participants = guild.selfMember.voiceState?.channel?.members ?: return
 
         if (participants.size <= 2) {
+            voteManager?.votes?.clear()
             musicManager.audioHandler.queue.clear()
             return event.terminate("Cleared the queue!")
         }
 
-        val voteManager = musicManager.voteHandler.getVoteManager(VoteType.CLEAR)
-            ?: return event.terminate("Could not process your vote!")
+        if (voteManager == null) {
+            return event.terminate("Could not process your vote!")
+        }
 
         if (voteManager.votes.contains(member.id)) {
             return event.terminate("You have already voted!")

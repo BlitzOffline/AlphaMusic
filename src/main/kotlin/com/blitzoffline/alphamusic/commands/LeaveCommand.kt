@@ -25,8 +25,10 @@ class LeaveCommand(private val bot: AlphaMusic) : BaseCommand() {
         val guild = guild ?: return
         val member = member ?: return
         val musicManager = bot.getMusicManager(guild)
+        val voteManager = musicManager.voteHandler.getVoteManager(VoteType.LEAVE)
 
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
+            voteManager?.votes?.clear()
             guild.audioManager.closeAudioConnection()
             return event.terminate("Left the voice channel!")
         }
@@ -34,12 +36,14 @@ class LeaveCommand(private val bot: AlphaMusic) : BaseCommand() {
         val participants = guild.selfMember.voiceState?.channel?.members ?: return
 
         if (participants.size <= 2) {
+            voteManager?.votes?.clear()
             guild.audioManager.closeAudioConnection()
             return event.terminate("Left the voice channel!")
         }
 
-        val voteManager = musicManager.voteHandler.getVoteManager(VoteType.LEAVE)
-            ?: return event.terminate("Could not process your vote!")
+        if (voteManager == null) {
+            return event.terminate("Could not process your vote!")
+        }
 
         if (voteManager.votes.contains(member.id)) {
             return event.terminate("You have already voted!")

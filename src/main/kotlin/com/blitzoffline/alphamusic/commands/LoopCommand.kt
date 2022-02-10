@@ -25,8 +25,10 @@ class LoopCommand(private val bot: AlphaMusic) : BaseCommand() {
         val guild = guild ?: return
         val member = member ?: return
         val musicManager = bot.getMusicManager(guild)
+        val voteManager = musicManager.voteHandler.getVoteManager(VoteType.LOOP)
 
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
+            voteManager?.votes?.clear()
             musicManager.audioHandler.loop = !musicManager.audioHandler.loop
             return if (musicManager.audioHandler.loop) {
                 event.terminate("The song will now be looped!")
@@ -38,6 +40,7 @@ class LoopCommand(private val bot: AlphaMusic) : BaseCommand() {
         val participants = guild.selfMember.voiceState?.channel?.members ?: return
 
         if (participants.size <= 2) {
+            voteManager?.votes?.clear()
             musicManager.audioHandler.loop = !musicManager.audioHandler.loop
             return if (musicManager.audioHandler.loop) {
                 event.terminate("The song will now be looped!")
@@ -46,8 +49,9 @@ class LoopCommand(private val bot: AlphaMusic) : BaseCommand() {
             }
         }
 
-        val voteManager = musicManager.voteHandler.getVoteManager(VoteType.LOOP)
-            ?: return event.terminate("Could not process your vote!")
+        if (voteManager == null) {
+            return event.terminate("Could not process your vote!")
+        }
 
         if (voteManager.votes.contains(member.id)) {
             return event.terminate("You have already voted!")

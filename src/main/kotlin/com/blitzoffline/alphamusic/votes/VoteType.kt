@@ -5,6 +5,7 @@ enum class VoteType(val requiredPercentage: Double) {
     LEAVE(0.3),
     LOOP(0.3),
     PAUSE(0.3),
+    RADIO(0.3),
     REMOVE_DUPES(0.3),
     REPLAY(0.3),
     RESUME(0.3),
