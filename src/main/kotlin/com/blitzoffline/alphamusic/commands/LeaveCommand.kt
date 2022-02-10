@@ -28,7 +28,7 @@ class LeaveCommand(private val bot: AlphaMusic) : BaseCommand() {
 
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
             guild.audioManager.closeAudioConnection()
-            event.terminate("Left the voice channel!")
+            return event.terminate("Left the voice channel!")
         }
 
         val participants = guild.selfMember.voiceState?.channel?.members ?: return
