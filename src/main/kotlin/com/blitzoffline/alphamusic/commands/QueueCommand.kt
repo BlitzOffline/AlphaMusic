@@ -32,7 +32,7 @@ class QueueCommand(private val bot: AlphaMusic) : BaseCommand() {
         val guild = guild ?: return
         val musicManager = bot.getMusicManager(guild)
 
-        if (musicManager.audioHandler.queue.isEmpty()) {
+        if (musicManager.audioHandler.size() == 0) {
             return event.terminate("The queue is empty!", deferred = true)
         }
 
@@ -72,7 +72,7 @@ class QueueCommand(private val bot: AlphaMusic) : BaseCommand() {
 
             embed.appendDescription(
                 """
-                **${musicManager.audioHandler.queue.size} songs in queue | ${formatHMS(Duration.ofMillis(musicManager.audioHandler.queue.sumOf { it.duration }))} total length**
+                **${musicManager.audioHandler.size()} songs in queue | ${formatHMS(Duration.ofMillis(musicManager.audioHandler.queue.sumOf { it.duration }))} total length**
             """.trimIndent()
             )
 

@@ -23,7 +23,7 @@ class ShuffleCommand(private val bot: AlphaMusic) : BaseCommand() {
         val guild = guild ?: return
         val musicManager = bot.getMusicManager(guild)
 
-        when (musicManager.audioHandler.queue.size) {
+        when (musicManager.audioHandler.size()) {
             0 -> event.terminate("There are no songs in the queue to be shuffled.")
             1 -> event.terminate("There is only one song in the queue.")
             else -> musicManager.audioHandler.shuffle()

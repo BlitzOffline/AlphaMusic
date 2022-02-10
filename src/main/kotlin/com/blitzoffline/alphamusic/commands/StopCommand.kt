@@ -25,11 +25,11 @@ class StopCommand(private val bot: AlphaMusic) : BaseCommand() {
 
         val musicManager = bot.getMusicManager(guild)
 
-        if (musicManager.player.playingTrack == null && musicManager.audioHandler.queue.isEmpty()) {
+        if (musicManager.player.playingTrack == null && musicManager.audioHandler.size() == 0) {
             return event.terminate("The bot is not playing any audio!")
         }
 
-        musicManager.audioHandler.queue.clear()
+        musicManager.audioHandler.clear()
         musicManager.player.stopTrack()
         bot.taskManager.addLeaveTask(guild)
 

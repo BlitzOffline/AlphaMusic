@@ -37,9 +37,9 @@ class SkipCommand(private val bot: AlphaMusic) : BaseCommand() {
             return event.terminate("Skipped currently playing song!")
         }
 
-        val available = if (musicManager.player.playingTrack != null) musicManager.audioHandler.queue.size + 1 else musicManager.audioHandler.queue.size
+        val available = if (musicManager.player.playingTrack != null) musicManager.audioHandler.size() + 1 else musicManager.audioHandler.size()
         if (finalAmount > available) {
-            musicManager.audioHandler.queue.clear()
+            musicManager.audioHandler.clear()
             musicManager.audioHandler.nextTrack(playing)
             return event.terminate("Skipped $available song(s). No songs left in the queue!")
         }

@@ -24,7 +24,7 @@ class RemoveDupesCommand(private val bot: AlphaMusic) : BaseCommand() {
         val guild = guild ?: return
         val musicManager = bot.getMusicManager(guild)
 
-        if (musicManager.audioHandler.queue.isEmpty()) {
+        if (musicManager.audioHandler.size() == 0) {
             return event.terminate("There are no song queued currently!")
         }
 

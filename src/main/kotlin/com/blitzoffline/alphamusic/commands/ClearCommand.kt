@@ -26,7 +26,7 @@ class ClearCommand(private val bot: AlphaMusic) : BaseCommand() {
         val member = member ?: return
 
         val musicManager = bot.getMusicManager(guild)
-        if (musicManager.audioHandler.queue.isEmpty()) {
+        if (musicManager.audioHandler.size() == 0) {
             return event.terminate("The queue is already empty!")
         }
 

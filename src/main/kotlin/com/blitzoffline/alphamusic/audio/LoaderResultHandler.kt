@@ -39,7 +39,7 @@ class LoaderResultHandler(
             return terminate(event, "Could not find any songs!", deferred = deferred)
         }
 
-        if (musicManager.audioHandler.queue.remainingCapacity() == 0) {
+        if (musicManager.audioHandler.remainingCapacity() == 0) {
             return terminate(event, "Queue is full. Could not add any more songs.", deferred = deferred)
         }
 

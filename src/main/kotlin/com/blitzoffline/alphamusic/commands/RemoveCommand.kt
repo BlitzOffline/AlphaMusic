@@ -27,11 +27,11 @@ class RemoveCommand(private val bot: AlphaMusic) : BaseCommand() {
         val guild = guild ?: return
         val musicManager = bot.getMusicManager(guild)
 
-        if (musicManager.audioHandler.queue.isEmpty()) {
+        if (musicManager.audioHandler.size() == 0) {
             return event.terminate("The queue is empty!")
         }
 
-        if (amount >= musicManager.audioHandler.queue.size) {
+        if (amount >= musicManager.audioHandler.size()) {
             val removed = musicManager.audioHandler.clear()
             return event.terminate("Removed all $removed songs from the queue!")
         }
@@ -39,6 +39,6 @@ class RemoveCommand(private val bot: AlphaMusic) : BaseCommand() {
         repeat(amount) {
             musicManager.audioHandler.nextTrack(musicManager.player.playingTrack)
         }
-        event.terminate("Removed $amount songs from the queue. ${musicManager.audioHandler.queue.size} songs left.")
+        event.terminate("Removed $amount songs from the queue. ${musicManager.audioHandler.size()} songs left.")
     }
 }
