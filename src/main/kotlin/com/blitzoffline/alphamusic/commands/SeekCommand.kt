@@ -20,6 +20,7 @@ class SeekCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
         Requirement("bot_in_vc", messageKey = "bot_not_in_vc"),
+        // todo: skip this check if there's only the command caller with the bot in vc
         Requirement("requester_or_admin", messageKey = "not_requester_or_admin"),
     )
     fun SlashSender.seek(

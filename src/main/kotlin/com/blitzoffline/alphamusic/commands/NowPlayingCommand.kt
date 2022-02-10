@@ -17,7 +17,7 @@ class NowPlayingCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
-        Requirement("same_channel_or_admin", messageKey = "not_same_channel_or_admin"),
+        Requirement("bot_in_vc", messageKey = "bot_not_in_vc"),
     )
     fun SlashSender.nowPlaying() {
         deferReply().queue()
