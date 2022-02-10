@@ -14,9 +14,9 @@ import dev.triumphteam.cmd.slash.sender.SlashSender
 class JoinCommand : BaseCommand() {
     @Default
     @Requirements(
-        Requirement("IN_GUILD", messageKey = "IN_GUILD"),
-        Requirement("BOT_IS_NOT_IN_VC", messageKey = "BOT_IS_NOT_IN_VC"),
-        Requirement("MEMBER_IS_IN_VC", messageKey = "MEMBER_IS_IN_VC")
+        Requirement("command_in_guild", messageKey = "command_not_in_guild"),
+        Requirement("bot_not_in_vc", messageKey = "bot_already_in_vc"),
+        Requirement("member_in_vc", messageKey = "member_not_in_vc"),
     )
     fun SlashSender.join() {
         val guild = guild ?: return

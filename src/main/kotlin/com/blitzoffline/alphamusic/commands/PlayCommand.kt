@@ -16,7 +16,7 @@ import net.dv8tion.jda.api.Permission
 class PlayCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
     @Requirements(
-        Requirement("IN_GUILD", messageKey = "IN_GUILD"),
+        Requirement("command_in_guild", messageKey = "command_not_in_guild"),
     )
     fun SlashSender.play(@Description("Link or keywords to find the song(s) by!") identifier: String) {
         event.deferReply().queue()

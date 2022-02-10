@@ -23,8 +23,8 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 class QueueCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
     @Requirements(
-        Requirement("IN_GUILD", messageKey = "IN_GUILD"),
-        Requirement("BOT_IS_IN_VC", messageKey = "BOT_IS_IN_VC"),
+        Requirement("command_in_guild", messageKey = "command_not_in_guild"),
+        Requirement("bot_in_vc", messageKey = "bot_not_in_vc"),
     )
     fun SlashSender.queue() {
         event.deferReply().queue()

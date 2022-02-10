@@ -16,8 +16,8 @@ import dev.triumphteam.cmd.slash.sender.SlashSender
 class NowPlayingCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
     @Requirements(
-        Requirement("IN_GUILD", messageKey = "IN_GUILD"),
-        Requirement("BOT_IS_IN_VC", messageKey = "BOT_IS_IN_VC"),
+        Requirement("command_in_guild", messageKey = "command_not_in_guild"),
+        Requirement("same_channel_or_admin", messageKey = "not_same_channel_or_admin"),
     )
     fun SlashSender.nowPlaying() {
         deferReply().queue()

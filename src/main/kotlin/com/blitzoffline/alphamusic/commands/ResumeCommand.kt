@@ -15,11 +15,11 @@ import dev.triumphteam.cmd.slash.sender.SlashSender
 class ResumeCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
     @Requirements(
-        Requirement("IN_GUILD", messageKey = "IN_GUILD"),
-        Requirement("BOT_IS_IN_VC", messageKey = "BOT_IS_IN_VC"),
-        Requirement("SAME_CHANNEL_OR_ADMIN", messageKey = "SAME_CHANNEL_OR_ADMIN"),
-        Requirement("IS_PAUSED", messageKey = "IS_PAUSED"),
-        Requirement("IS_REQUESTER_OR_ADMIN", messageKey = "IS_REQUESTER_OR_ADMIN"),
+        Requirement("command_in_guild", messageKey = "command_not_in_guild"),
+        Requirement("bot_in_vc", messageKey = "bot_not_in_vc"),
+        Requirement("same_channel_or_admin", messageKey = "not_same_channel_or_admin"),
+        Requirement("paused", messageKey = "not_paused"),
+        Requirement("requester_or_admin", messageKey = "not_requester_or_admin"),
     )
     fun SlashSender.resume() {
         val guild = guild ?: return
