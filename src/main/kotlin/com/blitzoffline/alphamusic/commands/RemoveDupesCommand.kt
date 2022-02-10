@@ -17,10 +17,9 @@ class RemoveDupesCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
         Requirement("bot_in_vc", messageKey = "bot_not_in_vc"),
-        Requirement("same_channel_or_admin", messageKey = "not_same_channel_or_admin"),
+        Requirement("admin", messageKey = "admin"),
     )
     fun SlashSender.removeDupes() {
-        // todo: Make this a requester or admin command.
         val guild = guild ?: return
         val musicManager = bot.getMusicManager(guild)
 
