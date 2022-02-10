@@ -157,6 +157,7 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
         }
 
         registerCommands(bot)
+        bot.jda.getGuildById("913414011587018782")?.let { bot.commandManager.registerCommand(it, DebugCommand(bot)) }
     }
 
     private fun registerCommands(bot: AlphaMusic) {
@@ -183,7 +184,6 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
             ForwardCommand(bot),
             RewindCommand(bot),
             RadioCommand(bot),
-            DebugCommand(bot)
         )
     }
 }
