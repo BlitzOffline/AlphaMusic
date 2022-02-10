@@ -37,7 +37,7 @@ class RemoveCommand(private val bot: AlphaMusic) : BaseCommand() {
         }
 
         repeat(amount) {
-            musicManager.audioHandler.nextTrack(musicManager.player.playingTrack)
+            musicManager.audioHandler.queue.poll()
         }
         event.terminate("Removed $amount songs from the queue. ${musicManager.audioHandler.size()} songs left.")
     }
