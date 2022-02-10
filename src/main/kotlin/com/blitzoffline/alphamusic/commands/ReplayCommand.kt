@@ -13,7 +13,7 @@ import dev.triumphteam.cmd.slash.sender.SlashSender
 import net.dv8tion.jda.api.Permission
 
 @Command("replay")
-@Description("Mark a song to be replayed!")
+@Description("Toggle replay for playing song!")
 class ReplayCommand(private val bot: AlphaMusic) : BaseCommand() {
     @Default
     @Requirements(
@@ -21,7 +21,6 @@ class ReplayCommand(private val bot: AlphaMusic) : BaseCommand() {
         Requirement("bot_in_vc", messageKey = "bot_not_in_vc"),
         Requirement("same_channel_or_admin", messageKey = "not_same_channel_or_admin"),
     )
-    // todo: make this command a toggle.
     fun SlashSender.replay() {
         val guild = guild ?: return
         val member = member ?: return
@@ -31,23 +30,27 @@ class ReplayCommand(private val bot: AlphaMusic) : BaseCommand() {
             return event.terminate("There is no song currently playing to be replayed!")
         }
 
-        if (musicManager.audioHandler.replay) {
-            return event.terminate("Currently playing song is already marked to be replayed!")
-        }
-
         val voteManager = musicManager.voteHandler.getVoteManager(VoteType.REPLAY)
 
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
             voteManager?.votes?.clear()
-            musicManager.audioHandler.replay = true
-            return event.terminate("Currently playing song marked to be replayed!")
+            musicManager.audioHandler.replay = !musicManager.audioHandler.replay
+            return if (musicManager.audioHandler.replay) {
+                event.terminate("Currently playing song marked to be replayed!")
+            } else {
+                event.terminate("Currently playing song marked to no longer be replayed!")
+            }
         }
 
         val participants = guild.selfMember.voiceState?.channel?.members ?: return
         if (participants.size <= 2) {
             voteManager?.votes?.clear()
-            musicManager.audioHandler.replay = true
-            return event.terminate("Currently playing song marked to be replayed!")
+            musicManager.audioHandler.replay = !musicManager.audioHandler.replay
+            return if (musicManager.audioHandler.replay) {
+                event.terminate("Currently playing song marked to be replayed!")
+            } else {
+                event.terminate("Currently playing song marked to no longer be replayed!")
+            }
         }
 
         if (voteManager == null) {
@@ -62,8 +65,12 @@ class ReplayCommand(private val bot: AlphaMusic) : BaseCommand() {
 
         if (voteManager.votes.size + 1 == required) {
             voteManager.votes.clear()
-            musicManager.audioHandler.replay = true
-            return event.terminate("Currently playing song marked to be replayed!")
+            musicManager.audioHandler.replay = !musicManager.audioHandler.replay
+            return if (musicManager.audioHandler.replay) {
+                event.terminate("Currently playing song marked to be replayed!")
+            } else {
+                event.terminate("Currently playing song marked to no longer be replayed!")
+            }
         }
 
         voteManager.votes.add(member.id)
