@@ -2,15 +2,27 @@ package com.blitzoffline.alphamusic.listeners
 
 import com.blitzoffline.alphamusic.AlphaMusic
 import com.blitzoffline.alphamusic.votes.VoteType
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent
+import net.dv8tion.jda.api.entities.AudioChannel
+import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.entities.Member
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 
+// todo: check for bot deafening/undeafening as well.
 class VoiceChannelListener(private val bot: AlphaMusic) : ListenerAdapter() {
-    override fun onGuildVoiceLeave(event: GuildVoiceLeaveEvent) {
-        val guild = event.guild
+    override fun onGuildVoiceUpdate(event: GuildVoiceUpdateEvent) {
+        if (event.channelLeft != null) {
+            onGuildVoiceLeave(event.guild, event.member, event.channelLeft!!)
+        }
+
+        if (event.channelJoined != null) {
+            onGuildVoiceJoin(event.guild, event.member, event.channelJoined!!)
+        }
+    }
+
+    private fun onGuildVoiceLeave(guild: Guild, member: Member, channelLeft: AudioChannel) {
         val musicManager = bot.getMusicManager(guild)
-        if (event.member == guild.selfMember) {
+        if (member == guild.selfMember) {
             musicManager.player.isPaused = true
 
             bot.taskManager.removeLeaveTask(guild.id)
@@ -18,19 +30,18 @@ class VoiceChannelListener(private val bot: AlphaMusic) : ListenerAdapter() {
             musicManager.voteHandler.clear()
         } else {
             VoteType.values.forEach { voteType ->
-                musicManager.voteHandler.getVoteManager(voteType)?.votes?.remove(event.member.id)
+                musicManager.voteHandler.getVoteManager(voteType)?.votes?.remove(member.id)
             }
-            if (event.channelLeft != guild.selfMember.voiceState?.channel) return
-            if (event.channelLeft.members.size >= 2) return
-            if (event.channelLeft.members[0] != guild.selfMember) return
+            if (channelLeft != guild.selfMember.voiceState?.channel) return
+            if (channelLeft.members.size >= 2) return
+            if (channelLeft.members[0] != guild.selfMember) return
 
             bot.taskManager.addLeaveTask(guild)
         }
     }
 
-    override fun onGuildVoiceJoin(event: GuildVoiceJoinEvent) {
-        val guild = event.guild
-        if (event.member == guild.selfMember) {
+    private fun onGuildVoiceJoin(guild: Guild, member: Member, channelJoined: AudioChannel) {
+        if (member == guild.selfMember) {
             val musicManager = bot.getMusicManager(guild)
             musicManager.player.isPaused = false
 
@@ -39,7 +50,7 @@ class VoiceChannelListener(private val bot: AlphaMusic) : ListenerAdapter() {
             }
             bot.taskManager.removeClearTask(guild.id)
         } else {
-            if (event.channelJoined != guild.selfMember.voiceState?.channel) return
+            if (channelJoined != guild.selfMember.voiceState?.channel) return
 
             bot.taskManager.removeLeaveTask(guild.id)
         }
