@@ -31,7 +31,6 @@ import dev.triumphteam.cmd.core.message.MessageKey
 import dev.triumphteam.cmd.core.message.context.MessageContext
 import dev.triumphteam.cmd.core.requirement.RequirementKey
 import net.dv8tion.jda.api.Permission
-import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.events.ReadyEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 
@@ -157,15 +156,11 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
             sender.reply("Only the requester or admins can do this. Requester: ${meta.data.name}#${meta.data.discriminator}").queue()
         }
 
-        // todo: register the commands globally
-        bot.jda.guilds.forEach { guild ->
-            registerCommands(bot, guild)
-        }
+        registerCommands(bot)
     }
 
-    private fun registerCommands(bot: AlphaMusic, guild: Guild) {
+    private fun registerCommands(bot: AlphaMusic) {
         bot.commandManager.registerCommand(
-            guild,
             HelpCommand(),
             PlayCommand(bot),
             LoopCommand(bot),
