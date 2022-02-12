@@ -26,8 +26,6 @@ class PauseCommand(private val bot: AlphaMusic) : BaseCommand() {
         val musicManager = bot.getMusicManager(guild)
 
         musicManager.player.isPaused = true
-        bot.taskManager.addLeaveTask(guild)
-
         event.terminate("Paused the audio!")
     }
 }

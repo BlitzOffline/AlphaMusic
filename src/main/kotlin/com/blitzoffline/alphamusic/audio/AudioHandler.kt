@@ -169,6 +169,14 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
         nextTrack(track)
     }
 
+    override fun onPlayerPause(player: AudioPlayer?) {
+        bot.taskManager.addLeaveTask(bot.jda.guilds.first { it.id == guildId })
+    }
+
+    override fun onPlayerResume(player: AudioPlayer?) {
+        bot.taskManager.removeLeaveTask(guildId)
+    }
+
     override fun canProvide(): Boolean {
         return player.provide(frame)
     }
