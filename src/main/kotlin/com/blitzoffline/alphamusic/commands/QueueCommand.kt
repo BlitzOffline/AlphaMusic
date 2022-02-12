@@ -37,10 +37,11 @@ class QueueCommand(private val bot: AlphaMusic) : BaseCommand() {
         }
 
         val playing = musicManager.player.playingTrack
-        val totalPages = musicManager.audioHandler.queue.chunked(10).size
+        val queue = musicManager.audioHandler.queue()
+        val totalPages = queue.chunked(10).size
         val pages = mutableListOf<Page>()
 
-        for ((pageIndex, page) in musicManager.audioHandler.queue.chunked(10).withIndex()) {
+        for ((pageIndex, page) in queue.chunked(10).withIndex()) {
             val embed = EmbedBuilder()
                 .setAuthor("Queue for ${guild.name}")
 
@@ -72,7 +73,7 @@ class QueueCommand(private val bot: AlphaMusic) : BaseCommand() {
 
             embed.appendDescription(
                 """
-                **${musicManager.audioHandler.size()} songs in queue | ${formatHMS(Duration.ofMillis(musicManager.audioHandler.queue.sumOf { it.duration }))} total length**
+                **${musicManager.audioHandler.size()} songs in queue | ${formatHMS(Duration.ofMillis(queue.sumOf { it.duration }))} total length**
             """.trimIndent()
             )
 

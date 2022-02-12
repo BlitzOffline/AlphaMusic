@@ -33,7 +33,7 @@ class SkipCommand(private val bot: AlphaMusic) : BaseCommand() {
 
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
             voteManager?.votes?.clear()
-            musicManager.audioHandler.nextTrack(playing)
+            musicManager.audioHandler.skip()
             return event.terminate("Skipped currently playing song!")
         }
 
@@ -41,7 +41,7 @@ class SkipCommand(private val bot: AlphaMusic) : BaseCommand() {
 
         if (participants.size <= 2) {
             voteManager?.votes?.clear()
-            musicManager.audioHandler.nextTrack(playing)
+            musicManager.audioHandler.skip()
             return event.terminate("Skipped currently playing song!")
         }
 
@@ -57,7 +57,7 @@ class SkipCommand(private val bot: AlphaMusic) : BaseCommand() {
 
         if (voteManager.votes.size + 1 == required) {
             voteManager.votes.clear()
-            musicManager.audioHandler.nextTrack(playing)
+            musicManager.audioHandler.skip()
             return event.terminate("Skipped currently playing song!")
         }
 

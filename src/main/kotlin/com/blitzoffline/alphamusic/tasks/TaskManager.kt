@@ -41,7 +41,7 @@ class TaskManager {
 
         clearTasks[musicManager.guildId] = Timer().schedule(300000) {
             musicManager.audioHandler.clear()
-            musicManager.audioHandler.nextTrack()
+            musicManager.audioHandler.skip()
             removeClearTask(musicManager.guildId)
         }
     }
