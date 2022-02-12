@@ -10,9 +10,8 @@ import java.nio.Buffer
 import java.nio.ByteBuffer
 import java.util.concurrent.ArrayBlockingQueue
 import net.dv8tion.jda.api.audio.AudioSendHandler
-import net.dv8tion.jda.api.entities.Guild
 
-class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer, private val guild: Guild) : AudioEventAdapter(), AudioSendHandler {
+class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer, private val guildId: String) : AudioEventAdapter(), AudioSendHandler {
     private val buffer: ByteBuffer = ByteBuffer.allocate(1024)
     private val frame: MutableAudioFrame = MutableAudioFrame()
 
@@ -25,7 +24,7 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
     fun queue(track: AudioTrack): Boolean {
         if (player.playingTrack == null) {
             player.playTrack(track)
-            bot.taskManager.removeLeaveTask(guild.id)
+            bot.taskManager.removeLeaveTask(guildId)
             return true
         }
         return queue.offer(track)
@@ -34,13 +33,13 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
     fun nextTrack(previous: AudioTrack? = null) {
         if (previous != null && radio && queue.size == 0) {
             val identifier = "https://www.youtube.com/watch?v=${previous.identifier}&list=RD${previous.identifier}"
-            return bot.trackService.loadTrack(identifier, guild, event = null, isRadio = true)
+            return bot.trackService.loadTrack(identifier, bot.jda.guilds.first { it.id == guildId }, event = null, isRadio = true)
         }
 
         if (player.startTrack(queue.poll(), false)) {
-            return bot.taskManager.removeLeaveTask(guild.id)
+            return bot.taskManager.removeLeaveTask(guildId)
         }
-        bot.taskManager.addLeaveTask(guild)
+        bot.taskManager.addLeaveTask(bot.jda.guilds.first { it.id == guildId })
     }
 
     fun shuffle() {

@@ -61,7 +61,7 @@ class AlphaMusic(private val token: String, youtubeEmail: String?, youtubePass: 
         var musicManager = musicManagers[guild.id]
 
         if (musicManager == null) {
-            musicManager = GuildMusicManager(this, guild)
+            musicManager = GuildMusicManager(this, guild.id)
             musicManagers[guild.id] = musicManager
         }
 
