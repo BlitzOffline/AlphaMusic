@@ -7,11 +7,15 @@ import java.time.Duration
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
 
-fun AudioTrack?.asEmbed(author: String = "Now Playing ♪", icon: String? = null, showTimestamp: Boolean = false): MessageEmbed? {
+fun AudioTrack?.asEmbedNullable(author: String = "Now Playing ♪", icon: String? = null, showTimestamp: Boolean = false): MessageEmbed? {
     if (this == null) {
         return null
     }
 
+    return this.asEmbed(author, icon, showTimestamp)
+}
+
+fun AudioTrack.asEmbed(author: String = "Now Playing ♪", icon: String? = null, showTimestamp: Boolean = false): MessageEmbed {
     val embed = EmbedBuilder()
         .setAuthor(author, null, icon)
         .setTitle(info.title, info.uri)

@@ -40,6 +40,6 @@ class PlayCommand(private val bot: AlphaMusic) : BaseCommand() {
             return event.terminate("You need to be in the same Voice Channel as the bot to do this!", deferred = true)
         }
 
-        bot.trackService.loadTrack(identifier, guild, event, isRadio = true, deferred = true)
+        bot.trackService.loadTrack(identifier, guild, event, isRadio = bot.getMusicManager(guild).audioHandler.radio, deferred = true)
     }
 }

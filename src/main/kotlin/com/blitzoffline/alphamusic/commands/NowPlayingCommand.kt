@@ -1,7 +1,7 @@
 package com.blitzoffline.alphamusic.commands
 
 import com.blitzoffline.alphamusic.AlphaMusic
-import com.blitzoffline.alphamusic.utils.asEmbed
+import com.blitzoffline.alphamusic.utils.asEmbedNullable
 import com.blitzoffline.alphamusic.utils.terminate
 import dev.triumphteam.cmd.core.BaseCommand
 import dev.triumphteam.cmd.core.annotation.Command
@@ -23,7 +23,7 @@ class NowPlayingCommand(private val bot: AlphaMusic) : BaseCommand() {
         deferReply().queue()
         val guild = guild ?: return
         val musicManager = bot.getMusicManager(guild)
-        val playing = musicManager.player.playingTrack.asEmbed(icon = user.avatarUrl, showTimestamp = true)
+        val playing = musicManager.player.playingTrack.asEmbedNullable(icon = user.avatarUrl, showTimestamp = true)
             ?: return event.terminate("There is no song playing currently!", deferred = true)
 
         event.terminate(playing, deferred = true)

@@ -1,6 +1,7 @@
 package com.blitzoffline.alphamusic.audio
 
 import com.blitzoffline.alphamusic.utils.asEmbed
+import com.blitzoffline.alphamusic.utils.asEmbedNullable
 import com.blitzoffline.alphamusic.utils.terminate
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
@@ -28,7 +29,7 @@ class LoaderResultHandler(
         trackService.audioItemCache.put(trackURL, track)
 
         if (musicManager.audioHandler.queue(track.makeClone())) {
-            terminate(event, track.asEmbed("Added song to queue ♪", event?.user?.avatarUrl, showTimestamp = false)!!, deferred = deferred)
+            terminate(event, track.asEmbed("Added song to queue ♪", event?.user?.avatarUrl, showTimestamp = false), deferred = deferred)
         } else {
             terminate(event, "Queue is full. Could not add song.", deferred = deferred)
         }
@@ -58,7 +59,7 @@ class LoaderResultHandler(
             }
 
             if (musicManager.audioHandler.queue(track.makeClone())) {
-                terminate(event, track.asEmbed("Added song to queue ♪", event?.user?.avatarUrl, showTimestamp = false)!!, deferred = deferred)
+                terminate(event, track.asEmbed("Added song to queue ♪", event?.user?.avatarUrl, showTimestamp = false), deferred = deferred)
             }
 
             return terminate(event, "Something went wrong while adding song to queue.", deferred = deferred)
