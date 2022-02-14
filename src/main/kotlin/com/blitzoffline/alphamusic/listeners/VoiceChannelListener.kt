@@ -66,10 +66,10 @@ class VoiceChannelListener(private val bot: AlphaMusic) : ListenerAdapter() {
 
             bot.taskManager.removeLeaveTask(guild.id)
             bot.taskManager.addClearTask(musicManager)
-            musicManager.voteHandler.clear()
+            musicManager.voteManager.clear()
         } else {
             VoteType.values.forEach { voteType ->
-                musicManager.voteHandler.getVoteManager(voteType)?.votes?.remove(member.id)
+                musicManager.voteManager.getVoteManager(voteType)?.votes?.remove(member.id)
             }
             if (channelLeft != guild.selfMember.voiceState?.channel) return
             if (channelLeft.members.size >= 2) return

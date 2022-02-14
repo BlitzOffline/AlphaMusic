@@ -30,7 +30,7 @@ class ClearCommand(private val bot: AlphaMusic) : BaseCommand() {
             return event.terminate("The queue is already empty!")
         }
 
-        val voteManager = musicManager.voteHandler.getVoteManager(VoteType.CLEAR)
+        val voteManager = musicManager.voteManager.getVoteManager(VoteType.CLEAR)
 
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
             voteManager?.votes?.clear()

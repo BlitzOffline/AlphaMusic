@@ -26,7 +26,7 @@ class RadioCommand(private val bot: AlphaMusic) : BaseCommand() {
         val member = member ?: return
         val musicManager = bot.getMusicManager(guild)
 
-        val voteManager = musicManager.voteHandler.getVoteManager(VoteType.RADIO)
+        val voteManager = musicManager.voteManager.getVoteManager(VoteType.RADIO)
 
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
             voteManager?.votes?.clear()

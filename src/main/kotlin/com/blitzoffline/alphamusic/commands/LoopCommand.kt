@@ -25,7 +25,7 @@ class LoopCommand(private val bot: AlphaMusic) : BaseCommand() {
         val guild = guild ?: return
         val member = member ?: return
         val musicManager = bot.getMusicManager(guild)
-        val voteManager = musicManager.voteHandler.getVoteManager(VoteType.LOOP)
+        val voteManager = musicManager.voteManager.getVoteManager(VoteType.LOOP)
 
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
             voteManager?.votes?.clear()

@@ -30,7 +30,7 @@ class StopCommand(private val bot: AlphaMusic) : BaseCommand() {
             return event.terminate("The bot is not playing any audio!")
         }
 
-        val voteManager = musicManager.voteHandler.getVoteManager(VoteType.CLEAR)
+        val voteManager = musicManager.voteManager.getVoteManager(VoteType.CLEAR)
 
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
             voteManager?.votes?.clear()

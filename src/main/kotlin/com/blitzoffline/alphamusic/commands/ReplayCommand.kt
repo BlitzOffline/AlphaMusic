@@ -30,7 +30,7 @@ class ReplayCommand(private val bot: AlphaMusic) : BaseCommand() {
             return event.terminate("There is no song currently playing to be replayed!")
         }
 
-        val voteManager = musicManager.voteHandler.getVoteManager(VoteType.REPLAY)
+        val voteManager = musicManager.voteManager.getVoteManager(VoteType.REPLAY)
 
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
             voteManager?.votes?.clear()
