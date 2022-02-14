@@ -1,23 +1,23 @@
 package com.blitzoffline.alphamusic.votes
 
 class VoteManager {
-    private val voteHolder = HashMap<VoteType, VoteHolder>()
+    private val voteHolders = HashMap<VoteType, VoteHolder>()
     
     init {
         VoteType.values.forEach { type ->
-            voteHolder[type] = VoteHolder(type, hashSetOf())
+            voteHolders[type] = VoteHolder(type, hashSetOf())
         }
     }
 
     fun clear() {
-        voteHolder.clear()
+        voteHolders.clear()
     }
 
     fun getVoteManager(type: VoteType): VoteHolder? {
-        return voteHolder[type]
+        return voteHolders[type]
     }
 
     fun getVoteManager(name: String): VoteHolder? {
-        return voteHolder[VoteType.getByName(name)]
+        return voteHolders[VoteType.getByName(name)]
     }
 }
