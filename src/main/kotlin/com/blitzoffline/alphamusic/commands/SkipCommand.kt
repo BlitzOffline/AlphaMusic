@@ -25,9 +25,7 @@ class SkipCommand(private val bot: AlphaMusic) : BaseCommand() {
         val guild = guild ?: return
         val member = member ?: return
         val musicManager = bot.getMusicManager(guild)
-        val playing = musicManager.player.playingTrack ?: run {
-            return event.terminate("There is no song playing currently!")
-        }
+        musicManager.player.playingTrack ?: return event.terminate("There is no song playing currently!")
 
         val voteManager = musicManager.voteHandler.getVoteManager(VoteType.SKIP)
 
