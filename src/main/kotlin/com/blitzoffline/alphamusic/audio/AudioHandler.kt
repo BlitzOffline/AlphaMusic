@@ -48,7 +48,8 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
     private fun nextTrack(previous: AudioTrack? = null) {
         if (previous != null && radio && queue.size == 0) {
             val identifier = "https://www.youtube.com/watch?v=${previous.identifier}&list=RD${previous.identifier}"
-            return bot.trackService.loadTrack(identifier, bot.jda.guilds.first { it.id == guildId }, event = null, isRadio = radio)
+            bot.trackService.loadTrack(identifier, bot.jda.guilds.first { it.id == guildId }, event = null, isRadio = radio)
+            return
         }
 
         if (player.startTrack(queue.poll(), false)) {

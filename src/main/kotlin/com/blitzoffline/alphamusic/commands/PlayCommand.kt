@@ -19,27 +19,26 @@ class PlayCommand(private val bot: AlphaMusic) : BaseCommand() {
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
     )
     fun SlashSender.play(@Description("Link or keywords to find the song(s) by!") identifier: String) {
-        event.deferReply().queue()
-        // todo: Make bot not join the voice channel unless there was a song found.
-
         val guild = guild ?: return
         val member = member ?: return
         val memberChannel = member.voiceState?.channel
 
-        if (guild.selfMember.voiceState?.channel == null) {
-            if (memberChannel == null) {
-                return event.terminate("You need to be in a voice channel!", deferred = true)
-            }
-
-            if (kotlin.runCatching { guild.audioManager.openAudioConnection(memberChannel) }.isFailure) {
-                return event.terminate("Could not connect to your voice channel!", deferred = true)
-            }
+        if (guild.selfMember.voiceState?.channel == null && memberChannel == null) {
+            return event.terminate("You need to be in a voice channel!")
         }
 
-        if (guild.selfMember.voiceState?.channel != memberChannel && !member.hasPermission(Permission.ADMINISTRATOR)) {
-            return event.terminate("You need to be in the same Voice Channel as the bot to do this!", deferred = true)
+        if (guild.selfMember.voiceState?.channel != null && memberChannel != guild.selfMember.voiceState?.channel && !member.hasPermission(Permission.ADMINISTRATOR)) {
+            return event.terminate("You need to be in the same Voice Channel as the bot to do this!")
         }
 
-        bot.trackService.loadTrack(identifier, guild, event, isRadio = bot.getMusicManager(guild).audioHandler.radio, deferred = true)
+        event.deferReply().queue()
+
+        val result = bot.trackService.loadTrack(identifier, guild, event, isRadio = bot.getMusicManager(guild).audioHandler.radio, deferred = true)
+        if (!result) return
+
+        if (guild.selfMember.voiceState?.channel == null
+            && kotlin.runCatching { guild.audioManager.openAudioConnection(memberChannel) }.isFailure) {
+            return event.terminate("Could not connect to your voice channel!", deferred = true)
+        }
     }
 }

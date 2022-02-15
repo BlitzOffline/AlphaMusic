@@ -1,7 +1,6 @@
 package com.blitzoffline.alphamusic.audio
 
 import com.blitzoffline.alphamusic.utils.asEmbed
-import com.blitzoffline.alphamusic.utils.asEmbedNullable
 import com.blitzoffline.alphamusic.utils.terminate
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
@@ -20,6 +19,8 @@ class LoaderResultHandler(
     private val isRadio: Boolean,
     private val deferred: Boolean = false
 ) : AudioLoadResultHandler {
+    var success = false
+
     override fun trackLoaded(track: AudioTrack) {
         if (event != null) {
             track.userData = TrackMetadata(event.user)
@@ -30,14 +31,16 @@ class LoaderResultHandler(
 
         if (musicManager.audioHandler.queue(track.makeClone())) {
             terminate(event, track.asEmbed("Added song to queue ♪", event?.user?.avatarUrl, showTimestamp = false), deferred = deferred)
+            success = true
         } else {
             terminate(event, "Queue is full. Could not add song.", deferred = deferred)
+            success = true
         }
     }
 
     override fun playlistLoaded(playlist: AudioPlaylist) {
         if (playlist.tracks.isEmpty()) {
-            return terminate(event, "Could not find any songs!", deferred = deferred)
+            return terminate(event, "Could not find any songs based on the given identifier!", deferred = deferred)
         }
 
         if (musicManager.audioHandler.remainingCapacity() == 0) {
@@ -59,10 +62,11 @@ class LoaderResultHandler(
             }
 
             if (musicManager.audioHandler.queue(track.makeClone())) {
-                terminate(event, track.asEmbed("Added song to queue ♪", event?.user?.avatarUrl, showTimestamp = false), deferred = deferred)
+                success = true
+                return terminate(event, track.asEmbed("Added song to queue ♪", event?.user?.avatarUrl, showTimestamp = false), deferred = deferred)
             }
 
-            return terminate(event, "Something went wrong while adding song to queue.", deferred = deferred)
+            return terminate(event, "Something went wrong while adding song to queue. (Error Code A01)", deferred = deferred)
         }
 
         var count = 0
@@ -80,13 +84,15 @@ class LoaderResultHandler(
         }
 
         if (count == 0) {
-            return terminate(event, "Something went wrong while adding songs to queue.", deferred = deferred)
+            return terminate(event, "Something went wrong while adding songs to queue. (Error Code A02)", deferred = deferred)
         }
 
         if (count != playlist.tracks.size) {
+            success = true
             return terminate(event, "Could only add $count ${if (count == 1) "song" else "songs"} to the queue because it is full!", deferred =deferred)
         }
 
+        success = true
         terminate(event, "Added $count ${if (count == 1) "song" else "songs"} to the queue.", deferred = deferred)
     }
 
