@@ -21,7 +21,7 @@ class RadioCommand(private val bot: AlphaMusic) : BaseCommand() {
         Requirement("bot_in_vc", messageKey = "bot_not_in_vc"),
         Requirement("same_channel_or_admin", messageKey = "not_same_channel_or_admin"),
     )
-    fun SlashSender.loop() {
+    fun SlashSender.radio() {
         val guild = guild ?: return
         val member = member ?: return
         val musicManager = bot.getMusicManager(guild)
