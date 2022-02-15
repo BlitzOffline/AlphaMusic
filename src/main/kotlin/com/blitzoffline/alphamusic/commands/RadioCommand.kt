@@ -30,7 +30,7 @@ class RadioCommand(private val bot: AlphaMusic) : BaseCommand() {
 
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
             voteManager?.votes?.clear()
-            musicManager.audioHandler.radio = !musicManager.audioHandler.radio
+            musicManager.audioHandler.toggleRadio()
             return if (musicManager.audioHandler.radio) {
                 event.terminate("Radio mode has been enabled!")
             } else {
@@ -42,8 +42,12 @@ class RadioCommand(private val bot: AlphaMusic) : BaseCommand() {
 
         if (participants.size <= 2) {
             voteManager?.votes?.clear()
-            musicManager.audioHandler.radio = !musicManager.audioHandler.radio
-            return event.terminate("Cleared the queue!")
+            musicManager.audioHandler.toggleRadio()
+            return if (musicManager.audioHandler.radio) {
+                event.terminate("Radio mode has been enabled!")
+            } else {
+                event.terminate("Radio mode has been disabled!")
+            }
         }
 
         if (voteManager == null) {
@@ -58,7 +62,7 @@ class RadioCommand(private val bot: AlphaMusic) : BaseCommand() {
 
         if (voteManager.votes.size + 1 == required) {
             voteManager.votes.clear()
-            musicManager.audioHandler.radio = !musicManager.audioHandler.radio
+            musicManager.audioHandler.toggleRadio()
             return if (musicManager.audioHandler.radio) {
                 event.terminate("Radio mode has been enabled!")
             } else {

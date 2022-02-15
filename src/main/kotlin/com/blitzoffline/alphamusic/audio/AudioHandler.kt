@@ -26,6 +26,7 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
      * left in the queue.
      */
     var radio = false
+        private set
 
     /**
      * Marks the currently playing [AudioTrack] to be replayed when it ends.
@@ -47,8 +48,7 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
      */
     private fun nextTrack(previous: AudioTrack? = null) {
         if (previous != null && radio && queue.size == 0) {
-            val identifier = "https://www.youtube.com/watch?v=${previous.identifier}&list=RD${previous.identifier}"
-            bot.trackService.loadTrack(identifier, bot.jda.guilds.first { it.id == guildId }, event = null, isRadio = radio)
+            bot.trackService.loadTrack(generateRadioLink(previous), bot.jda.guilds.first { it.id == guildId }, event = null, isRadio = radio)
             return
         }
 
@@ -151,6 +151,25 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
      */
     fun queue(): List<AudioTrack> {
         return ArrayList(queue)
+    }
+
+    /**
+     * Toggles the radio on or off.
+     */
+    fun toggleRadio(): Boolean {
+        radio = !radio
+        return radio
+    }
+
+    fun generateRadioLink(previous: AudioTrack): String {
+        val builder = StringBuilder()
+        builder.append("https://www.youtube.com/watch?v=")
+        // seed
+        builder.append(previous.identifier)
+        // last played
+        builder.append("&list=RD${previous.identifier}")
+
+        return builder.toString()
     }
 
     override fun onTrackEnd(player: AudioPlayer, track: AudioTrack, endReason: AudioTrackEndReason) {
