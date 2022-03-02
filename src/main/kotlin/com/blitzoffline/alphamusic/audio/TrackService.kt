@@ -17,7 +17,7 @@ class TrackService(private val bot: AlphaMusic) {
         .expireAfterWrite(25, TimeUnit.MINUTES)
         .build()
 
-    fun loadTrack(identifier: String, guild: Guild, event: SlashCommandInteractionEvent?, isRadio: Boolean, deferred: Boolean = false) : Boolean {
+    fun loadTrack(identifier: String, guild: Guild, event: SlashCommandInteractionEvent?, isRadio: Boolean, deferred: Boolean = false) {
         val isUrl = URL_REGEX.matches(identifier)
         val musicManager = bot.getMusicManager(guild)
         val trackUrl = when {
@@ -29,22 +29,18 @@ class TrackService(private val bot: AlphaMusic) {
 
         val track = audioItemCache.getIfPresent(trackUrl)
             ?: run {
-                bot.playerManager.loadItemOrdered(musicManager.player, trackUrl, resultHandler).get()
-                return resultHandler.success
+                bot.playerManager.loadItemOrdered(musicManager.player, trackUrl, resultHandler)
+                return
             }
 
-        return when (track) {
+        when (track) {
             is AudioTrack -> {
                 resultHandler.trackLoaded(track)
-                true
             }
             is AudioPlaylist -> {
                 resultHandler.playlistLoaded(track)
-                true
             }
-            else -> false
         }
-
     }
 
     companion object {

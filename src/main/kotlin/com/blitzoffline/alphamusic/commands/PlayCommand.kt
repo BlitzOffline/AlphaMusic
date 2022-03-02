@@ -33,12 +33,11 @@ class PlayCommand(private val bot: AlphaMusic) : BaseCommand() {
 
         event.deferReply().queue()
 
-        val result = bot.trackService.loadTrack(identifier, guild, event, isRadio = bot.getMusicManager(guild).audioHandler.radio, deferred = true)
-        if (!result) return
-
         if (guild.selfMember.voiceState?.channel == null
             && kotlin.runCatching { guild.audioManager.openAudioConnection(memberChannel) }.isFailure) {
             return event.terminate("Could not connect to your voice channel!", deferred = true)
         }
+
+        bot.trackService.loadTrack(identifier, guild, event, isRadio = bot.getMusicManager(guild).audioHandler.radio, deferred = true)
     }
 }
