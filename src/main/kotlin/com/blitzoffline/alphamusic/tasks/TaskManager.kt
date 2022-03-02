@@ -14,12 +14,12 @@ class TaskManager {
         return leaveTasks
     }
 
-    @Synchronized fun addLeaveTask(guild: Guild) {
+    @Synchronized fun addLeaveTask(guild: Guild, delay: Long = 300000) {
         if (leaveTasks[guild.id] != null) {
             return
         }
 
-        leaveTasks[guild.id] = Timer().schedule(300000) {
+        leaveTasks[guild.id] = Timer().schedule(delay) {
             guild.audioManager.closeAudioConnection()
             removeLeaveTask(guild.id)
         }
@@ -34,12 +34,12 @@ class TaskManager {
         return clearTasks
     }
 
-    @Synchronized fun addClearTask(musicManager: GuildMusicManager) {
+    @Synchronized fun addClearTask(musicManager: GuildMusicManager, delay: Long = 300000) {
         if (clearTasks[musicManager.guildId] != null) {
             return
         }
 
-        clearTasks[musicManager.guildId] = Timer().schedule(300000) {
+        clearTasks[musicManager.guildId] = Timer().schedule(delay) {
             musicManager.audioHandler.clear()
             musicManager.audioHandler.skip()
             removeClearTask(musicManager.guildId)
