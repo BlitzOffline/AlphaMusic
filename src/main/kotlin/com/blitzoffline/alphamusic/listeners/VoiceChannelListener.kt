@@ -46,7 +46,7 @@ class VoiceChannelListener(private val bot: AlphaMusic) : ListenerAdapter() {
         val musicManager = bot.getMusicManager(guild)
 
         musicManager.player.isPaused = true
-        return bot.taskManager.addLeaveTask(guild)
+        return bot.taskManager.addLeaveTask(bot.jda, guild.id)
     }
 
     private fun onBotUnsuppressOrUnmute(guild: Guild, voiceState: GuildVoiceState) {
@@ -75,7 +75,7 @@ class VoiceChannelListener(private val bot: AlphaMusic) : ListenerAdapter() {
             if (channelLeft.members.size >= 2) return
             if (channelLeft.members[0] != guild.selfMember) return
 
-            bot.taskManager.addLeaveTask(guild)
+            bot.taskManager.addLeaveTask(bot.jda, guild.id)
         }
     }
 
@@ -83,14 +83,14 @@ class VoiceChannelListener(private val bot: AlphaMusic) : ListenerAdapter() {
         if (member.id == guild.selfMember.id) {
             val afk = guild.afkChannel
             if (afk != null && channelJoined.id == afk.id) {
-                return bot.taskManager.addLeaveTask(guild)
+                return bot.taskManager.addLeaveTask(bot.jda, guild.id)
             }
 
             val musicManager = bot.getMusicManager(guild)
             musicManager.player.isPaused = false
 
             if (musicManager.player.playingTrack == null) {
-                bot.taskManager.addLeaveTask(guild)
+                bot.taskManager.addLeaveTask(bot.jda, guild.id)
             }
             bot.taskManager.removeClearTask(guild.id)
         } else {

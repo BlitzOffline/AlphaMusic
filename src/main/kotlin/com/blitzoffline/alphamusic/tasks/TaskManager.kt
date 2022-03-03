@@ -4,7 +4,7 @@ import com.blitzoffline.alphamusic.audio.GuildMusicManager
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.schedule
-import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.JDA
 
 class TaskManager {
     private val clearTasks = hashMapOf<String, TimerTask>()
@@ -14,14 +14,15 @@ class TaskManager {
         return leaveTasks
     }
 
-    @Synchronized fun addLeaveTask(guild: Guild, delay: Long = 300000) {
-        if (leaveTasks[guild.id] != null) {
+    @Synchronized fun addLeaveTask(jda: JDA, guildId: String, delay: Long = 300000) {
+        if (leaveTasks[guildId] != null) {
             return
         }
 
-        leaveTasks[guild.id] = Timer().schedule(delay) {
+        leaveTasks[guildId] = Timer().schedule(delay) {
+            val guild = jda.guildCache.firstOrNull { it.id == guildId } ?: return@schedule
             guild.audioManager.closeAudioConnection()
-            removeLeaveTask(guild.id)
+            removeLeaveTask(guildId)
         }
     }
 

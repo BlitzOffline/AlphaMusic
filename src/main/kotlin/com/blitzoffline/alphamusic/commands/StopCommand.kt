@@ -36,7 +36,7 @@ class StopCommand(private val bot: AlphaMusic) : BaseCommand() {
             voteManager?.votes?.clear()
             musicManager.audioHandler.clear()
             musicManager.player.stopTrack()
-            bot.taskManager.addLeaveTask(guild)
+            bot.taskManager.addLeaveTask(bot.jda, guild.id)
             return event.terminate("Stopped the audio!")
         }
 
@@ -46,7 +46,7 @@ class StopCommand(private val bot: AlphaMusic) : BaseCommand() {
             voteManager?.votes?.clear()
             musicManager.audioHandler.clear()
             musicManager.player.stopTrack()
-            bot.taskManager.addLeaveTask(guild)
+            bot.taskManager.addLeaveTask(bot.jda, guild.id)
             return event.terminate("Stopped the audio!")
         }
 
@@ -64,7 +64,7 @@ class StopCommand(private val bot: AlphaMusic) : BaseCommand() {
             voteManager.votes.clear()
             musicManager.audioHandler.clear()
             musicManager.player.stopTrack()
-            bot.taskManager.addLeaveTask(guild)
+            bot.taskManager.addLeaveTask(bot.jda, guild.id)
             return event.terminate("Stopped the audio!")
         }
 

@@ -55,7 +55,7 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
         if (player.startTrack(queue.poll(), false)) {
             return bot.taskManager.removeLeaveTask(guildId)
         }
-        bot.taskManager.addLeaveTask(bot.jda.guilds.first { it.id == guildId })
+        bot.taskManager.addLeaveTask(bot.jda, guildId)
     }
 
     /**
@@ -190,7 +190,7 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
     }
 
     override fun onPlayerPause(player: AudioPlayer?) {
-        bot.taskManager.addLeaveTask(bot.jda.guilds.first { it.id == guildId })
+        bot.taskManager.addLeaveTask(bot.jda, guildId)
     }
 
     override fun onPlayerResume(player: AudioPlayer?) {
