@@ -11,6 +11,7 @@ import com.blitzoffline.alphamusic.commands.LeaveCommand
 import com.blitzoffline.alphamusic.commands.LoopCommand
 import com.blitzoffline.alphamusic.commands.NowPlayingCommand
 import com.blitzoffline.alphamusic.commands.PauseCommand
+import com.blitzoffline.alphamusic.commands.PingCommand
 import com.blitzoffline.alphamusic.commands.PlayCommand
 import com.blitzoffline.alphamusic.commands.QueueCommand
 import com.blitzoffline.alphamusic.commands.RadioCommand
@@ -160,6 +161,7 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
         bot.commandManager.registerCommand(
             HelpCommand(),
             PlayCommand(bot),
+            PingCommand(bot),
             LoopCommand(bot),
             QueueCommand(bot),
             NowPlayingCommand(bot),
