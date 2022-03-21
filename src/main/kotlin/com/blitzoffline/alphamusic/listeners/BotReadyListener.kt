@@ -3,7 +3,6 @@ package com.blitzoffline.alphamusic.listeners
 import com.blitzoffline.alphamusic.AlphaMusic
 import com.blitzoffline.alphamusic.audio.TrackMetadata
 import com.blitzoffline.alphamusic.commands.ClearCommand
-import com.blitzoffline.alphamusic.commands.DebugCommand
 import com.blitzoffline.alphamusic.commands.ForwardCommand
 import com.blitzoffline.alphamusic.commands.GrabCommand
 import com.blitzoffline.alphamusic.commands.HelpCommand
@@ -36,23 +35,30 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter
 
 class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
     override fun onReady(event: ReadyEvent) {
+        registerPagination()
+
+        registerRequirements()
+        registerMessages()
+        registerCommands()
+        //bot.jda.getGuildById("913414011587018782")?.let { bot.commandManager.registerCommand(it, DebugCommand(bot)) }
+    }
+
+    private fun registerPagination() {
         PaginatorBuilder.createPaginator()
             .setHandler(bot.jda)
             .shouldRemoveOnReact(false)
             .shouldEventLock(true)
             .setEmote(Emote.CANCEL, "✖️")
             .activate()
+    }
 
+    private fun registerRequirements() {
         bot.commandManager.registerRequirement(RequirementKey.of("command_in_guild")) { sender ->
             sender.guild != null && sender.member != null
         }
 
         bot.commandManager.registerRequirement(RequirementKey.of("bot_in_vc")) { sender ->
             sender.guild?.selfMember?.voiceState?.channel != null
-        }
-
-        bot.commandManager.registerRequirement(RequirementKey.of("bot_not_in_vc")) { sender ->
-            sender.guild?.selfMember?.voiceState?.channel == null
         }
 
         bot.commandManager.registerRequirement(RequirementKey.of("member_in_vc")) { sender ->
@@ -82,15 +88,6 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
             }
         }
 
-        bot.commandManager.registerRequirement(RequirementKey.of("not_paused")) { sender ->
-            val guild = sender.guild
-            if (guild == null) {
-                false
-            } else {
-                !bot.getMusicManager(guild).player.isPaused
-            }
-        }
-
         bot.commandManager.registerRequirement(RequirementKey.of("requester_or_admin")) { sender ->
             val guild = sender.guild
             if (guild == null) {
@@ -114,7 +111,9 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
                 }
             }
         }
+    }
 
+    private fun registerMessages() {
         bot.commandManager.registerMessage(MessageKey.of("command_not_in_guild", MessageContext::class.java)) { sender, _ ->
             sender.reply("This command can only be used in a guild!").queue()
         }
@@ -155,12 +154,9 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
 
             sender.reply("Only the requester or admins can do this. Requester: ${meta.data.name}#${meta.data.discriminator}").queue()
         }
-
-        registerCommands(bot)
-        bot.jda.getGuildById("913414011587018782")?.let { bot.commandManager.registerCommand(it, DebugCommand(bot)) }
     }
 
-    private fun registerCommands(bot: AlphaMusic) {
+    private fun registerCommands() {
         bot.commandManager.registerCommand(
             HelpCommand(),
             PlayCommand(bot),

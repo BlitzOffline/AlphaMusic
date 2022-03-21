@@ -15,7 +15,7 @@ class JoinCommand : BaseCommand() {
     @Default
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
-        Requirement("bot_not_in_vc", messageKey = "bot_already_in_vc"),
+        Requirement("bot_in_vc", messageKey = "bot_already_in_vc", invert = true),
         Requirement("member_in_vc", messageKey = "member_not_in_vc"),
     )
     fun SlashSender.join() {
