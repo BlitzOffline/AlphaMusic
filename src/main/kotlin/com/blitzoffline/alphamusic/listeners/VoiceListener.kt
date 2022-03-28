@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceSuppressEvent
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 
-class VoiceChannelListener(private val bot: AlphaMusic) : ListenerAdapter() {
+class VoiceListener(private val bot: AlphaMusic) : ListenerAdapter() {
     override fun onGuildVoiceMute(event: GuildVoiceMuteEvent) {
         if (event.member.id != bot.jda.selfUser.id) return
 

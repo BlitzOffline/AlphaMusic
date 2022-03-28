@@ -4,7 +4,7 @@ import com.blitzoffline.alphamusic.audio.GuildMusicManager
 import com.blitzoffline.alphamusic.audio.PlayerManager
 import com.blitzoffline.alphamusic.audio.TrackService
 import com.blitzoffline.alphamusic.listeners.BotReadyListener
-import com.blitzoffline.alphamusic.listeners.VoiceChannelListener
+import com.blitzoffline.alphamusic.listeners.VoiceListener
 import com.blitzoffline.alphamusic.tasks.TaskManager
 import dev.triumphteam.cmd.slash.SlashCommandManager
 import dev.triumphteam.cmd.slash.sender.SlashSender
@@ -53,7 +53,7 @@ class AlphaMusic(private val token: String, youtubeEmail: String?, youtubePass: 
         )
         .addEventListeners(
             BotReadyListener(this),
-            VoiceChannelListener(this)
+            VoiceListener(this)
         )
         .build()
 
