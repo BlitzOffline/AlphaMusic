@@ -24,12 +24,12 @@ class RemoveDupesCommand(private val bot: AlphaMusic) : BaseCommand() {
         val musicManager = bot.getMusicManager(guild)
 
         if (musicManager.audioHandler.size() == 0) {
-            return event.terminate("There are no song queued currently!")
+            return event.terminate(reason = "There are no song queued currently!", ephemeral = true)
         }
 
         when(musicManager.audioHandler.removeDupes()) {
-            0 -> event.terminate("No dupes found!")
-            else -> event.terminate("Successfully removed all duplicates!")
+            0 -> event.terminate(reason = "No dupes found!", ephemeral = true)
+            else -> event.terminate(reason = "Successfully removed all duplicates!")
         }
     }
 }

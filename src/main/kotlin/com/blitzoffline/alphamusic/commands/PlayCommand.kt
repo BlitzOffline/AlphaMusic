@@ -24,18 +24,18 @@ class PlayCommand(private val bot: AlphaMusic) : BaseCommand() {
         val memberChannel = member.voiceState?.channel
 
         if (guild.selfMember.voiceState?.channel == null && memberChannel == null) {
-            return event.terminate("You need to be in a voice channel!")
+            return event.terminate(reason = "You need to be in a voice channel!", ephemeral = true)
         }
 
         if (guild.selfMember.voiceState?.channel != null && memberChannel != guild.selfMember.voiceState?.channel && !member.hasPermission(Permission.ADMINISTRATOR)) {
-            return event.terminate("You need to be in the same Voice Channel as the bot to do this!")
+            return event.terminate(reason = "You need to be in the same Voice Channel as the bot to do this!", ephemeral = true)
         }
 
         event.deferReply().queue()
 
         if (guild.selfMember.voiceState?.channel == null
             && kotlin.runCatching { guild.audioManager.openAudioConnection(memberChannel) }.isFailure) {
-            return event.terminate("Could not connect to your voice channel!", deferred = true)
+            return event.terminate(reason = "Could not connect to your voice channel!", ephemeral = true, deferred = true)
         }
 
         bot.trackService.loadTrack(identifier, guild, event, isRadio = bot.getMusicManager(guild).audioHandler.radio, deferred = true)

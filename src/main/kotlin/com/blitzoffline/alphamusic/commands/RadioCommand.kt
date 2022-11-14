@@ -32,9 +32,9 @@ class RadioCommand(private val bot: AlphaMusic) : BaseCommand() {
             voteManager?.votes?.clear()
             musicManager.audioHandler.toggleRadio()
             return if (musicManager.audioHandler.radio) {
-                event.terminate("Radio mode has been enabled!")
+                event.terminate(reason = "Radio mode has been enabled!")
             } else {
-                event.terminate("Radio mode has been disabled!")
+                event.terminate(reason = "Radio mode has been disabled!")
             }
         }
 
@@ -44,18 +44,18 @@ class RadioCommand(private val bot: AlphaMusic) : BaseCommand() {
             voteManager?.votes?.clear()
             musicManager.audioHandler.toggleRadio()
             return if (musicManager.audioHandler.radio) {
-                event.terminate("Radio mode has been enabled!")
+                event.terminate(reason = "Radio mode has been enabled!")
             } else {
-                event.terminate("Radio mode has been disabled!")
+                event.terminate(reason = "Radio mode has been disabled!")
             }
         }
 
         if (voteManager == null) {
-            return event.terminate("Could not process your vote!")
+            return event.terminate(reason = "Could not process your vote!", ephemeral = true)
         }
 
         if (voteManager.votes.contains(member.id)) {
-            return event.terminate("You have already voted!")
+            return event.terminate(reason = "You have already voted!", ephemeral = true)
         }
 
         val required = voteManager.getRequiredVotes(participants.size)
@@ -64,13 +64,13 @@ class RadioCommand(private val bot: AlphaMusic) : BaseCommand() {
             voteManager.votes.clear()
             musicManager.audioHandler.toggleRadio()
             return if (musicManager.audioHandler.radio) {
-                event.terminate("Radio mode has been enabled!")
+                event.terminate(reason = "Radio mode has been enabled!")
             } else {
-                event.terminate("Radio mode has been disabled!")
+                event.terminate(reason = "Radio mode has been disabled!")
             }
         }
 
         voteManager.votes.add(member.id)
-        return event.terminate("Added vote for the radio to be toggled. Total votes: ${voteManager.votes.size}/$required!")
+        return event.terminate(reason = "Added vote for the radio to be toggled. Total votes: ${voteManager.votes.size}/$required!")
     }
 }

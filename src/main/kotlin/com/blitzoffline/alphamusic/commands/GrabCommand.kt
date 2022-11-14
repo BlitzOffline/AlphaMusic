@@ -25,16 +25,16 @@ class GrabCommand(private val bot: AlphaMusic) : BaseCommand() {
         val guild = guild ?: return
         val musicManager = bot.getMusicManager(guild)
         val playing = musicManager.player.playingTrack.asEmbedNullable(icon = user.avatarUrl, showTimestamp = false)
-            ?: return event.terminate("There is no song playing currently!", deferred = true)
+            ?: return event.terminate(reason = "There is no song playing currently!", ephemeral = true, deferred = true)
 
         event.user.openPrivateChannel()
             .flatMap { it.sendMessageEmbeds(playing) }
             .queue(
                 {
-                    event.terminate("Check your DMs! Currently playing song was listed there.", deferred = true)
+                    event.terminate("Check your DMs! Currently playing song was listed there.", ephemeral = true, deferred = true)
                 }
             ) {
-                event.terminate("Something went wrong while grabbing. Make sure your DMs are not closed!", deferred = true)
+                event.terminate("Something went wrong while grabbing. Make sure your DMs are not closed!", ephemeral = true, deferred = true)
             }
     }
 }

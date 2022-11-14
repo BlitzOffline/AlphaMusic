@@ -30,7 +30,7 @@ class LeaveCommand(private val bot: AlphaMusic) : BaseCommand() {
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
             voteManager?.votes?.clear()
             guild.audioManager.closeAudioConnection()
-            return event.terminate("Left the voice channel!")
+            return event.terminate(reason = "Left the voice channel!")
         }
 
         val participants = guild.selfMember.voiceState?.channel?.members ?: return
@@ -38,15 +38,15 @@ class LeaveCommand(private val bot: AlphaMusic) : BaseCommand() {
         if (participants.size <= 2) {
             voteManager?.votes?.clear()
             guild.audioManager.closeAudioConnection()
-            return event.terminate("Left the voice channel!")
+            return event.terminate(reason = "Left the voice channel!")
         }
 
         if (voteManager == null) {
-            return event.terminate("Could not process your vote!")
+            return event.terminate(reason = "Could not process your vote!", ephemeral = true)
         }
 
         if (voteManager.votes.contains(member.id)) {
-            return event.terminate("You have already voted!")
+            return event.terminate(reason = "You have already voted!", ephemeral = true)
         }
 
         val required = voteManager.getRequiredVotes(participants.size)
@@ -54,11 +54,11 @@ class LeaveCommand(private val bot: AlphaMusic) : BaseCommand() {
         if (voteManager.votes.size + 1 == required) {
             voteManager.votes.clear()
             guild.audioManager.closeAudioConnection()
-            return event.terminate("Left the voice channel!")
+            return event.terminate(reason = "Left the voice channel!")
         }
 
         voteManager.votes.add(member.id)
-        return event.terminate("Added vote for the bot to leave. Total votes: ${voteManager.votes.size}/$required!")
+        return event.terminate(reason = "Added vote for the bot to leave. Total votes: ${voteManager.votes.size}/$required!")
 
     }
 }

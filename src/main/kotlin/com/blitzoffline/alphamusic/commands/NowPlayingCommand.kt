@@ -24,7 +24,7 @@ class NowPlayingCommand(private val bot: AlphaMusic) : BaseCommand() {
         val guild = guild ?: return
         val musicManager = bot.getMusicManager(guild)
         val playing = musicManager.player.playingTrack.asEmbedNullable(icon = user.avatarUrl, showTimestamp = true)
-            ?: return event.terminate("There is no song playing currently!", deferred = true)
+            ?: return event.terminate(reason = "There is no song playing currently!", deferred = true)
 
         event.terminate(playing, deferred = true)
     }

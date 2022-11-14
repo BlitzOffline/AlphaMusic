@@ -31,9 +31,9 @@ class LoopCommand(private val bot: AlphaMusic) : BaseCommand() {
             voteManager?.votes?.clear()
             musicManager.audioHandler.loop = !musicManager.audioHandler.loop
             return if (musicManager.audioHandler.loop) {
-                event.terminate("The song will now be looped!")
+                event.terminate(reason = "The song will now be looped!")
             } else {
-                event.terminate("The song will no longer be looped!")
+                event.terminate(reason = "The song will no longer be looped!")
             }
         }
 
@@ -43,18 +43,18 @@ class LoopCommand(private val bot: AlphaMusic) : BaseCommand() {
             voteManager?.votes?.clear()
             musicManager.audioHandler.loop = !musicManager.audioHandler.loop
             return if (musicManager.audioHandler.loop) {
-                event.terminate("The song will now be looped!")
+                event.terminate(reason = "The song will now be looped!")
             } else {
-                event.terminate("The song will no longer be looped!")
+                event.terminate(reason = "The song will no longer be looped!")
             }
         }
 
         if (voteManager == null) {
-            return event.terminate("Could not process your vote!")
+            return event.terminate(reason = "Could not process your vote!", ephemeral = true)
         }
 
         if (voteManager.votes.contains(member.id)) {
-            return event.terminate("You have already voted!")
+            return event.terminate(reason = "You have already voted!", ephemeral = true)
         }
 
         val required = voteManager.getRequiredVotes(participants.size)
@@ -63,13 +63,13 @@ class LoopCommand(private val bot: AlphaMusic) : BaseCommand() {
             voteManager.votes.clear()
             musicManager.audioHandler.loop = !musicManager.audioHandler.loop
             return if (musicManager.audioHandler.loop) {
-                event.terminate("The song will now be looped!")
+                event.terminate(reason = "The song will now be looped!")
             } else {
-                event.terminate("The song will no longer be looped!")
+                event.terminate(reason = "The song will no longer be looped!")
             }
         }
 
         voteManager.votes.add(member.id)
-        return event.terminate("Added vote for the loop to be toggled. Total votes: ${voteManager.votes.size}/$required!")
+        return event.terminate(reason = "Added vote for the loop to be toggled. Total votes: ${voteManager.votes.size}/$required!")
     }
 }

@@ -27,7 +27,7 @@ class ReplayCommand(private val bot: AlphaMusic) : BaseCommand() {
         val musicManager = bot.getMusicManager(guild)
 
         if (musicManager.player.playingTrack == null) {
-            return event.terminate("There is no song currently playing to be replayed!")
+            return event.terminate(reason = "There is no song currently playing to be replayed!", ephemeral = true)
         }
 
         val voteManager = musicManager.voteManager.getVoteManager(VoteType.REPLAY)
@@ -36,9 +36,9 @@ class ReplayCommand(private val bot: AlphaMusic) : BaseCommand() {
             voteManager?.votes?.clear()
             musicManager.audioHandler.replay = !musicManager.audioHandler.replay
             return if (musicManager.audioHandler.replay) {
-                event.terminate("Currently playing song marked to be replayed!")
+                event.terminate(reason = "Currently playing song marked to be replayed!")
             } else {
-                event.terminate("Currently playing song marked to no longer be replayed!")
+                event.terminate(reason = "Currently playing song marked to no longer be replayed!")
             }
         }
 
@@ -47,18 +47,18 @@ class ReplayCommand(private val bot: AlphaMusic) : BaseCommand() {
             voteManager?.votes?.clear()
             musicManager.audioHandler.replay = !musicManager.audioHandler.replay
             return if (musicManager.audioHandler.replay) {
-                event.terminate("Currently playing song marked to be replayed!")
+                event.terminate(reason = "Currently playing song marked to be replayed!")
             } else {
-                event.terminate("Currently playing song marked to no longer be replayed!")
+                event.terminate(reason = "Currently playing song marked to no longer be replayed!")
             }
         }
 
         if (voteManager == null) {
-            return event.terminate("Could not process your vote!")
+            return event.terminate(reason = "Could not process your vote!", ephemeral = true)
         }
 
         if (voteManager.votes.contains(member.id)) {
-            return event.terminate("You have already voted!")
+            return event.terminate(reason = "You have already voted!", ephemeral = true)
         }
 
         val required = voteManager.getRequiredVotes(participants.size)
@@ -67,13 +67,13 @@ class ReplayCommand(private val bot: AlphaMusic) : BaseCommand() {
             voteManager.votes.clear()
             musicManager.audioHandler.replay = !musicManager.audioHandler.replay
             return if (musicManager.audioHandler.replay) {
-                event.terminate("Currently playing song marked to be replayed!")
+                event.terminate(reason = "Currently playing song marked to be replayed!")
             } else {
-                event.terminate("Currently playing song marked to no longer be replayed!")
+                event.terminate(reason = "Currently playing song marked to no longer be replayed!")
             }
         }
 
         voteManager.votes.add(member.id)
-        event.terminate("Added vote for the current song to be replayed. Total votes: ${voteManager.votes.size}/$required!")
+        event.terminate(reason = "Added vote for the current song to be replayed. Total votes: ${voteManager.votes.size}/$required!")
     }
 }

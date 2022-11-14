@@ -21,24 +21,24 @@ class RemoveCommand(private val bot: AlphaMusic) : BaseCommand() {
     )
     fun SlashSender.remove(@Description("Amount of songs you want to remove. Starts from the first one in the queue!") amount: Int) {
         if (amount <= 0) {
-            return event.terminate("The amount needs to be greater than 0!")
+            return event.terminate(reason = "The amount needs to be greater than 0!", ephemeral = true)
         }
 
         val guild = guild ?: return
         val musicManager = bot.getMusicManager(guild)
 
         if (musicManager.audioHandler.size() == 0) {
-            return event.terminate("The queue is empty!")
+            return event.terminate(reason = "The queue is empty!", ephemeral = true)
         }
 
         if (amount >= musicManager.audioHandler.size()) {
             val removed = musicManager.audioHandler.clear()
-            return event.terminate("Removed all $removed songs from the queue!")
+            return event.terminate(reason = "Removed all $removed songs from the queue!")
         }
 
         repeat(amount) {
             musicManager.audioHandler.removeNext()
         }
-        event.terminate("Removed $amount songs from the queue. ${musicManager.audioHandler.size()} songs left.")
+        event.terminate(reason = "Removed $amount songs from the queue. ${musicManager.audioHandler.size()} songs left.")
     }
 }

@@ -24,9 +24,9 @@ class JoinCommand : BaseCommand() {
         val memberVC = member.voiceState?.channel ?: return
 
         if (kotlin.runCatching { guild.audioManager.openAudioConnection(memberVC) }.isFailure) {
-            return event.terminate("Could not connect to your voice channel!")
+            return event.terminate(reason = "Could not connect to your voice channel!", ephemeral = true)
         }
 
-        event.terminate("Joined your voice channel successfully!")
+        event.terminate(reason = "Joined your voice channel successfully!")
     }
 }

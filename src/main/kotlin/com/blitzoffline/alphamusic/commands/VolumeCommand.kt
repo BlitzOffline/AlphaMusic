@@ -25,14 +25,14 @@ class VolumeCommand(private val bot: AlphaMusic) : BaseCommand() {
         val musicManager = bot.getMusicManager(guild)
 
         if (volume == null) {
-            return event.terminate("Volume is: ${musicManager.player.volume}")
+            return event.terminate(reason = "Volume is: ${musicManager.player.volume}", ephemeral = true)
         }
 
         if (volume > 150 || volume < 0) {
-            return event.terminate("Volume needs to be a value between 0 and 150!")
+            return event.terminate(reason = "Volume needs to be a value between 0 and 150!", ephemeral = true)
         }
 
         musicManager.player.volume = volume
-        event.terminate("Volume set to: $volume!")
+        event.terminate(reason = "Volume set to: $volume!")
     }
 }
