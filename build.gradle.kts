@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("jvm") version "1.6.10"
+    kotlin("jvm") version "1.7.21"
     id("application")
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
@@ -22,10 +22,10 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.10")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.21")
     implementation("commons-cli:commons-cli:1.5.0")
-    implementation("org.slf4j:slf4j-log4j12:1.7.36")
-    implementation("net.dv8tion:JDA:5.0.0-alpha.9") {
+    implementation("org.slf4j:slf4j-log4j12:2.0.3")
+    implementation("net.dv8tion:JDA:5.0.0-alpha.18") {
         exclude(module = "opus-java")
     }
     implementation("com.github.walkyst:lavaplayer-fork:custom-SNAPSHOT")

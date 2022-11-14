@@ -8,34 +8,34 @@ class StartupParametersParser(args: Array<String>) {
     private val cli = DefaultParser().parse(
         Options().apply {
             addOption(
-                Option.builder("discord-bot-token").hasArg().argName("discord-bot-token").required(true).build()
+                Option.builder("discord_bot_token").hasArg().argName("discord_bot_token").required(true).build()
             )
             addOption(
-                Option.builder("youtube-email").hasArg().argName("youtube-email").required(false).build()
+                Option.builder("youtube_email").hasArg().argName("youtube_email").required(false).build()
             )
             addOption(
-                Option.builder("youtube-password").hasArg().argName("youtube-pass").required(false).build()
+                Option.builder("youtube_password").hasArg().argName("youtube_pass").required(false).build()
             )
             addOption(
-                Option.builder("spotify-api-token").hasArg().argName("spotify-api-token").required(false).build()
+                Option.builder("spotify_api_token").hasArg().argName("spotify_api_token").required(false).build()
             )
         },
         args
     )
 
     fun parseDiscordBotToken(): String {
-        return cli.getOptionValue("discord-bot-token")
+        return cli.getOptionValue("discord_bot_token")
     }
 
     fun parseYoutubeEmail(): String? {
-        return cli.getOptionValue("youtube-email")
+        return cli.getOptionValue("youtube_email")
     }
 
     fun parseYoutubePassword(): String? {
-        return cli.getOptionValue("youtube-pass")
+        return cli.getOptionValue("youtube_pass")
     }
 
     fun parseSpotifyAPIToken(): String? {
-        return cli.getOptionValue("spotify-api-token")
+        return cli.getOptionValue("spotify_api_token")
     }
 }
