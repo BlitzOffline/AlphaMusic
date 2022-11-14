@@ -25,6 +25,7 @@ import com.blitzoffline.alphamusic.commands.ShuffleCommand
 import com.blitzoffline.alphamusic.commands.SkipCommand
 import com.blitzoffline.alphamusic.commands.StopCommand
 import com.blitzoffline.alphamusic.commands.VolumeCommand
+import com.blitzoffline.alphamusic.utils.terminate
 import com.github.ygimenez.model.PaginatorBuilder
 import com.github.ygimenez.type.Emote
 import dev.triumphteam.cmd.core.message.MessageKey
@@ -116,35 +117,35 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
 
     private fun registerMessages() {
         bot.commandManager.registerMessage(MessageKey.of("command_not_in_guild", MessageContext::class.java)) { sender, _ ->
-            sender.reply("This command can only be used in a guild!").queue()
+            sender.event.terminate(reason = "This command can only be used in a guild!", ephemeral = true)
         }
 
         bot.commandManager.registerMessage(MessageKey.of("bot_not_in_vc", MessageContext::class.java)) { sender, _ ->
-            sender.reply("The bot is currently not connected to a voice channel!").queue()
+            sender.event.terminate("The bot is currently not connected to a voice channel!", ephemeral = true)
         }
 
         bot.commandManager.registerMessage(MessageKey.of("bot_already_in_vc", MessageContext::class.java)) { sender, _ ->
-            sender.reply("The bot is already connected to a voice channel!").queue()
+            sender.event.terminate(reason = "The bot is already connected to a voice channel!", ephemeral = true)
         }
 
         bot.commandManager.registerMessage(MessageKey.of("member_not_in_vc", MessageContext::class.java)) { sender, _ ->
-            sender.reply("You need to be connected to a voice channel!").queue()
+            sender.event.terminate(reason = "You need to be connected to a voice channel!", ephemeral = true)
         }
 
         bot.commandManager.registerMessage(MessageKey.of("not_same_channel_or_admin", MessageContext::class.java)) { sender, _ ->
-            sender.reply("You need to be in the same Voice Channel as the bot to do this!").queue()
+            sender.event.terminate(reason = "You need to be in the same Voice Channel as the bot to do this!", ephemeral = true)
         }
 
         bot.commandManager.registerMessage(MessageKey.of("not_admin", MessageContext::class.java)) { sender, _ ->
-            sender.reply("You can't do this!").queue()
+            sender.event.terminate(reason = "You can't do this!", ephemeral = true)
         }
 
         bot.commandManager.registerMessage(MessageKey.of("not_paused", MessageContext::class.java)) { sender, _ ->
-            sender.reply("The audio is not paused. Use \"/pause\" to pause!").queue()
+            sender.event.terminate(reason = "The audio is not paused. Use \"/pause\" to pause!", ephemeral = true)
         }
 
         bot.commandManager.registerMessage(MessageKey.of("paused", MessageContext::class.java)) { sender, _ ->
-            sender.reply("The audio is already paused. Use \"/resume\" to resume!").queue()
+            sender.event.terminate(reason = "The audio is already paused. Use \"/resume\" to resume!", ephemeral = true)
         }
 
         bot.commandManager.registerMessage(MessageKey.of("not_requester_or_admin", MessageContext::class.java)) { sender, _ ->
@@ -153,7 +154,10 @@ class BotReadyListener(private val bot: AlphaMusic) : ListenerAdapter() {
             val playing = manager.player.playingTrack ?: return@registerMessage
             val meta = playing.userData as TrackMetadata
 
-            sender.reply("Only the requester or admins can do this. Requester: ${meta.data.name}#${meta.data.discriminator}").queue()
+            sender.event.terminate(
+                reason = "Only the requester or admins can do this. Requester: ${meta.data.name}#${meta.data.discriminator}",
+                ephemeral = true
+            )
         }
     }
 
