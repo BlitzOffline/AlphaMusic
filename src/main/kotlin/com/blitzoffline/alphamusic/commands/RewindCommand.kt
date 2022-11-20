@@ -29,19 +29,19 @@ class RewindCommand(private val bot: AlphaMusic) : BaseCommand() {
         @Description("Amount of hours to rewind by!") @Optional hours: Int?
     ) {
         if (minutes != null && minutes < 0) {
-            return event.terminate("Minutes can not be < 0!")
+            return event.terminate(reason = "Minutes can not be < 0!", ephemeral = true)
         }
 
         if (hours != null && hours < 0) {
-            return event.terminate("Hours can not be < 0!")
+            return event.terminate(reason = "Hours can not be < 0!", ephemeral = true)
         }
 
         if (seconds < 0) {
-            return event.terminate("Seconds can not be < 0!")
+            return event.terminate(reason = "Seconds can not be < 0!", ephemeral = true)
         }
 
         if (seconds == 0 && ((minutes == null || minutes == 0) && (hours == null || hours == 0))) {
-            return event.terminate("Seconds can not be 0 when hours and minutes are 0!")
+            return event.terminate(reason = "Seconds can not be 0 when hours and minutes are 0!", ephemeral = true)
         }
 
         val guild = guild ?: return
@@ -49,12 +49,15 @@ class RewindCommand(private val bot: AlphaMusic) : BaseCommand() {
         val musicManager = bot.getMusicManager(guild)
 
         val playing = musicManager.player.playingTrack
-            ?: return event.terminate("There is no song playing currently!")
+            ?: return event.terminate(reason = "There is no song playing currently!", ephemeral = true)
 
         val meta = playing.userData as TrackMetadata
         val channel = guild.selfMember.voiceState?.channel ?: return
         if (!member.hasPermission(Permission.ADMINISTRATOR) && meta.data.id != member.id && channel.members.size > 2) {
-            return event.terminate("Only the requester of the song can do this. Requester: ${meta.data.name}#${meta.data.discriminator}")
+            return event.terminate(
+                reason = "Only the requester of the song can do this. Requester: ${meta.data.name}#${meta.data.discriminator}",
+                ephemeral = true
+            )
         }
 
         var total = seconds.toLong()
@@ -70,6 +73,6 @@ class RewindCommand(private val bot: AlphaMusic) : BaseCommand() {
         total *= 1000
 
         playing.position = playing.position - total
-        event.terminate("Rewound song to: ${formatHMS(Duration.ofMillis(playing.position))}!")
+        event.terminate(reason = "Rewound song to: ${formatHMS(Duration.ofMillis(playing.position))}!")
     }
 }

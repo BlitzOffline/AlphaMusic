@@ -26,6 +26,6 @@ class ResumeCommand(private val bot: AlphaMusic) : BaseCommand() {
         val musicManager = bot.getMusicManager(guild)
 
         musicManager.player.isPaused = false
-        event.terminate("Resumed the audio!")
+        event.terminate(reason = "Resumed the audio!")
     }
 }

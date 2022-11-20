@@ -27,7 +27,7 @@ class StopCommand(private val bot: AlphaMusic) : BaseCommand() {
         val musicManager = bot.getMusicManager(guild)
 
         if (musicManager.player.playingTrack == null && musicManager.audioHandler.size() == 0) {
-            return event.terminate("The bot is not playing any audio!")
+            return event.terminate(reason = "The bot is not playing any audio!", ephemeral = true)
         }
 
         val voteManager = musicManager.voteManager.getVoteManager(VoteType.CLEAR)
@@ -37,7 +37,7 @@ class StopCommand(private val bot: AlphaMusic) : BaseCommand() {
             musicManager.audioHandler.clear()
             musicManager.player.stopTrack()
             bot.taskManager.addLeaveTask(bot.jda, guild.id)
-            return event.terminate("Stopped the audio!")
+            return event.terminate(reason = "Stopped the audio!")
         }
 
         val participants = guild.selfMember.voiceState?.channel?.members ?: return
@@ -47,15 +47,15 @@ class StopCommand(private val bot: AlphaMusic) : BaseCommand() {
             musicManager.audioHandler.clear()
             musicManager.player.stopTrack()
             bot.taskManager.addLeaveTask(bot.jda, guild.id)
-            return event.terminate("Stopped the audio!")
+            return event.terminate(reason = "Stopped the audio!")
         }
 
         if (voteManager == null) {
-            return event.terminate("Could not process your vote!")
+            return event.terminate(reason = "Could not process your vote!", ephemeral = true)
         }
 
         if (voteManager.votes.contains(member.id)) {
-            return event.terminate("You have already voted!")
+            return event.terminate(reason = "You have already voted!", ephemeral = true)
         }
 
         val required = voteManager.getRequiredVotes(participants.size)
@@ -65,10 +65,10 @@ class StopCommand(private val bot: AlphaMusic) : BaseCommand() {
             musicManager.audioHandler.clear()
             musicManager.player.stopTrack()
             bot.taskManager.addLeaveTask(bot.jda, guild.id)
-            return event.terminate("Stopped the audio!")
+            return event.terminate(reason = "Stopped the audio!")
         }
 
         voteManager.votes.add(member.id)
-        return event.terminate("Added vote for the bot to be stopped. Total votes: ${voteManager.votes.size}/$required!")
+        return event.terminate(reason = "Added vote for the bot to be stopped. Total votes: ${voteManager.votes.size}/$required!")
     }
 }

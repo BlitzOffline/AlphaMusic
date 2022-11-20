@@ -25,14 +25,14 @@ class SkipCommand(private val bot: AlphaMusic) : BaseCommand() {
         val guild = guild ?: return
         val member = member ?: return
         val musicManager = bot.getMusicManager(guild)
-        musicManager.player.playingTrack ?: return event.terminate("There is no song playing currently!")
+        musicManager.player.playingTrack ?: return event.terminate(reason = "There is no song playing currently!", ephemeral = true)
 
         val voteManager = musicManager.voteManager.getVoteManager(VoteType.SKIP)
 
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
             voteManager?.votes?.clear()
             musicManager.audioHandler.skip()
-            return event.terminate("Skipped currently playing song!")
+            return event.terminate(reason = "Skipped currently playing song!")
         }
 
         val participants = guild.selfMember.voiceState?.channel?.members ?: return
@@ -40,15 +40,15 @@ class SkipCommand(private val bot: AlphaMusic) : BaseCommand() {
         if (participants.size <= 2) {
             voteManager?.votes?.clear()
             musicManager.audioHandler.skip()
-            return event.terminate("Skipped currently playing song!")
+            return event.terminate(reason = "Skipped currently playing song!")
         }
 
         if (voteManager == null) {
-            return event.terminate("Could not process your vote!")
+            return event.terminate(reason = "Could not process your vote!", ephemeral = true)
         }
 
         if (voteManager.votes.contains(member.id)) {
-            return event.terminate("You have already voted!")
+            return event.terminate(reason = "You have already voted!", ephemeral = true)
         }
 
         val required = voteManager.getRequiredVotes(participants.size)
@@ -56,10 +56,10 @@ class SkipCommand(private val bot: AlphaMusic) : BaseCommand() {
         if (voteManager.votes.size + 1 == required) {
             voteManager.votes.clear()
             musicManager.audioHandler.skip()
-            return event.terminate("Skipped currently playing song!")
+            return event.terminate(reason = "Skipped currently playing song!")
         }
 
         voteManager.votes.add(member.id)
-        return event.terminate("Added vote for the song to be skipped. Total votes: ${voteManager.votes.size}/$required!")
+        return event.terminate(reason = "Added vote for the song to be skipped. Total votes: ${voteManager.votes.size}/$required!")
     }
 }
