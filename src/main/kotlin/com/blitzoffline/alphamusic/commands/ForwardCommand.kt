@@ -4,26 +4,20 @@ import com.blitzoffline.alphamusic.AlphaMusic
 import com.blitzoffline.alphamusic.audio.TrackMetadata
 import com.blitzoffline.alphamusic.utils.formatHMS
 import com.blitzoffline.alphamusic.utils.terminate
-import dev.triumphteam.cmd.core.BaseCommand
-import dev.triumphteam.cmd.core.annotation.Command
-import dev.triumphteam.cmd.core.annotation.Default
-import dev.triumphteam.cmd.core.annotation.Description
-import dev.triumphteam.cmd.core.annotation.Optional
-import dev.triumphteam.cmd.core.annotation.Requirement
-import dev.triumphteam.cmd.core.annotation.Requirements
-import dev.triumphteam.cmd.slash.sender.SlashSender
+import dev.triumphteam.cmd.core.annotations.*
+import dev.triumphteam.cmd.jda.sender.SlashCommandSender
 import java.time.Duration
 import net.dv8tion.jda.api.Permission
 
 @Command("forward")
 @Description("Forward the currently playing song by a certain amount of time!")
-class ForwardCommand(private val bot: AlphaMusic) : BaseCommand() {
-    @Default
+class ForwardCommand(private val bot: AlphaMusic) {
+    @Command
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
         Requirement("bot_in_vc", messageKey = "bot_not_in_vc"),
     )
-    fun SlashSender.forward(
+    fun SlashCommandSender.forward(
         @Description("Amount of seconds to forward by!") seconds: Int,
         @Description("Amount of minutes to forward by!") @Optional minutes: Int?,
         @Description("Amount of hours to forward by!") @Optional hours: Int?

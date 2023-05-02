@@ -2,24 +2,22 @@ package com.blitzoffline.alphamusic.commands
 
 import com.blitzoffline.alphamusic.AlphaMusic
 import com.blitzoffline.alphamusic.utils.terminate
-import dev.triumphteam.cmd.core.BaseCommand
-import dev.triumphteam.cmd.core.annotation.Command
-import dev.triumphteam.cmd.core.annotation.Default
-import dev.triumphteam.cmd.core.annotation.Description
-import dev.triumphteam.cmd.core.annotation.Requirement
-import dev.triumphteam.cmd.core.annotation.Requirements
-import dev.triumphteam.cmd.slash.sender.SlashSender
+import dev.triumphteam.cmd.core.annotations.Command
+import dev.triumphteam.cmd.core.annotations.Description
+import dev.triumphteam.cmd.core.annotations.Requirement
+import dev.triumphteam.cmd.core.annotations.Requirements
+import dev.triumphteam.cmd.jda.sender.SlashCommandSender
 
 @Command("remove")
 @Description("Remove songs from the queue!")
-class RemoveCommand(private val bot: AlphaMusic) : BaseCommand() {
-    @Default
+class RemoveCommand(private val bot: AlphaMusic) {
+    @Command
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
         Requirement("bot_in_vc", messageKey = "bot_not_in_vc"),
         Requirement("admin", messageKey = "not_admin"),
     )
-    fun SlashSender.remove(@Description("Amount of songs you want to remove. Starts from the first one in the queue!") amount: Int) {
+    fun SlashCommandSender.remove(@Description("Amount of songs you want to remove. Starts from the first one in the queue!") amount: Int) {
         if (amount <= 0) {
             return event.terminate(reason = "The amount needs to be greater than 0!", ephemeral = true)
         }

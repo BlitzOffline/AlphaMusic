@@ -7,26 +7,24 @@ import com.blitzoffline.alphamusic.utils.terminate
 import com.github.ygimenez.method.Pages
 import com.github.ygimenez.model.InteractPage
 import com.github.ygimenez.model.Page
-import dev.triumphteam.cmd.core.BaseCommand
-import dev.triumphteam.cmd.core.annotation.Command
-import dev.triumphteam.cmd.core.annotation.Default
-import dev.triumphteam.cmd.core.annotation.Description
-import dev.triumphteam.cmd.core.annotation.Requirement
-import dev.triumphteam.cmd.core.annotation.Requirements
-import dev.triumphteam.cmd.slash.sender.SlashSender
+import dev.triumphteam.cmd.core.annotations.Command
+import dev.triumphteam.cmd.core.annotations.Description
+import dev.triumphteam.cmd.core.annotations.Requirement
+import dev.triumphteam.cmd.core.annotations.Requirements
+import dev.triumphteam.cmd.jda.sender.SlashCommandSender
 import java.time.Duration
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
 
 @Command("queue")
 @Description("List all the songs that are currently queued!")
-class QueueCommand(private val bot: AlphaMusic) : BaseCommand() {
-    @Default
+class QueueCommand(private val bot: AlphaMusic) {
+    @Command
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
         Requirement("bot_in_vc", messageKey = "bot_not_in_vc"),
     )
-    fun SlashSender.queue() {
+    fun SlashCommandSender.queue() {
         event.deferReply().queue()
 
         val guild = guild ?: return

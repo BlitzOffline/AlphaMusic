@@ -1,24 +1,22 @@
 package com.blitzoffline.alphamusic.commands
 
 import com.blitzoffline.alphamusic.utils.terminate
-import dev.triumphteam.cmd.core.BaseCommand
-import dev.triumphteam.cmd.core.annotation.Command
-import dev.triumphteam.cmd.core.annotation.Default
-import dev.triumphteam.cmd.core.annotation.Description
-import dev.triumphteam.cmd.core.annotation.Requirement
-import dev.triumphteam.cmd.core.annotation.Requirements
-import dev.triumphteam.cmd.slash.sender.SlashSender
+import dev.triumphteam.cmd.core.annotations.Command
+import dev.triumphteam.cmd.core.annotations.Description
+import dev.triumphteam.cmd.core.annotations.Requirement
+import dev.triumphteam.cmd.core.annotations.Requirements
+import dev.triumphteam.cmd.jda.sender.SlashCommandSender
 
 @Command("join")
 @Description("Make the bot join your voice channel!")
-class JoinCommand : BaseCommand() {
-    @Default
+class JoinCommand {
+    @Command
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
         Requirement("bot_in_vc", messageKey = "bot_already_in_vc", invert = true),
         Requirement("member_in_vc", messageKey = "member_not_in_vc"),
     )
-    fun SlashSender.join() {
+    fun SlashCommandSender.join() {
         val guild = guild ?: return
         val member = member ?: return
         val memberVC = member.voiceState?.channel ?: return

@@ -2,10 +2,10 @@ package com.blitzoffline.alphamusic.listeners
 
 import com.blitzoffline.alphamusic.AlphaMusic
 import com.blitzoffline.alphamusic.votes.VoteType
-import net.dv8tion.jda.api.entities.AudioChannel
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.GuildVoiceState
 import net.dv8tion.jda.api.entities.Member
+import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMuteEvent
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceSuppressEvent
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent

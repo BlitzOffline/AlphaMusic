@@ -6,8 +6,8 @@ import com.blitzoffline.alphamusic.audio.TrackService
 import com.blitzoffline.alphamusic.listeners.BotReadyListener
 import com.blitzoffline.alphamusic.listeners.VoiceListener
 import com.blitzoffline.alphamusic.tasks.TaskManager
-import dev.triumphteam.cmd.slash.SlashCommandManager
-import dev.triumphteam.cmd.slash.sender.SlashSender
+import dev.triumphteam.cmd.jda.SlashCommandManager
+import dev.triumphteam.cmd.jda.sender.SlashSender
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.entities.Guild

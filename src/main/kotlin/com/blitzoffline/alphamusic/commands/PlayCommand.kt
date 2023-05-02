@@ -2,23 +2,21 @@ package com.blitzoffline.alphamusic.commands
 
 import com.blitzoffline.alphamusic.AlphaMusic
 import com.blitzoffline.alphamusic.utils.terminate
-import dev.triumphteam.cmd.core.BaseCommand
-import dev.triumphteam.cmd.core.annotation.Command
-import dev.triumphteam.cmd.core.annotation.Default
-import dev.triumphteam.cmd.core.annotation.Description
-import dev.triumphteam.cmd.core.annotation.Requirement
-import dev.triumphteam.cmd.core.annotation.Requirements
-import dev.triumphteam.cmd.slash.sender.SlashSender
+import dev.triumphteam.cmd.core.annotations.Command
+import dev.triumphteam.cmd.core.annotations.Description
+import dev.triumphteam.cmd.core.annotations.Requirement
+import dev.triumphteam.cmd.core.annotations.Requirements
+import dev.triumphteam.cmd.jda.sender.SlashCommandSender
 import net.dv8tion.jda.api.Permission
 
 @Command("play")
 @Description("Play a song!")
-class PlayCommand(private val bot: AlphaMusic) : BaseCommand() {
-    @Default
+class PlayCommand(private val bot: AlphaMusic) {
+    @Command
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
     )
-    fun SlashSender.play(@Description("Link or keywords to find the song(s) by!") identifier: String) {
+    fun SlashCommandSender.play(@Description("Link or keywords to find the song(s) by!") identifier: String) {
         val guild = guild ?: return
         val member = member ?: return
         val memberChannel = member.voiceState?.channel

@@ -4,26 +4,20 @@ import com.blitzoffline.alphamusic.AlphaMusic
 import com.blitzoffline.alphamusic.audio.TrackMetadata
 import com.blitzoffline.alphamusic.utils.formatHMS
 import com.blitzoffline.alphamusic.utils.terminate
-import dev.triumphteam.cmd.core.BaseCommand
-import dev.triumphteam.cmd.core.annotation.Command
-import dev.triumphteam.cmd.core.annotation.Default
-import dev.triumphteam.cmd.core.annotation.Description
-import dev.triumphteam.cmd.core.annotation.Optional
-import dev.triumphteam.cmd.core.annotation.Requirement
-import dev.triumphteam.cmd.core.annotation.Requirements
-import dev.triumphteam.cmd.slash.sender.SlashSender
+import dev.triumphteam.cmd.core.annotations.*
+import dev.triumphteam.cmd.jda.sender.SlashCommandSender
 import java.time.Duration
 import net.dv8tion.jda.api.Permission
 
 @Command("seek")
 @Description("Seek to a certain moment in the currently playing song!")
-class SeekCommand(private val bot: AlphaMusic) : BaseCommand() {
-    @Default
+class SeekCommand(private val bot: AlphaMusic) {
+    @Command
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
         Requirement("bot_in_vc", messageKey = "bot_not_in_vc"),
     )
-    fun SlashSender.seek(
+    fun SlashCommandSender.seek(
         @Description("Amount of seconds to seek!") seconds: Int,
         @Description("Amount of minutes to seek!") @Optional minutes: Int?,
         @Description("Amount of hours to seek!") @Optional hours: Int?
