@@ -19,7 +19,7 @@ class SeekCommand(private val bot: AlphaMusic) {
     )
     fun SlashCommandSender.seek(
         @Description("Amount of seconds to seek!") seconds: Int,
-        @Description("Amount of minutes to seek!") @Optional minutes: Int?,
+        @Description("Amount of minutes to seek!") minutes: Int,
         @Description("Amount of hours to seek!") @Optional hours: Int?
     ) {
         if (minutes != null && minutes < 0) {

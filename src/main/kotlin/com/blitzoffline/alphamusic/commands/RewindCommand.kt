@@ -19,7 +19,7 @@ class RewindCommand(private val bot: AlphaMusic) {
     )
     fun SlashCommandSender.rewind(
         @Description("Amount of seconds to rewind by!") seconds: Int,
-        @Description("Amount of minutes to rewind by!") @Optional minutes: Int?,
+        @Description("Amount of minutes to rewind by!") minutes: Int,
         @Description("Amount of hours to rewind by!") @Optional hours: Int?
     ) {
         if (minutes != null && minutes < 0) {

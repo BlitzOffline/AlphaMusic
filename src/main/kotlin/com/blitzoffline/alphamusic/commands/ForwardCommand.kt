@@ -19,7 +19,7 @@ class ForwardCommand(private val bot: AlphaMusic) {
     )
     fun SlashCommandSender.forward(
         @Description("Amount of seconds to forward by!") seconds: Int,
-        @Description("Amount of minutes to forward by!") @Optional minutes: Int?,
+        @Description("Amount of minutes to forward by!") minutes: Int,
         @Description("Amount of hours to forward by!") @Optional hours: Int?
     ) {
         if (minutes != null && minutes < 0) {
