@@ -29,6 +29,11 @@ class AppConsoleCommand(options: Options = defaultConsoleCommandOptions()) : Com
     fun debug(): Boolean {
         return this.isPresent("debug")
     }
+
+    fun debugInfo(): String? {
+        if (!this.isPresent("debug")) return null
+        return this.getOptionalValue("debug")
+    }
 }
 
 private fun defaultConsoleCommandOptions(): Options {
@@ -36,6 +41,6 @@ private fun defaultConsoleCommandOptions(): Options {
         addOption(Option.builder("h").longOpt("help").required(false).hasArg(false).desc("Shows this help message").build())
         addOption(Option.builder("s").longOpt("shutdown").required(false).hasArg(false).desc("Shuts down the application").build())
         addOption(Option.builder("v").longOpt("version").required(false).hasArg(false).desc("Shows the current version").build())
-        addOption(Option.builder("d").longOpt("debug").required(false).hasArg(false).desc("Toggle debug mode").build())
+        addOption(Option.builder("d").longOpt("debug").required(false).hasArg(true).optionalArg(true).argName("option").desc("Toggle debug mode").build())
     }
 }
