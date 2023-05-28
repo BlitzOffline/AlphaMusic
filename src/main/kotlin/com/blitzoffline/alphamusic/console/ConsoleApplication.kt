@@ -55,12 +55,42 @@ class ConsoleApplication(private val jda: JDA, private val logger: Logger) {
 
             var executed = 0
             if (appConsoleCommand.debug()) {
-                if (LogManager.getRootLogger().level == org.apache.log4j.Level.DEBUG) {
-                    logger.info("Debug mode disabled.")
-                    LogManager.getRootLogger().level = org.apache.log4j.Level.INFO
+                val debugInfo = appConsoleCommand.debugInfo()
+                if (!debugInfo.isNullOrBlank() && !debugInfo.equals("true", true) && !debugInfo.equals("false", true)) {
+                    when(debugInfo) {
+                        "guilds" -> {
+                            logger.info("Bot is currently in ${jda.guilds.size} guilds.")
+                        }
+                        "members" -> {
+                            logger.info("Bot is currently serving ${jda.guilds.sumOf { it.memberCount }} members.")
+                        }
+                        "voice" -> {
+                            logger.info("Bot is currently connected to ${jda.audioManagers.count { it.isConnected }} voice channels.")
+                        }
+                        "voice-users" -> {
+                            // Count number of users that are currently connected to a voice channel together with the bot.
+                            jda.audioManagers.forEach { it.connectedChannel?.members?.size?.minus(1) }
+                            logger.info("Bot is currently serving ${jda.audioManagers
+                                .filter { it.isConnected && it.guild.selfMember.voiceState?.isMuted == false && it.guild.selfMember.voiceState?.isDeafened == false }
+                                .sumOf { it.connectedChannel?.members?.size?.minus(1) ?: 0 }} users in voice channels.")
+                        }
+                        "voice-users-total" -> {
+                            // Count number of users that are currently connected to a voice channel together with the bot.
+                            jda.audioManagers.forEach { it.connectedChannel?.members?.size?.minus(1) }
+                            logger.info("Bot is currently serving ${jda.audioManagers.sumOf { it.connectedChannel?.members?.size?.minus(1) ?: 0 }} users in voice channels.")
+                        }
+                    }
                 } else {
-                    logger.info("Debug mode enabled.")
-                    LogManager.getRootLogger().level = org.apache.log4j.Level.DEBUG
+                    val toggle = debugInfo.isNullOrBlank()
+                    val turnOn = if (toggle) !LogManager.getRootLogger().isDebugEnabled else debugInfo.toBoolean()
+
+                    if (turnOn) {
+                        logger.info("Debug mode enabled.")
+                        LogManager.getRootLogger().level = org.apache.log4j.Level.DEBUG
+                    } else {
+                        logger.info("Debug mode disabled.")
+                        LogManager.getRootLogger().level = org.apache.log4j.Level.INFO
+                    }
                 }
                 executed++
             }
