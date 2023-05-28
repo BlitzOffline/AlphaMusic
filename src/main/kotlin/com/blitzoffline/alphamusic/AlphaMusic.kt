@@ -24,10 +24,13 @@ import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.requests.RestAction
 import net.dv8tion.jda.api.utils.cache.CacheFlag
 import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
-class AlphaMusic(private val token: String, youtubeEmail: String?, youtubePass: String?) {
-    val logger: Logger = LoggerFactory.getLogger(this::class.java)
+class AlphaMusic(
+    private val logger: Logger,
+    private val token: String,
+    youtubeEmail: String? = null,
+    youtubePass: String? = null
+) {
     val playerManager = PlayerManager(youtubeEmail, youtubePass)
     val trackService = TrackService(this)
     val taskManager = TaskManager()
@@ -37,7 +40,7 @@ class AlphaMusic(private val token: String, youtubeEmail: String?, youtubePass: 
     lateinit var jda: JDA
         private set
 
-    fun run() {
+    fun run(): AlphaMusic {
         jda = createJDAInstance()
         jda.awaitReady()
         RestAction.setPassContext(true)
@@ -55,6 +58,7 @@ class AlphaMusic(private val token: String, youtubeEmail: String?, youtubePass: 
         }
 
         commandManager.pushCommands()
+        return this
     }
 
     private fun createJDAInstance() = JDABuilder
@@ -78,7 +82,8 @@ class AlphaMusic(private val token: String, youtubeEmail: String?, youtubePass: 
         )
         .build()
 
-    @Synchronized fun getMusicManager(guild: Guild): GuildMusicManager {
+    @Synchronized
+    fun getMusicManager(guild: Guild): GuildMusicManager {
         var musicManager = musicManagers[guild.id]
 
         if (musicManager == null) {
@@ -185,9 +190,17 @@ class AlphaMusic(private val token: String, youtubeEmail: String?, youtubePass: 
             sender.event.terminate(reason = "You need to be connected to a voice channel!", ephemeral = true)
         }
 
-        commandManager.registerMessage(MessageKey.of("not_same_channel_or_admin", MessageContext::class.java)) { sender, _ ->
+        commandManager.registerMessage(
+            MessageKey.of(
+                "not_same_channel_or_admin",
+                MessageContext::class.java
+            )
+        ) { sender, _ ->
             if (sender !is SlashCommandSender) return@registerMessage
-            sender.event.terminate(reason = "You need to be in the same Voice Channel as the bot to do this!", ephemeral = true)
+            sender.event.terminate(
+                reason = "You need to be in the same Voice Channel as the bot to do this!",
+                ephemeral = true
+            )
         }
 
         commandManager.registerMessage(MessageKey.of("not_admin", MessageContext::class.java)) { sender, _ ->
@@ -205,7 +218,12 @@ class AlphaMusic(private val token: String, youtubeEmail: String?, youtubePass: 
             sender.event.terminate(reason = "The audio is already paused. Use \"/resume\" to resume!", ephemeral = true)
         }
 
-        commandManager.registerMessage(MessageKey.of("not_requester_or_admin", MessageContext::class.java)) { sender, _ ->
+        commandManager.registerMessage(
+            MessageKey.of(
+                "not_requester_or_admin",
+                MessageContext::class.java
+            )
+        ) { sender, _ ->
             if (sender !is SlashCommandSender) return@registerMessage
             val guild = sender.guild ?: return@registerMessage
             val manager = getMusicManager(guild)
