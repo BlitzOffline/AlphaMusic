@@ -6,10 +6,10 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 import com.sedmelluq.discord.lavaplayer.track.playback.MutableAudioFrame
+import net.dv8tion.jda.api.audio.AudioSendHandler
 import java.nio.Buffer
 import java.nio.ByteBuffer
 import java.util.concurrent.ArrayBlockingQueue
-import net.dv8tion.jda.api.audio.AudioSendHandler
 
 class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer, private val guildId: String) : AudioEventAdapter(), AudioSendHandler {
     private val buffer: ByteBuffer = ByteBuffer.allocate(1024)
@@ -83,7 +83,9 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
      * generate a new queue and play it.
      */
     fun skip() {
-        nextTrack(player.playingTrack)
+        val currentTrack = player.playingTrack
+        player.stopTrack()
+        nextTrack(currentTrack)
     }
 
     /**
