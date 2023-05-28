@@ -3,6 +3,7 @@ package com.blitzoffline.alphamusic
 import com.blitzoffline.alphamusic.console.ConsoleApplication
 import com.blitzoffline.alphamusic.console.command.StartupCommand
 import com.blitzoffline.alphamusic.console.command.handleException
+import com.blitzoffline.alphamusic.utils.printHelp
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.ParseException
 import org.slf4j.Logger
@@ -25,7 +26,7 @@ fun main(args: Array<String>) {
             logger.info("Something went wrong while executing command: $commandLine", exception)
         }
 
-        helpFormatter.printHelp("AlphaMusic.jar", startupCommand.options, true)
+        helpFormatter.printHelp("AlphaMusic.jar", startupCommand.options, logger)
         exitProcess(0)
     }
 
