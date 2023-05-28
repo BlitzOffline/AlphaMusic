@@ -2,6 +2,7 @@ package com.blitzoffline.alphamusic.console
 
 import com.blitzoffline.alphamusic.console.command.AppConsoleCommand
 import com.blitzoffline.alphamusic.console.command.handleException
+import com.blitzoffline.alphamusic.utils.printHelp
 import net.dv8tion.jda.api.JDA
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.ParseException
@@ -29,7 +30,7 @@ class ConsoleApplication(private val jda: JDA, private val logger: Logger) {
             }
 
             if (input.length == command.length) {
-                helpFormatter.printHelp(command, appConsoleCommand.options, true)
+                helpFormatter.printHelp(command, appConsoleCommand.options, logger)
                 continue
             }
 
@@ -49,7 +50,7 @@ class ConsoleApplication(private val jda: JDA, private val logger: Logger) {
                     logger.debug("Something went wrong while executing command: $commandLine", exception)
                 }
 
-                helpFormatter.printHelp(command, appConsoleCommand.options, true)
+                helpFormatter.printHelp(command, appConsoleCommand.options, logger)
                 continue
             }
 
@@ -101,7 +102,7 @@ class ConsoleApplication(private val jda: JDA, private val logger: Logger) {
             }
 
             if (appConsoleCommand.help()) {
-                helpFormatter.printHelp(command, appConsoleCommand.options, true)
+                helpFormatter.printHelp(command, appConsoleCommand.options, logger)
                 executed++
             }
 
@@ -120,7 +121,7 @@ class ConsoleApplication(private val jda: JDA, private val logger: Logger) {
 
             if (executed == 0) {
                 logger.warn("Options not found: $commandLine.")
-                helpFormatter.printHelp(command, appConsoleCommand.options, true)
+                helpFormatter.printHelp(command, appConsoleCommand.options, logger)
             }
         }
     }
