@@ -52,11 +52,6 @@ class AlphaMusic(
         registerRequirements()
         registerMessages()
         registerCommands()
-        jda.getGuildById("1054382015539056690")?.let {
-            println("Guild name: ${it.name}")
-            commandManager.registerCommand(it, DebugCommand())
-        }
-
         commandManager.pushCommands()
         return this
     }
