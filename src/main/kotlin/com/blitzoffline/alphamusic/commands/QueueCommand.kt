@@ -85,7 +85,7 @@ class QueueCommand(private val bot: AlphaMusic) {
 
             embed.setFooter(footer.toString())
             embed.setColor(AlphaMusic.EMBED_COLOR)
-            pages.add(InteractPage(embed.build()))
+            pages.add(InteractPage.of(embed.build()))
         }
 
         event.interaction.hook.editOriginalEmbeds(pages[0].content as MessageEmbed).queue {
