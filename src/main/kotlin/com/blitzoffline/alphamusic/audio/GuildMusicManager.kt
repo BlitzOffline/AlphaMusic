@@ -1,7 +1,7 @@
 package com.blitzoffline.alphamusic.audio
 
 import com.blitzoffline.alphamusic.AlphaMusic
-import com.blitzoffline.alphamusic.votes.VoteManager
+import com.blitzoffline.alphamusic.vote.VoteManager
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 
 class GuildMusicManager(bot: AlphaMusic, val guildId: String) {

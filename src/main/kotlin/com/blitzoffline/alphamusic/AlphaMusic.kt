@@ -4,9 +4,9 @@ import com.blitzoffline.alphamusic.audio.GuildMusicManager
 import com.blitzoffline.alphamusic.audio.PlayerManager
 import com.blitzoffline.alphamusic.audio.TrackMetadata
 import com.blitzoffline.alphamusic.audio.TrackService
-import com.blitzoffline.alphamusic.commands.*
-import com.blitzoffline.alphamusic.listeners.VoiceListener
-import com.blitzoffline.alphamusic.tasks.TaskManager
+import com.blitzoffline.alphamusic.command.*
+import com.blitzoffline.alphamusic.listener.VoiceListener
+import com.blitzoffline.alphamusic.task.TaskManager
 import com.blitzoffline.alphamusic.utils.terminate
 import com.github.ygimenez.model.PaginatorBuilder
 import com.github.ygimenez.type.Emote

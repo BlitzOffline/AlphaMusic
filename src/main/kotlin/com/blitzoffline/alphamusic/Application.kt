@@ -1,8 +1,8 @@
 package com.blitzoffline.alphamusic
 
 import com.blitzoffline.alphamusic.console.ConsoleApplication
-import com.blitzoffline.alphamusic.console.commands.StartupCommand
-import com.blitzoffline.alphamusic.console.commands.handleException
+import com.blitzoffline.alphamusic.console.command.StartupCommand
+import com.blitzoffline.alphamusic.console.command.handleException
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.ParseException
 import org.slf4j.Logger
