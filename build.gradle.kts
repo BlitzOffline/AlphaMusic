@@ -3,16 +3,11 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     kotlin("jvm") version "1.8.21"
-    id("application")
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "com.blitzoffline"
 version = "1.0.0"
-
-application {
-    mainClass.set("com.blitzoffline.alphamusic.ApplicationKt")
-}
 
 repositories {
     mavenCentral()
@@ -38,6 +33,14 @@ java {
 }
 
 tasks {
+    withType<Jar> {
+        manifest {
+            attributes["Specification-Version"] = project.version
+            attributes["Implementation-Version"] = project.version
+            attributes["Main-Class"] = "com.blitzoffline.alphamusic.ApplicationKt"
+        }
+    }
+
     withType<KotlinCompile> {
         kotlinOptions {
             jvmTarget = "11"
