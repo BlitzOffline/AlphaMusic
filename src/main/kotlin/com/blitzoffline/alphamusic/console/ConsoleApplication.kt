@@ -5,6 +5,7 @@ import com.blitzoffline.alphamusic.console.commands.handleException
 import net.dv8tion.jda.api.JDA
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.ParseException
+import org.apache.log4j.LogManager
 import org.slf4j.Logger
 import org.slf4j.event.Level
 import kotlin.system.exitProcess
@@ -53,6 +54,17 @@ class ConsoleApplication(private val jda: JDA, private val logger: Logger) {
             }
 
             var executed = 0
+            if (appConsoleCommand.debug()) {
+                if (LogManager.getRootLogger().level == org.apache.log4j.Level.DEBUG) {
+                    logger.info("Debug mode disabled.")
+                    LogManager.getRootLogger().level = org.apache.log4j.Level.INFO
+                } else {
+                    logger.info("Debug mode enabled.")
+                    LogManager.getRootLogger().level = org.apache.log4j.Level.DEBUG
+                }
+                executed++
+            }
+
             if (appConsoleCommand.version()) {
                 logger.info("AlphaMusic version: ${this.javaClass.`package`.implementationVersion}")
                 executed++
