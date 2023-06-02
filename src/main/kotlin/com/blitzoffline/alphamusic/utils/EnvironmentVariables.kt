@@ -27,7 +27,7 @@ data class EnvironmentVariables(
             databaseSaveDelay: Long? = null,
             databaseSaveDelayTimeUnit: TimeUnit? = null
         ) = EnvironmentVariables(
-            discordToken = discordToken ?: System.getenv("ALPHAMUSIC_TOKEN") ?: System.getProperty("ALPHAMUSIC_TOKEN") ?: throw MissingArgumentException("Could not find environment variable ALPHAMUSIC_DISCORD_TOKEN"),
+            discordToken = discordToken ?: System.getenv("ALPHAMUSIC_DISCORD_TOKEN") ?: System.getProperty("ALPHAMUSIC_DISCORD_TOKEN") ?: throw MissingArgumentException("Could not find environment variable ALPHAMUSIC_DISCORD_TOKEN"),
             youtubeEmail = youtubeEmail ?: System.getenv("ALPHAMUSIC_YOUTUBE_EMAIL") ?: System.getProperty("ALPHAMUSIC_YOUTUBE_EMAIL"),
             youtubePassword = youtubePassword ?: System.getenv("ALPHAMUSIC_YOUTUBE_PASSWORD") ?: System.getProperty("ALPHAMUSIC_YOUTUBE_PASSWORD"),
             databaseHost = databaseHost ?: System.getenv("ALPHAMUSIC_MYSQL_HOST") ?: System.getProperty("ALPHAMUSIC_MYSQL_HOST") ?: throw MissingArgumentException("Could not find environment variable ALPHAMUSIC_MYSQL_HOST"),

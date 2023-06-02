@@ -22,12 +22,12 @@ import org.slf4j.Logger
 
 class AlphaMusic(
     private val logger: Logger,
-    private val token: String,
+    discordToken: String? = null,
     youtubeEmail: String? = null,
     youtubePassword: String? = null
 ) {
     private val environmentVariables = EnvironmentVariables(
-        discordToken = token,
+        discordToken = discordToken,
         youtubeEmail = youtubeEmail,
         youtubePassword = youtubePassword
     )
@@ -70,7 +70,7 @@ class AlphaMusic(
 
     private fun createJDAInstance() = JDABuilder
         .create(
-            token,
+            environmentVariables.discordToken,
             listOf(
                 GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
                 GatewayIntent.GUILD_VOICE_STATES,
