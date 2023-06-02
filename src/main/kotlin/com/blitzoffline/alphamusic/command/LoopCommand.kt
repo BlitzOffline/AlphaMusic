@@ -1,7 +1,7 @@
 package com.blitzoffline.alphamusic.command
 
-import com.blitzoffline.alphamusic.AlphaMusic
-import com.blitzoffline.alphamusic.utils.terminate
+import com.blitzoffline.alphamusic.holder.GuildManagersHolder
+import com.blitzoffline.alphamusic.utils.extension.terminate
 import com.blitzoffline.alphamusic.vote.VoteType
 import dev.triumphteam.cmd.core.annotations.Command
 import dev.triumphteam.cmd.core.annotations.Description
@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.Permission
 
 @Command("loop")
 @Description("Toggle looping for the currently playing song!")
-class LoopCommand(private val bot: AlphaMusic) {
+class LoopCommand(private val guildManagersHolder: GuildManagersHolder) {
     @Command
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
@@ -22,13 +22,13 @@ class LoopCommand(private val bot: AlphaMusic) {
     fun SlashCommandSender.loop() {
         val guild = guild ?: return
         val member = member ?: return
-        val musicManager = bot.getMusicManager(guild)
+        val musicManager = guildManagersHolder.getGuildManager(guild)
         val voteManager = musicManager.voteManager.getVoteManager(VoteType.LOOP)
 
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
             voteManager?.votes?.clear()
-            musicManager.audioHandler.loop = !musicManager.audioHandler.loop
-            return if (musicManager.audioHandler.loop) {
+            musicManager.guildHolder.setLoop(guild.id, !musicManager.guildHolder.loop(guild.id))
+            return if (musicManager.guildHolder.loop(guild.id)) {
                 event.terminate(reason = "The song will now be looped!")
             } else {
                 event.terminate(reason = "The song will no longer be looped!")
@@ -39,8 +39,8 @@ class LoopCommand(private val bot: AlphaMusic) {
 
         if (participants.size <= 2) {
             voteManager?.votes?.clear()
-            musicManager.audioHandler.loop = !musicManager.audioHandler.loop
-            return if (musicManager.audioHandler.loop) {
+            musicManager.guildHolder.setLoop(guild.id, !musicManager.guildHolder.loop(guild.id))
+            return if (musicManager.guildHolder.loop(guild.id)) {
                 event.terminate(reason = "The song will now be looped!")
             } else {
                 event.terminate(reason = "The song will no longer be looped!")
@@ -59,8 +59,8 @@ class LoopCommand(private val bot: AlphaMusic) {
 
         if (voteManager.votes.size + 1 == required) {
             voteManager.votes.clear()
-            musicManager.audioHandler.loop = !musicManager.audioHandler.loop
-            return if (musicManager.audioHandler.loop) {
+            musicManager.guildHolder.setLoop(guild.id, !musicManager.guildHolder.loop(guild.id))
+            return if (musicManager.guildHolder.loop(guild.id)) {
                 event.terminate(reason = "The song will now be looped!")
             } else {
                 event.terminate(reason = "The song will no longer be looped!")

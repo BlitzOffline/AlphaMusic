@@ -1,7 +1,7 @@
 package com.blitzoffline.alphamusic.command
 
-import com.blitzoffline.alphamusic.AlphaMusic
-import com.blitzoffline.alphamusic.utils.terminate
+import com.blitzoffline.alphamusic.holder.GuildManagersHolder
+import com.blitzoffline.alphamusic.utils.extension.terminate
 import com.blitzoffline.alphamusic.vote.VoteType
 import dev.triumphteam.cmd.core.annotations.Command
 import dev.triumphteam.cmd.core.annotations.Description
@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.Permission
 
 @Command("leave")
 @Description("Make the bot leave the voice channel!")
-class LeaveCommand(private val bot: AlphaMusic) {
+class LeaveCommand(private val guildManagersHolder: GuildManagersHolder) {
     @Command
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
@@ -22,8 +22,8 @@ class LeaveCommand(private val bot: AlphaMusic) {
     fun SlashCommandSender.leave() {
         val guild = guild ?: return
         val member = member ?: return
-        val musicManager = bot.getMusicManager(guild)
-        val voteManager = musicManager.voteManager.getVoteManager(VoteType.LEAVE)
+        val guildManager = guildManagersHolder.getGuildManager(guild)
+        val voteManager = guildManager.voteManager.getVoteManager(VoteType.LEAVE)
 
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
             voteManager?.votes?.clear()

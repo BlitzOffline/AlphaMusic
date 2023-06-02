@@ -43,61 +43,63 @@ class VoiceListener(private val bot: AlphaMusic) : ListenerAdapter() {
     }
 
     private fun onBotSuppressOrMute(guild: Guild) {
-        val musicManager = bot.getMusicManager(guild)
+        val guildManager = bot.guildManagers.getGuildManager(guild)
 
-        musicManager.player.isPaused = true
-        return bot.taskManager.addLeaveTask(bot.jda, guild.id)
+        guildManager.audioPlayer.isPaused = true
+        return guildManager.addLeaveTask()
     }
 
     private fun onBotUnsuppressOrUnmute(guild: Guild, voiceState: GuildVoiceState) {
-        val musicManager = bot.getMusicManager(guild)
+        val guildManager = bot.guildManagers.getGuildManager(guild)
 
         val channel = voiceState.channel ?: return
         if (channel.members.size < 2) return
 
-        musicManager.player.isPaused = false
-        bot.taskManager.removeLeaveTask(guild.id)
+        guildManager.audioPlayer.isPaused = false
+        guildManager.removeLeaveTask()
     }
 
     private fun onGuildVoiceLeave(guild: Guild, member: Member, channelLeft: AudioChannel) {
-        val musicManager = bot.getMusicManager(guild)
+        val guildManager = bot.guildManagers.getGuildManager(guild)
         if (member.id == guild.selfMember.id) {
-            musicManager.player.isPaused = true
+            guildManager.audioPlayer.isPaused = true
 
-            bot.taskManager.removeLeaveTask(guild.id)
-            bot.taskManager.addClearTask(musicManager)
-            musicManager.voteManager.clear()
+            guildManager.removeLeaveTask()
+            guildManager.addClearTask()
+            guildManager.voteManager.clear()
         } else {
             VoteType.values.forEach { voteType ->
-                musicManager.voteManager.getVoteManager(voteType)?.votes?.remove(member.id)
+                guildManager.voteManager.getVoteManager(voteType)?.votes?.remove(member.id)
             }
             if (channelLeft != guild.selfMember.voiceState?.channel) return
             if (channelLeft.members.size >= 2) return
             if (channelLeft.members[0] != guild.selfMember) return
 
-            bot.taskManager.addLeaveTask(bot.jda, guild.id)
+            guildManager.addLeaveTask()
         }
     }
 
     private fun onGuildVoiceJoin(guild: Guild, member: Member, channelJoined: AudioChannel) {
+        val guildManager = bot.guildManagers.getGuildManager(guild)
         if (member.id == guild.selfMember.id) {
             val afk = guild.afkChannel
+
             if (afk != null && channelJoined.id == afk.id) {
-                return bot.taskManager.addLeaveTask(bot.jda, guild.id)
+                return guildManager.addLeaveTask()
             }
 
-            val musicManager = bot.getMusicManager(guild)
-            musicManager.player.isPaused = false
+            guildManager.audioPlayer.isPaused = false
 
-            if (musicManager.player.playingTrack == null) {
-                bot.taskManager.addLeaveTask(bot.jda, guild.id)
+            if (guildManager.audioPlayer.playingTrack == null) {
+                guildManager.addLeaveTask()
             }
-            bot.taskManager.removeClearTask(guild.id)
+
+            guildManager.removeClearTask()
         } else {
             if (channelJoined != guild.selfMember.voiceState?.channel) return
             if (guild.selfMember.voiceState?.isMuted == true) return
             if (guild.selfMember.voiceState?.isSuppressed == true) return
-            bot.taskManager.removeLeaveTask(guild.id)
+            guildManager.removeLeaveTask()
         }
     }
 }

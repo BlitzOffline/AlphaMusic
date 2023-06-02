@@ -2,7 +2,7 @@ package com.blitzoffline.alphamusic.console
 
 import com.blitzoffline.alphamusic.console.command.AppConsoleCommand
 import com.blitzoffline.alphamusic.console.command.handleException
-import com.blitzoffline.alphamusic.utils.printHelp
+import com.blitzoffline.alphamusic.utils.extension.printHelp
 import net.dv8tion.jda.api.JDA
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.ParseException

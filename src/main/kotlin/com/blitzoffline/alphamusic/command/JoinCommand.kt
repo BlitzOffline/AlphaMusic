@@ -1,6 +1,6 @@
 package com.blitzoffline.alphamusic.command
 
-import com.blitzoffline.alphamusic.utils.terminate
+import com.blitzoffline.alphamusic.utils.extension.terminate
 import dev.triumphteam.cmd.core.annotations.Command
 import dev.triumphteam.cmd.core.annotations.Description
 import dev.triumphteam.cmd.core.annotations.Requirement

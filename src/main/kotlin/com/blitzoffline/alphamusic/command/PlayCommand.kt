@@ -1,7 +1,8 @@
 package com.blitzoffline.alphamusic.command
 
-import com.blitzoffline.alphamusic.AlphaMusic
-import com.blitzoffline.alphamusic.utils.terminate
+import com.blitzoffline.alphamusic.track.TrackLoader
+import com.blitzoffline.alphamusic.holder.GuildManagersHolder
+import com.blitzoffline.alphamusic.utils.extension.terminate
 import dev.triumphteam.cmd.core.annotations.Command
 import dev.triumphteam.cmd.core.annotations.Description
 import dev.triumphteam.cmd.core.annotations.Requirement
@@ -11,7 +12,7 @@ import net.dv8tion.jda.api.Permission
 
 @Command("play")
 @Description("Play a song!")
-class PlayCommand(private val bot: AlphaMusic) {
+class PlayCommand(private val trackLoader: TrackLoader, private val audioManagers: GuildManagersHolder) {
     @Command
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
@@ -36,6 +37,11 @@ class PlayCommand(private val bot: AlphaMusic) {
             return event.terminate(reason = "Could not connect to your voice channel!", ephemeral = true, deferred = true)
         }
 
-        bot.trackService.loadTrack(identifier, guild, event, isRadio = bot.getMusicManager(guild).audioHandler.radio, deferred = true)
+        trackLoader.loadTrack(
+            identifier = identifier,
+            guildManager = audioManagers.getGuildManager(guild),
+            event = event,
+            deferred = true
+        )
     }
 }

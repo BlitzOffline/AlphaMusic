@@ -1,4 +1,4 @@
-package com.blitzoffline.alphamusic.utils
+package com.blitzoffline.alphamusic.utils.extension
 
 import com.blitzoffline.alphamusic.AlphaMusic
 import net.dv8tion.jda.api.EmbedBuilder

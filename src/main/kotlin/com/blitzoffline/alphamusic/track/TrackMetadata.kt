@@ -1,4 +1,4 @@
-package com.blitzoffline.alphamusic.audio
+package com.blitzoffline.alphamusic.track
 
 import net.dv8tion.jda.api.entities.User
 

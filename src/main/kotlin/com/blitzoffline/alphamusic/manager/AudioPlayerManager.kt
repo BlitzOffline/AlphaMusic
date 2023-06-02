@@ -1,10 +1,13 @@
-package com.blitzoffline.alphamusic.audio
+package com.blitzoffline.alphamusic.manager
 
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 
-class PlayerManager(youtubeEmail: String?, youtubePass: String?) : DefaultAudioPlayerManager() {
+/**
+ * Audio player manager used for creating audio players and loading tracks and playlists.
+ */
+class AudioPlayerManager(youtubeEmail: String?, youtubePass: String?) : DefaultAudioPlayerManager() {
     init {
         if (youtubeEmail != null && youtubePass != null) {
             registerSourceManager(

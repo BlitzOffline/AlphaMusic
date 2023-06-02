@@ -1,7 +1,7 @@
 package com.blitzoffline.alphamusic.command
 
-import com.blitzoffline.alphamusic.AlphaMusic
-import com.blitzoffline.alphamusic.utils.terminate
+import com.blitzoffline.alphamusic.holder.GuildManagersHolder
+import com.blitzoffline.alphamusic.utils.extension.terminate
 import dev.triumphteam.cmd.core.annotations.Command
 import dev.triumphteam.cmd.core.annotations.Description
 import dev.triumphteam.cmd.core.annotations.Requirement
@@ -10,7 +10,7 @@ import dev.triumphteam.cmd.jda.sender.SlashCommandSender
 
 @Command("remove-dupes")
 @Description("Remove all duplicates from the queue!")
-class RemoveDupesCommand(private val bot: AlphaMusic) {
+class RemoveDupesCommand(private val guildManagersHolder: GuildManagersHolder) {
     @Command
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
@@ -19,13 +19,13 @@ class RemoveDupesCommand(private val bot: AlphaMusic) {
     )
     fun SlashCommandSender.removeDupes() {
         val guild = guild ?: return
-        val musicManager = bot.getMusicManager(guild)
+        val guildManager = guildManagersHolder.getGuildManager(guild)
 
-        if (musicManager.audioHandler.size() == 0) {
+        if (guildManager.audioHandler.size() == 0) {
             return event.terminate(reason = "There are no song queued currently!", ephemeral = true)
         }
 
-        when(musicManager.audioHandler.removeDupes()) {
+        when(guildManager.audioHandler.removeDupes()) {
             0 -> event.terminate(reason = "No dupes found!", ephemeral = true)
             else -> event.terminate(reason = "Successfully removed all duplicates!")
         }

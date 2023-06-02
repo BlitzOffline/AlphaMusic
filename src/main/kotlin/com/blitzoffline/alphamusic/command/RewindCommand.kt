@@ -1,9 +1,9 @@
 package com.blitzoffline.alphamusic.command
 
-import com.blitzoffline.alphamusic.AlphaMusic
-import com.blitzoffline.alphamusic.audio.TrackMetadata
+import com.blitzoffline.alphamusic.holder.GuildManagersHolder
+import com.blitzoffline.alphamusic.track.TrackMetadata
 import com.blitzoffline.alphamusic.utils.formatHMS
-import com.blitzoffline.alphamusic.utils.terminate
+import com.blitzoffline.alphamusic.utils.extension.terminate
 import dev.triumphteam.cmd.core.annotations.*
 import dev.triumphteam.cmd.jda.sender.SlashCommandSender
 import java.time.Duration
@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.Permission
 
 @Command("rewind")
 @Description("Rewind the currently playing song by a certain amount of time!")
-class RewindCommand(private val bot: AlphaMusic) {
+class RewindCommand(private val guildManagersHolder: GuildManagersHolder) {
     @Command
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
@@ -40,9 +40,9 @@ class RewindCommand(private val bot: AlphaMusic) {
 
         val guild = guild ?: return
         val member = member ?: return
-        val musicManager = bot.getMusicManager(guild)
+        val guildManager = guildManagersHolder.getGuildManager(guild)
 
-        val playing = musicManager.player.playingTrack
+        val playing = guildManager.audioPlayer.playingTrack
             ?: return event.terminate(reason = "There is no song playing currently!", ephemeral = true)
 
         val meta = playing.userData as TrackMetadata

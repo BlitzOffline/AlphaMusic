@@ -1,7 +1,7 @@
 package com.blitzoffline.alphamusic.command
 
-import com.blitzoffline.alphamusic.AlphaMusic
-import com.blitzoffline.alphamusic.utils.terminate
+import com.blitzoffline.alphamusic.holder.GuildManagersHolder
+import com.blitzoffline.alphamusic.utils.extension.terminate
 import com.blitzoffline.alphamusic.vote.VoteType
 import dev.triumphteam.cmd.core.annotations.Command
 import dev.triumphteam.cmd.core.annotations.Description
@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.Permission
 
 @Command("skip")
 @Description("Skip the currently playing song!")
-class SkipCommand(private val bot: AlphaMusic) {
+class SkipCommand(private val guildManagersHolder: GuildManagersHolder) {
     @Command
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
@@ -22,14 +22,14 @@ class SkipCommand(private val bot: AlphaMusic) {
     fun SlashCommandSender.skip()  {
         val guild = guild ?: return
         val member = member ?: return
-        val musicManager = bot.getMusicManager(guild)
-        musicManager.player.playingTrack ?: return event.terminate(reason = "There is no song playing currently!", ephemeral = true)
+        val guildManager = guildManagersHolder.getGuildManager(guild)
+        guildManager.audioPlayer.playingTrack ?: return event.terminate(reason = "There is no song playing currently!", ephemeral = true)
 
-        val voteManager = musicManager.voteManager.getVoteManager(VoteType.SKIP)
+        val voteManager = guildManager.voteManager.getVoteManager(VoteType.SKIP)
 
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
             voteManager?.votes?.clear()
-            musicManager.audioHandler.skip()
+            guildManager.audioHandler.skip()
             return event.terminate(reason = "Skipped currently playing song!")
         }
 
@@ -37,7 +37,7 @@ class SkipCommand(private val bot: AlphaMusic) {
 
         if (participants.size <= 2) {
             voteManager?.votes?.clear()
-            musicManager.audioHandler.skip()
+            guildManager.audioHandler.skip()
             return event.terminate(reason = "Skipped currently playing song!")
         }
 
@@ -53,7 +53,7 @@ class SkipCommand(private val bot: AlphaMusic) {
 
         if (voteManager.votes.size + 1 == required) {
             voteManager.votes.clear()
-            musicManager.audioHandler.skip()
+            guildManager.audioHandler.skip()
             return event.terminate(reason = "Skipped currently playing song!")
         }
 
