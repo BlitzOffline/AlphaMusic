@@ -1,7 +1,7 @@
 package com.blitzoffline.alphamusic.command
 
-import com.blitzoffline.alphamusic.AlphaMusic
-import com.blitzoffline.alphamusic.utils.terminate
+import com.blitzoffline.alphamusic.holder.GuildManagersHolder
+import com.blitzoffline.alphamusic.utils.extension.terminate
 import com.blitzoffline.alphamusic.vote.VoteType
 import dev.triumphteam.cmd.core.annotations.Command
 import dev.triumphteam.cmd.core.annotations.Description
@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.Permission
 
 @Command("clear")
 @Description("Clear the queue!")
-class ClearCommand(private val bot: AlphaMusic) {
+class ClearCommand(private val guildManagersHolder: GuildManagersHolder) {
     @Command
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
@@ -23,16 +23,16 @@ class ClearCommand(private val bot: AlphaMusic) {
         val guild = guild ?: return
         val member = member ?: return
 
-        val musicManager = bot.getMusicManager(guild)
-        if (musicManager.audioHandler.size() == 0) {
+        val guildManager = guildManagersHolder.getGuildManager(guild)
+        if (guildManager.audioHandler.size() == 0) {
             return event.terminate(reason = "The queue is already empty!", ephemeral = true)
         }
 
-        val voteManager = musicManager.voteManager.getVoteManager(VoteType.CLEAR)
+        val voteManager = guildManager.voteManager.getVoteManager(VoteType.CLEAR)
 
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
             voteManager?.votes?.clear()
-            musicManager.audioHandler.clear()
+            guildManager.audioHandler.clear()
             return event.terminate(reason = "Cleared the queue!")
         }
 
@@ -40,7 +40,7 @@ class ClearCommand(private val bot: AlphaMusic) {
 
         if (participants.size <= 2) {
             voteManager?.votes?.clear()
-            musicManager.audioHandler.clear()
+            guildManager.audioHandler.clear()
             return event.terminate(reason = "Cleared the queue!")
         }
 
@@ -56,7 +56,7 @@ class ClearCommand(private val bot: AlphaMusic) {
 
         if (voteManager.votes.size + 1 == required) {
             voteManager.votes.clear()
-            musicManager.audioHandler.clear()
+            guildManager.audioHandler.clear()
             return event.terminate(reason = "Cleared the queue!")
         }
 

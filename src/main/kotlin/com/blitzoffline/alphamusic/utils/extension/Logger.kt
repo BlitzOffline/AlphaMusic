@@ -1,4 +1,4 @@
-package com.blitzoffline.alphamusic.utils
+package com.blitzoffline.alphamusic.utils.extension
 
 import org.slf4j.Logger
 import org.slf4j.event.Level

@@ -1,7 +1,7 @@
 package com.blitzoffline.alphamusic.command
 
-import com.blitzoffline.alphamusic.AlphaMusic
-import com.blitzoffline.alphamusic.utils.terminate
+import com.blitzoffline.alphamusic.holder.GuildManagersHolder
+import com.blitzoffline.alphamusic.utils.extension.terminate
 import com.blitzoffline.alphamusic.vote.VoteType
 import dev.triumphteam.cmd.core.annotations.Command
 import dev.triumphteam.cmd.core.annotations.Description
@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.Permission
 
 @Command("replay")
 @Description("Toggle replay for the currently playing song!")
-class ReplayCommand(private val bot: AlphaMusic) {
+class ReplayCommand(private val guildManagersHolder: GuildManagersHolder) {
     @Command
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
@@ -22,18 +22,18 @@ class ReplayCommand(private val bot: AlphaMusic) {
     fun SlashCommandSender.replay() {
         val guild = guild ?: return
         val member = member ?: return
-        val musicManager = bot.getMusicManager(guild)
+        val guildManager = guildManagersHolder.getGuildManager(guild)
 
-        if (musicManager.player.playingTrack == null) {
+        if (guildManager.audioPlayer.playingTrack == null) {
             return event.terminate(reason = "There is no song currently playing to be replayed!", ephemeral = true)
         }
 
-        val voteManager = musicManager.voteManager.getVoteManager(VoteType.REPLAY)
+        val voteManager = guildManager.voteManager.getVoteManager(VoteType.REPLAY)
 
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
             voteManager?.votes?.clear()
-            musicManager.audioHandler.replay = !musicManager.audioHandler.replay
-            return if (musicManager.audioHandler.replay) {
+            guildManager.guildHolder.setReplay(guild.id, !guildManager.guildHolder.replay(guild.id))
+            return if (guildManager.guildHolder.replay(guild.id)) {
                 event.terminate(reason = "Currently playing song marked to be replayed!")
             } else {
                 event.terminate(reason = "Currently playing song marked to no longer be replayed!")
@@ -43,8 +43,8 @@ class ReplayCommand(private val bot: AlphaMusic) {
         val participants = guild.selfMember.voiceState?.channel?.members ?: return
         if (participants.size <= 2) {
             voteManager?.votes?.clear()
-            musicManager.audioHandler.replay = !musicManager.audioHandler.replay
-            return if (musicManager.audioHandler.replay) {
+            guildManager.guildHolder.setReplay(guild.id, !guildManager.guildHolder.replay(guild.id))
+            return if (guildManager.guildHolder.replay(guild.id)) {
                 event.terminate(reason = "Currently playing song marked to be replayed!")
             } else {
                 event.terminate(reason = "Currently playing song marked to no longer be replayed!")
@@ -63,8 +63,8 @@ class ReplayCommand(private val bot: AlphaMusic) {
 
         if (voteManager.votes.size + 1 == required) {
             voteManager.votes.clear()
-            musicManager.audioHandler.replay = !musicManager.audioHandler.replay
-            return if (musicManager.audioHandler.replay) {
+            guildManager.guildHolder.setReplay(guild.id, !guildManager.guildHolder.replay(guild.id))
+            return if (guildManager.guildHolder.replay(guild.id)) {
                 event.terminate(reason = "Currently playing song marked to be replayed!")
             } else {
                 event.terminate(reason = "Currently playing song marked to no longer be replayed!")

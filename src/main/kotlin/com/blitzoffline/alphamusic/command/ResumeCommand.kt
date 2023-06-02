@@ -1,7 +1,7 @@
 package com.blitzoffline.alphamusic.command
 
-import com.blitzoffline.alphamusic.AlphaMusic
-import com.blitzoffline.alphamusic.utils.terminate
+import com.blitzoffline.alphamusic.holder.GuildManagersHolder
+import com.blitzoffline.alphamusic.utils.extension.terminate
 import dev.triumphteam.cmd.core.annotations.Command
 import dev.triumphteam.cmd.core.annotations.Description
 import dev.triumphteam.cmd.core.annotations.Requirement
@@ -10,7 +10,7 @@ import dev.triumphteam.cmd.jda.sender.SlashCommandSender
 
 @Command("resume")
 @Description("Resume the audio!")
-class ResumeCommand(private val bot: AlphaMusic) {
+class ResumeCommand(private val guildManagersHolder: GuildManagersHolder) {
     @Command
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
@@ -21,9 +21,9 @@ class ResumeCommand(private val bot: AlphaMusic) {
     )
     fun SlashCommandSender.resume() {
         val guild = guild ?: return
-        val musicManager = bot.getMusicManager(guild)
+        val guildManager = guildManagersHolder.getGuildManager(guild)
 
-        musicManager.player.isPaused = false
+        guildManager.audioPlayer.isPaused = false
         event.terminate(reason = "Resumed the audio!")
     }
 }

@@ -1,4 +1,4 @@
-package com.blitzoffline.alphamusic.utils
+package com.blitzoffline.alphamusic.utils.extension
 
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.Options

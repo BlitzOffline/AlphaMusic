@@ -5,8 +5,8 @@ import dev.triumphteam.cmd.core.annotations.Command
 import dev.triumphteam.cmd.core.annotations.Requirement
 import dev.triumphteam.cmd.core.annotations.Requirements
 import dev.triumphteam.cmd.jda.sender.SlashCommandSender
-import java.time.Instant
 import net.dv8tion.jda.api.EmbedBuilder
+import java.time.Instant
 
 @Command("help")
 class HelpCommand {

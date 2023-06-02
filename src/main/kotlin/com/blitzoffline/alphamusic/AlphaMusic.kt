@@ -1,64 +1,86 @@
 package com.blitzoffline.alphamusic
 
-import com.blitzoffline.alphamusic.audio.GuildMusicManager
-import com.blitzoffline.alphamusic.audio.PlayerManager
-import com.blitzoffline.alphamusic.audio.TrackMetadata
-import com.blitzoffline.alphamusic.audio.TrackService
-import com.blitzoffline.alphamusic.command.*
+import com.blitzoffline.alphamusic.database.Database
+import com.blitzoffline.alphamusic.database.table.Guilds
+import com.blitzoffline.alphamusic.holder.CachedGuildHolder
+import com.blitzoffline.alphamusic.holder.GuildManagersHolder
+import com.blitzoffline.alphamusic.listener.ShutdownListener
 import com.blitzoffline.alphamusic.listener.VoiceListener
-import com.blitzoffline.alphamusic.task.TaskManager
-import com.blitzoffline.alphamusic.utils.terminate
-import com.github.ygimenez.model.PaginatorBuilder
-import com.github.ygimenez.type.Emote
-import dev.triumphteam.cmd.core.message.MessageKey
-import dev.triumphteam.cmd.core.message.context.MessageContext
-import dev.triumphteam.cmd.core.requirement.RequirementKey
+import com.blitzoffline.alphamusic.manager.AudioPlayerManager
+import com.blitzoffline.alphamusic.track.TrackLoader
+import com.blitzoffline.alphamusic.utils.*
 import dev.triumphteam.cmd.jda.SlashCommandManager
-import dev.triumphteam.cmd.jda.sender.SlashCommandSender
 import dev.triumphteam.cmd.jda.sender.SlashSender
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
-import net.dv8tion.jda.api.Permission
-import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.requests.RestAction
 import net.dv8tion.jda.api.utils.cache.CacheFlag
+import org.apache.log4j.LogManager
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.Logger
 
 class AlphaMusic(
     private val logger: Logger,
-    private val token: String,
+    discordToken: String? = null,
     youtubeEmail: String? = null,
-    youtubePass: String? = null
+    youtubePassword: String? = null
 ) {
-    val playerManager = PlayerManager(youtubeEmail, youtubePass)
-    val trackService = TrackService(this)
-    val taskManager = TaskManager()
-    private val musicManagers = HashMap<String, GuildMusicManager>()
+    private val environmentVariables = EnvironmentVariables(
+        discordToken = discordToken,
+        youtubeEmail = youtubeEmail,
+        youtubePassword = youtubePassword
+    )
+    private val audioPlayerManager = AudioPlayerManager(youtubeEmail, youtubePassword)
+    private val trackLoader = TrackLoader()
 
     private lateinit var commandManager: SlashCommandManager<SlashSender>
     lateinit var jda: JDA
         private set
+    lateinit var guildHolder: CachedGuildHolder
+        private set
+    lateinit var guildManagers: GuildManagersHolder
+        private set
+
+    init {
+        if (!LogManager.getRootLogger().isDebugEnabled) {
+            if (environmentVariables.debugModeEnabled) {
+                LogManager.getRootLogger().level = org.apache.log4j.Level.DEBUG
+                logger.info("Debug mode enabled.")
+            }
+        } else {
+            logger.info("Debug mode is already enabled.")
+        }
+
+        Database(environmentVariables).instance
+        transaction {
+            SchemaUtils.createMissingTablesAndColumns(Guilds)
+        }
+    }
 
     fun run(): AlphaMusic {
         jda = createJDAInstance()
         jda.awaitReady()
         RestAction.setPassContext(true)
         RestAction.setDefaultFailure(Throwable::printStackTrace)
+
+        guildHolder = CachedGuildHolder(jda, environmentVariables)
+        guildManagers = GuildManagersHolder(jda, trackLoader, audioPlayerManager, guildHolder)
+
         commandManager = SlashCommandManager.create(jda)
-
-        registerPagination()
-
-        registerRequirements()
-        registerMessages()
-        registerCommands()
+        registerRequirements(commandManager, guildManagers)
+        registerMessages(commandManager, guildManagers)
+        registerCommands(commandManager, jda, guildManagers, trackLoader)
         commandManager.pushCommands()
+
+        registerPagination(jda)
         return this
     }
 
     private fun createJDAInstance() = JDABuilder
         .create(
-            token,
+            environmentVariables.discordToken,
             listOf(
                 GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
                 GatewayIntent.GUILD_VOICE_STATES,
@@ -73,190 +95,12 @@ class AlphaMusic(
             CacheFlag.SCHEDULED_EVENTS,
         )
         .addEventListeners(
-            VoiceListener(this)
+            VoiceListener(this),
+            ShutdownListener(this)
         )
         .build()
 
-    @Synchronized
-    fun getMusicManager(guild: Guild): GuildMusicManager {
-        var musicManager = musicManagers[guild.id]
-
-        if (musicManager == null) {
-            musicManager = GuildMusicManager(this, guild.id)
-            musicManagers[guild.id] = musicManager
-        }
-
-        guild.audioManager.sendingHandler = musicManager.audioHandler
-        return musicManager
-    }
-
     companion object {
         const val EMBED_COLOR = 0x70BB2B
-    }
-
-    private fun registerPagination() {
-        PaginatorBuilder.createPaginator()
-            .setHandler(jda)
-            .shouldRemoveOnReact(false)
-            .shouldEventLock(true)
-            .setEmote(Emote.CANCEL, "✖️")
-            .activate()
-    }
-
-    private fun registerRequirements() {
-        commandManager.registerRequirement(RequirementKey.of("command_in_guild")) { sender, _ ->
-            sender.guild != null && sender.member != null
-        }
-
-        commandManager.registerRequirement(RequirementKey.of("bot_in_vc")) { sender, _ ->
-            sender.guild?.selfMember?.voiceState?.channel != null
-        }
-
-        commandManager.registerRequirement(RequirementKey.of("member_in_vc")) { sender, _ ->
-            sender.member?.voiceState?.channel != null
-        }
-
-        commandManager.registerRequirement(RequirementKey.of("admin")) { sender, _ ->
-            sender.member?.permissions?.contains(Permission.ADMINISTRATOR) ?: false
-        }
-
-        commandManager.registerRequirement(RequirementKey.of("same_channel_or_admin")) { sender, _ ->
-            val member = sender.member
-
-            if (member == null) {
-                false
-            } else {
-                member.permissions.contains(Permission.ADMINISTRATOR) || member.voiceState?.channel == sender.guild?.selfMember?.voiceState?.channel
-            }
-        }
-
-        commandManager.registerRequirement(RequirementKey.of("paused")) { sender, _ ->
-            val guild = sender.guild
-            if (guild == null) {
-                true
-            } else {
-                getMusicManager(guild).player.isPaused
-            }
-        }
-
-        commandManager.registerRequirement(RequirementKey.of("requester_or_admin")) { sender, _ ->
-            val guild = sender.guild
-            if (guild == null) {
-                false
-            } else {
-                val member = sender.member
-                if (member == null) {
-                    false
-                } else {
-                    if (member.hasPermission(Permission.ADMINISTRATOR)) {
-                        true
-                    } else {
-                        val playing = getMusicManager(guild).player.playingTrack
-                        if (playing == null) {
-                            true
-                        } else {
-                            val meta = playing.userData as TrackMetadata
-                            meta.data.id == member.id
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun registerMessages() {
-        commandManager.registerMessage(MessageKey.of("command_not_in_guild", MessageContext::class.java)) { sender, _ ->
-            if (sender !is SlashCommandSender) return@registerMessage
-            sender.event.terminate(reason = "This command can only be used in a guild!", ephemeral = true)
-        }
-
-        commandManager.registerMessage(MessageKey.of("bot_not_in_vc", MessageContext::class.java)) { sender, _ ->
-            if (sender !is SlashCommandSender) return@registerMessage
-            sender.event.terminate("The bot is currently not connected to a voice channel!", ephemeral = true)
-        }
-
-        commandManager.registerMessage(MessageKey.of("bot_already_in_vc", MessageContext::class.java)) { sender, _ ->
-            if (sender !is SlashCommandSender) return@registerMessage
-            sender.event.terminate(reason = "The bot is already connected to a voice channel!", ephemeral = true)
-        }
-
-        commandManager.registerMessage(MessageKey.of("member_not_in_vc", MessageContext::class.java)) { sender, _ ->
-            if (sender !is SlashCommandSender) return@registerMessage
-            sender.event.terminate(reason = "You need to be connected to a voice channel!", ephemeral = true)
-        }
-
-        commandManager.registerMessage(
-            MessageKey.of(
-                "not_same_channel_or_admin",
-                MessageContext::class.java
-            )
-        ) { sender, _ ->
-            if (sender !is SlashCommandSender) return@registerMessage
-            sender.event.terminate(
-                reason = "You need to be in the same Voice Channel as the bot to do this!",
-                ephemeral = true
-            )
-        }
-
-        commandManager.registerMessage(MessageKey.of("not_admin", MessageContext::class.java)) { sender, _ ->
-            if (sender !is SlashCommandSender) return@registerMessage
-            sender.event.terminate(reason = "You can't do this!", ephemeral = true)
-        }
-
-        commandManager.registerMessage(MessageKey.of("not_paused", MessageContext::class.java)) { sender, _ ->
-            if (sender !is SlashCommandSender) return@registerMessage
-            sender.event.terminate(reason = "The audio is not paused. Use \"/pause\" to pause!", ephemeral = true)
-        }
-
-        commandManager.registerMessage(MessageKey.of("paused", MessageContext::class.java)) { sender, _ ->
-            if (sender !is SlashCommandSender) return@registerMessage
-            sender.event.terminate(reason = "The audio is already paused. Use \"/resume\" to resume!", ephemeral = true)
-        }
-
-        commandManager.registerMessage(
-            MessageKey.of(
-                "not_requester_or_admin",
-                MessageContext::class.java
-            )
-        ) { sender, _ ->
-            if (sender !is SlashCommandSender) return@registerMessage
-            val guild = sender.guild ?: return@registerMessage
-            val manager = getMusicManager(guild)
-            val playing = manager.player.playingTrack ?: return@registerMessage
-            val meta = playing.userData as TrackMetadata
-
-            sender.event.terminate(
-                reason = "Only the requester or admins can do this. Requester: ${meta.data.name}#${meta.data.discriminator}",
-                ephemeral = true
-            )
-        }
-    }
-
-    private fun registerCommands() {
-        commandManager.registerCommand(
-            HelpCommand(),
-            PlayCommand(this),
-            PingCommand(this),
-            LoopCommand(this),
-            QueueCommand(this),
-            NowPlayingCommand(this),
-            GrabCommand(this),
-            ShuffleCommand(this),
-            VolumeCommand(this),
-            PauseCommand(this),
-            ResumeCommand(this),
-            SkipCommand(this),
-            JoinCommand(),
-            RemoveDupesCommand(this),
-            ClearCommand(this),
-            ReplayCommand(this),
-            StopCommand(this),
-            RemoveCommand(this),
-            LeaveCommand(this),
-            SeekCommand(this),
-            ForwardCommand(this),
-            RewindCommand(this),
-            RadioCommand(this),
-        )
     }
 }

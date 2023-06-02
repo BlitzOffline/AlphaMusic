@@ -1,8 +1,8 @@
 package com.blitzoffline.alphamusic.command
 
-import com.blitzoffline.alphamusic.AlphaMusic
-import com.blitzoffline.alphamusic.utils.asEmbedNullable
-import com.blitzoffline.alphamusic.utils.terminate
+import com.blitzoffline.alphamusic.holder.GuildManagersHolder
+import com.blitzoffline.alphamusic.utils.extension.asEmbedNullable
+import com.blitzoffline.alphamusic.utils.extension.terminate
 import dev.triumphteam.cmd.core.annotations.Command
 import dev.triumphteam.cmd.core.annotations.Description
 import dev.triumphteam.cmd.core.annotations.Requirement
@@ -11,7 +11,7 @@ import dev.triumphteam.cmd.jda.sender.SlashCommandSender
 
 @Command("grab")
 @Description("Get a DM listing the currently playing song!")
-class GrabCommand(private val bot: AlphaMusic) {
+class GrabCommand(private val guildManagersHolder: GuildManagersHolder) {
     @Command
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
@@ -21,8 +21,8 @@ class GrabCommand(private val bot: AlphaMusic) {
         deferReply().queue()
 
         val guild = guild ?: return
-        val musicManager = bot.getMusicManager(guild)
-        val playing = musicManager.player.playingTrack.asEmbedNullable(icon = user.avatarUrl, showTimestamp = false)
+        val guildManager = guildManagersHolder.getGuildManager(guild)
+        val playing = guildManager.audioPlayer.playingTrack.asEmbedNullable(icon = user.avatarUrl, showTimestamp = false)
             ?: return event.terminate(reason = "There is no song playing currently!", ephemeral = true, deferred = true)
 
         event.user.openPrivateChannel()

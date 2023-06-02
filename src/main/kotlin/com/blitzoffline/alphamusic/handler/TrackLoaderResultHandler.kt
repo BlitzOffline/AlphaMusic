@@ -1,7 +1,10 @@
-package com.blitzoffline.alphamusic.audio
+package com.blitzoffline.alphamusic.handler
 
-import com.blitzoffline.alphamusic.utils.asEmbed
-import com.blitzoffline.alphamusic.utils.terminate
+import com.blitzoffline.alphamusic.manager.GuildManager
+import com.blitzoffline.alphamusic.track.TrackLoader
+import com.blitzoffline.alphamusic.track.TrackMetadata
+import com.blitzoffline.alphamusic.utils.extension.asEmbed
+import com.blitzoffline.alphamusic.utils.extension.terminate
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
@@ -10,10 +13,10 @@ import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 
-class LoaderResultHandler(
+class TrackLoaderResultHandler(
     private val event: SlashCommandInteractionEvent?,
-    private val musicManager: GuildMusicManager,
-    private val trackService: TrackService,
+    private val musicManager: GuildManager,
+    private val trackLoader: TrackLoader,
     private val trackURL: String,
     private val jda: JDA,
     private val isRadio: Boolean,
@@ -27,7 +30,7 @@ class LoaderResultHandler(
         } else {
             track.userData = TrackMetadata(jda.selfUser)
         }
-        trackService.audioItemCache.put(trackURL, track)
+        trackLoader.audioItemCache.put(trackURL, track)
 
         if (musicManager.audioHandler.queue(track.makeClone())) {
             terminate(event, track.asEmbed("Added song to queue ♪", event?.user?.avatarUrl, showTimestamp = false), deferred = deferred)
@@ -47,7 +50,7 @@ class LoaderResultHandler(
             return terminate(event, "Queue is full. Could not add any more songs.", deferred = deferred)
         }
 
-        trackService.audioItemCache.put(trackURL, playlist)
+        trackLoader.audioItemCache.put(trackURL, playlist)
 
         if (isRadio && playlist.tracks.size == 1) {
             return terminate(event, "Could not find any songs based on the given identifier!", deferred = deferred)

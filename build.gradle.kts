@@ -26,6 +26,15 @@ dependencies {
     implementation("com.github.Walkyst.lavaplayer-fork:lavaplayer:ef075855da")
     implementation("com.github.ygimenez:Pagination-Utils:4.0.3")
     implementation("dev.triumphteam:triumph-cmd-jda-slash:2.0.0-ALPHA-8")
+
+    implementation("mysql:mysql-connector-java:8.0.33")
+    implementation("com.zaxxer:HikariCP:5.0.1")
+
+    val exposedVersion = "0.41.1"
+    implementation("org.jetbrains.exposed", "exposed-core", exposedVersion)
+    implementation("org.jetbrains.exposed", "exposed-dao", exposedVersion)
+    implementation("org.jetbrains.exposed", "exposed-jdbc", exposedVersion)
+    implementation("org.jetbrains.exposed", "exposed-java-time", exposedVersion)
 }
 
 java {
@@ -49,10 +58,6 @@ tasks {
     }
 
     withType<ShadowJar> {
-
-        relocate("kotlin", "com.blitzoffline.alphamusic.libs.kotlin")
-        relocate("dev.triumphteam.cmd", "com.blitzoffline.alphamusic.libs.commands")
-
         archiveFileName.set("AlphaMusic.jar")
     }
 }

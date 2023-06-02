@@ -1,11 +1,13 @@
-package com.blitzoffline.alphamusic.utils
+package com.blitzoffline.alphamusic.utils.extension
 
 import com.blitzoffline.alphamusic.AlphaMusic
-import com.blitzoffline.alphamusic.audio.TrackMetadata
+import com.blitzoffline.alphamusic.track.TrackMetadata
+import com.blitzoffline.alphamusic.utils.formatHMSDouble
+import com.blitzoffline.alphamusic.utils.progressBar
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
-import java.time.Duration
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
+import java.time.Duration
 
 fun AudioTrack?.asEmbedNullable(author: String = "Now Playing ♪", icon: String? = null, showTimestamp: Boolean = false): MessageEmbed? {
     if (this == null) {

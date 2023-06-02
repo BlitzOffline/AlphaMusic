@@ -14,8 +14,8 @@ class StartupCommand(options: Options = defaultStartupCommandOptions()): Command
         return this
     }
 
-    fun getDiscordToken(): String {
-        return this.getValue("discord_token")
+    fun getDiscordToken(): String? {
+        return this.getOptionalValue("discord_token")
     }
 
     fun getYoutubeEmail(): String? {
@@ -29,7 +29,7 @@ class StartupCommand(options: Options = defaultStartupCommandOptions()): Command
 
 private fun defaultStartupCommandOptions(): Options {
     return Options().apply {
-        addOption(Option.builder("dt").longOpt("discord_token").required(true).hasArg(true).argName("token").desc("Discord bot token").build())
+        addOption(Option.builder("dt").longOpt("discord_token").required(false).hasArg(true).argName("token").desc("Discord bot token").build())
         addOption(Option.builder("ye").longOpt("youtube_email").required(false).hasArg(true).argName("email").desc("Youtube account email").build())
         addOption(Option.builder("yp").longOpt("youtube_pass").required(false).hasArg(true).argName("password").desc("Youtube account password").build())
     }

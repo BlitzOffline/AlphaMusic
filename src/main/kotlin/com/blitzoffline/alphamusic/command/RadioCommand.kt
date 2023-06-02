@@ -1,7 +1,7 @@
 package com.blitzoffline.alphamusic.command
 
-import com.blitzoffline.alphamusic.AlphaMusic
-import com.blitzoffline.alphamusic.utils.terminate
+import com.blitzoffline.alphamusic.holder.GuildManagersHolder
+import com.blitzoffline.alphamusic.utils.extension.terminate
 import com.blitzoffline.alphamusic.vote.VoteType
 import dev.triumphteam.cmd.core.annotations.Command
 import dev.triumphteam.cmd.core.annotations.Description
@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.Permission
 
 @Command("radio")
 @Description("Toggle the radio!")
-class RadioCommand(private val bot: AlphaMusic) {
+class RadioCommand(private val guildManagersHolder: GuildManagersHolder) {
     @Command
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
@@ -22,14 +22,14 @@ class RadioCommand(private val bot: AlphaMusic) {
     fun SlashCommandSender.radio() {
         val guild = guild ?: return
         val member = member ?: return
-        val musicManager = bot.getMusicManager(guild)
+        val guildManager = guildManagersHolder.getGuildManager(guild)
 
-        val voteManager = musicManager.voteManager.getVoteManager(VoteType.RADIO)
+        val voteManager = guildManager.voteManager.getVoteManager(VoteType.RADIO)
 
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
             voteManager?.votes?.clear()
-            musicManager.audioHandler.toggleRadio()
-            return if (musicManager.audioHandler.radio) {
+            guildManager.audioHandler.toggleRadio()
+            return if (guildManager.guildHolder.radio(guild.id)) {
                 event.terminate(reason = "Radio mode has been enabled!")
             } else {
                 event.terminate(reason = "Radio mode has been disabled!")
@@ -40,8 +40,8 @@ class RadioCommand(private val bot: AlphaMusic) {
 
         if (participants.size <= 2) {
             voteManager?.votes?.clear()
-            musicManager.audioHandler.toggleRadio()
-            return if (musicManager.audioHandler.radio) {
+            guildManager.audioHandler.toggleRadio()
+            return if (guildManager.guildHolder.radio(guild.id)) {
                 event.terminate(reason = "Radio mode has been enabled!")
             } else {
                 event.terminate(reason = "Radio mode has been disabled!")
@@ -60,8 +60,8 @@ class RadioCommand(private val bot: AlphaMusic) {
 
         if (voteManager.votes.size + 1 == required) {
             voteManager.votes.clear()
-            musicManager.audioHandler.toggleRadio()
-            return if (musicManager.audioHandler.radio) {
+            guildManager.audioHandler.toggleRadio()
+            return if (guildManager.guildHolder.radio(guild.id)) {
                 event.terminate(reason = "Radio mode has been enabled!")
             } else {
                 event.terminate(reason = "Radio mode has been disabled!")

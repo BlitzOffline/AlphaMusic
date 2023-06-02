@@ -1,6 +1,6 @@
 package com.blitzoffline.alphamusic.console.command
 
-import com.blitzoffline.alphamusic.utils.log
+import com.blitzoffline.alphamusic.utils.extension.log
 import org.apache.commons.cli.*
 import org.slf4j.Logger
 import org.slf4j.event.Level

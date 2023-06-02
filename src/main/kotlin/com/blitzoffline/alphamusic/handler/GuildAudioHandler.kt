@@ -1,17 +1,38 @@
-package com.blitzoffline.alphamusic.audio
+package com.blitzoffline.alphamusic.handler
 
-import com.blitzoffline.alphamusic.AlphaMusic
+import com.blitzoffline.alphamusic.holder.CachedGuild
+import com.blitzoffline.alphamusic.holder.CachedGuildHolder
+import com.blitzoffline.alphamusic.manager.GuildManager
+import com.blitzoffline.alphamusic.track.TrackLoader
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 import com.sedmelluq.discord.lavaplayer.track.playback.MutableAudioFrame
+import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.audio.AudioSendHandler
+import net.dv8tion.jda.api.entities.Guild
 import java.nio.Buffer
 import java.nio.ByteBuffer
 import java.util.concurrent.ArrayBlockingQueue
 
-class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer, private val guildId: String) : AudioEventAdapter(), AudioSendHandler {
+/**
+ * Handles the audio for a [Guild].
+ * @param jda the [JDA] instance.
+ * @param guildHolder a [CachedGuildHolder] that holds a [CachedGuild] that represents the [Guild] this [GuildAudioHandler] is for.
+ * @param trackLoader the [TrackLoader] instance.
+ * @param player the [AudioPlayer] instance.
+ * @param guildManager the [GuildManager] instance.
+ */
+class GuildAudioHandler(
+    private val guildId: String,
+    private val jda: JDA,
+    private val guildHolder: CachedGuildHolder,
+    private val trackLoader: TrackLoader,
+    private val player: AudioPlayer,
+    private val guildManager: GuildManager
+) : AudioEventAdapter(), AudioSendHandler {
+
     private val buffer: ByteBuffer = ByteBuffer.allocate(1024)
     private val frame: MutableAudioFrame = MutableAudioFrame()
 
@@ -19,24 +40,6 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
      * The queue. It can hold up to 250 [AudioTrack]s.
      */
     private val queue = ArrayBlockingQueue<AudioTrack>(250)
-
-    /**
-     * If enabled, there will be an attempt to generate a new queue
-     * based on the last played [AudioTrack] when there is no [AudioTrack]
-     * left in the queue.
-     */
-    var radio = false
-        private set
-
-    /**
-     * Marks the currently playing [AudioTrack] to be replayed when it ends.
-     */
-    var replay = false
-
-    /**
-     * Marks the currently playing [AudioTrack] to be looped indefinitely.
-     */
-    var loop = false
 
     /**
      * Attempts to play a new [AudioTrack] from the queue and
@@ -47,15 +50,25 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
      * This is used only when Radio Mode is enabled.
      */
     private fun nextTrack(previous: AudioTrack? = null) {
-        if (previous != null && radio && queue.size == 0) {
-            bot.trackService.loadTrack(generateRadioLink(previous), bot.jda.guilds.first { it.id == guildId }, event = null, isRadio = radio)
+        if (previous != null && guildHolder.radio(guildId) && queue.size == 0) {
+            val jdaGuild = jda.guilds.firstOrNull { it.id == guildId }
+            if (jdaGuild == null) {
+                guildManager.addLeaveTask()
+                return
+            }
+
+            trackLoader.loadTrack(
+                generateRadioLink(previous),
+                guildManager,
+                event = null,
+            )
             return
         }
 
         if (player.startTrack(queue.poll(), false)) {
-            return bot.taskManager.removeLeaveTask(guildId)
+            return guildManager.removeLeaveTask()
         }
-        bot.taskManager.addLeaveTask(bot.jda, guildId)
+        guildManager.addLeaveTask()
     }
 
     /**
@@ -70,7 +83,7 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
     fun queue(track: AudioTrack): Boolean {
         if (player.playingTrack == null) {
             player.playTrack(track)
-            bot.taskManager.removeLeaveTask(guildId)
+            guildManager.removeLeaveTask()
             return true
         }
         return queue.offer(track)
@@ -159,8 +172,9 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
      * Toggles the radio on or off.
      */
     fun toggleRadio(): Boolean {
-        radio = !radio
-        return radio
+        val oldValue = guildHolder.radio(guildId)
+        guildHolder.setRadio(guildId, !oldValue)
+        return !oldValue
     }
 
     fun generateRadioLink(previous: AudioTrack): String {
@@ -179,12 +193,12 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
             return
         }
 
-        if (loop) {
+        if (guildHolder.loop(guildId)) {
             return player.playTrack(track.makeClone())
         }
 
-        if (replay) {
-            replay = false
+        if (guildHolder.replay(guildId)) {
+            guildHolder.setReplay(guildId, false)
             return player.playTrack(track.makeClone())
         }
 
@@ -192,11 +206,11 @@ class AudioHandler(private val bot: AlphaMusic, private val player: AudioPlayer,
     }
 
     override fun onPlayerPause(player: AudioPlayer?) {
-        bot.taskManager.addLeaveTask(bot.jda, guildId)
+        guildManager.addLeaveTask()
     }
 
     override fun onPlayerResume(player: AudioPlayer?) {
-        bot.taskManager.removeLeaveTask(guildId)
+        guildManager.removeLeaveTask()
     }
 
     override fun canProvide(): Boolean {

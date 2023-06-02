@@ -1,7 +1,7 @@
 package com.blitzoffline.alphamusic.command
 
-import com.blitzoffline.alphamusic.AlphaMusic
-import com.blitzoffline.alphamusic.utils.terminate
+import com.blitzoffline.alphamusic.holder.GuildManagersHolder
+import com.blitzoffline.alphamusic.utils.extension.terminate
 import com.blitzoffline.alphamusic.vote.VoteType
 import dev.triumphteam.cmd.core.annotations.Command
 import dev.triumphteam.cmd.core.annotations.Description
@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.Permission
 
 @Command("stop")
 @Description("Stop the audio and clear the queue!")
-class StopCommand(private val bot: AlphaMusic) {
+class StopCommand(private val guildManagersHolder: GuildManagersHolder) {
     @Command
     @Requirements(
         Requirement("command_in_guild", messageKey = "command_not_in_guild"),
@@ -22,19 +22,19 @@ class StopCommand(private val bot: AlphaMusic) {
     fun SlashCommandSender.stop() {
         val guild = guild ?: return
         val member = member ?: return
-        val musicManager = bot.getMusicManager(guild)
+        val guildManager = guildManagersHolder.getGuildManager(guild)
 
-        if (musicManager.player.playingTrack == null && musicManager.audioHandler.size() == 0) {
+        if (guildManager.audioPlayer.playingTrack == null && guildManager.audioHandler.size() == 0) {
             return event.terminate(reason = "The bot is not playing any audio!", ephemeral = true)
         }
 
-        val voteManager = musicManager.voteManager.getVoteManager(VoteType.CLEAR)
+        val voteManager = guildManager.voteManager.getVoteManager(VoteType.CLEAR)
 
         if (member.permissions.contains(Permission.ADMINISTRATOR)) {
             voteManager?.votes?.clear()
-            musicManager.audioHandler.clear()
-            musicManager.player.stopTrack()
-            bot.taskManager.addLeaveTask(bot.jda, guild.id)
+            guildManager.audioHandler.clear()
+            guildManager.audioPlayer.stopTrack()
+            guildManager.addLeaveTask()
             return event.terminate(reason = "Stopped the audio!")
         }
 
@@ -42,9 +42,9 @@ class StopCommand(private val bot: AlphaMusic) {
 
         if (participants.size <= 2) {
             voteManager?.votes?.clear()
-            musicManager.audioHandler.clear()
-            musicManager.player.stopTrack()
-            bot.taskManager.addLeaveTask(bot.jda, guild.id)
+            guildManager.audioHandler.clear()
+            guildManager.audioPlayer.stopTrack()
+            guildManager.addLeaveTask()
             return event.terminate(reason = "Stopped the audio!")
         }
 
@@ -60,9 +60,9 @@ class StopCommand(private val bot: AlphaMusic) {
 
         if (voteManager.votes.size + 1 == required) {
             voteManager.votes.clear()
-            musicManager.audioHandler.clear()
-            musicManager.player.stopTrack()
-            bot.taskManager.addLeaveTask(bot.jda, guild.id)
+            guildManager.audioHandler.clear()
+            guildManager.audioPlayer.stopTrack()
+            guildManager.addLeaveTask()
             return event.terminate(reason = "Stopped the audio!")
         }
 
