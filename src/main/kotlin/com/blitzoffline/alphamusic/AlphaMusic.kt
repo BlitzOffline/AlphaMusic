@@ -8,10 +8,7 @@ import com.blitzoffline.alphamusic.listener.ShutdownListener
 import com.blitzoffline.alphamusic.listener.VoiceListener
 import com.blitzoffline.alphamusic.manager.AudioPlayerManager
 import com.blitzoffline.alphamusic.track.TrackLoader
-import com.blitzoffline.alphamusic.utils.registerCommands
-import com.blitzoffline.alphamusic.utils.registerMessages
-import com.blitzoffline.alphamusic.utils.registerPagination
-import com.blitzoffline.alphamusic.utils.registerRequirements
+import com.blitzoffline.alphamusic.utils.*
 import dev.triumphteam.cmd.jda.SlashCommandManager
 import dev.triumphteam.cmd.jda.sender.SlashSender
 import net.dv8tion.jda.api.JDA
@@ -27,9 +24,14 @@ class AlphaMusic(
     private val logger: Logger,
     private val token: String,
     youtubeEmail: String? = null,
-    youtubePass: String? = null
+    youtubePassword: String? = null
 ) {
-    private val audioPlayerManager = AudioPlayerManager(youtubeEmail, youtubePass)
+    private val environmentVariables = EnvironmentVariables(
+        discordToken = token,
+        youtubeEmail = youtubeEmail,
+        youtubePassword = youtubePassword
+    )
+    private val audioPlayerManager = AudioPlayerManager(youtubeEmail, youtubePassword)
     private val trackLoader = TrackLoader()
 
     private lateinit var commandManager: SlashCommandManager<SlashSender>
@@ -41,7 +43,7 @@ class AlphaMusic(
         private set
 
     init {
-        Database.instance
+        Database(environmentVariables).instance
         transaction {
             SchemaUtils.createMissingTablesAndColumns(Guilds)
         }
@@ -53,7 +55,7 @@ class AlphaMusic(
         RestAction.setPassContext(true)
         RestAction.setDefaultFailure(Throwable::printStackTrace)
 
-        guildHolder = CachedGuildHolder(jda)
+        guildHolder = CachedGuildHolder(jda, environmentVariables)
         guildManagers = GuildManagersHolder(jda, trackLoader, audioPlayerManager, guildHolder)
 
         commandManager = SlashCommandManager.create(jda)

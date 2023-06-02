@@ -1,19 +1,17 @@
 package com.blitzoffline.alphamusic.holder
 
 import com.blitzoffline.alphamusic.database.table.Guilds
-import com.blitzoffline.alphamusic.utils.extension.toTimeUnit
+import com.blitzoffline.alphamusic.utils.EnvironmentVariables
 import com.google.common.cache.CacheBuilder
 import com.google.common.cache.CacheLoader
 import net.dv8tion.jda.api.JDA
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import java.time.Instant
+import java.time.OffsetDateTime
 import java.util.concurrent.Executors
 
-class CachedGuildHolder(private val jda: JDA) {
-    private val delay = System.getenv("ALPHAMUSIC_MYSQL_DELAY")?.toLong() ?: 30
-    private val timeUnit = System.getenv("ALPHAMUSIC_MYSQL_TIMEUNIT").toTimeUnit()
-
+class CachedGuildHolder(private val jda: JDA, environmentVariables: EnvironmentVariables) {
     private val scheduler = Executors.newScheduledThreadPool(1)
 
     private val cacheLoader = object : CacheLoader<String, CachedGuild>() {
@@ -29,9 +27,9 @@ class CachedGuildHolder(private val jda: JDA) {
     init {
         scheduler.scheduleAtFixedRate(
             { save() },
-            delay,
-            delay,
-            timeUnit
+            environmentVariables.databaseSaveDelay,
+            environmentVariables.databaseSaveDelay,
+            environmentVariables.databaseSaveDelayTimeUnit
         )
     }
 
@@ -87,6 +85,11 @@ class CachedGuildHolder(private val jda: JDA) {
 
     private fun getByIdOrCreate(id: String): CachedGuild {
         return transaction {
+            val joinTime = jda.getGuildById(id)?.retrieveMemberById(jda.selfUser.id)?.complete()?.timeJoined ?: OffsetDateTime.now()
+            println("Join time: $joinTime")
+            println(joinTime.offset)
+            println("Join time instant: ${joinTime.toInstant()}")
+
             val guild = Guilds.findByIdOrCreate(id) {
                 this.joinedAt = jda.getGuildById(id)?.retrieveMemberById(jda.selfUser.id)?.complete()?.timeJoined?.toInstant() ?: Instant.now()
             }
