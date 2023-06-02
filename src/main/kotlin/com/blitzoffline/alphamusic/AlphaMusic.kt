@@ -16,6 +16,7 @@ import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.requests.RestAction
 import net.dv8tion.jda.api.utils.cache.CacheFlag
+import org.apache.log4j.LogManager
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.Logger
@@ -43,6 +44,15 @@ class AlphaMusic(
         private set
 
     init {
+        if (!LogManager.getRootLogger().isDebugEnabled) {
+            if (environmentVariables.debugModeEnabled) {
+                LogManager.getRootLogger().level = org.apache.log4j.Level.DEBUG
+                logger.info("Debug mode enabled.")
+            }
+        } else {
+            logger.info("Debug mode is already enabled.")
+        }
+
         Database(environmentVariables).instance
         transaction {
             SchemaUtils.createMissingTablesAndColumns(Guilds)

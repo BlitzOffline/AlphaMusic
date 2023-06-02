@@ -14,7 +14,8 @@ data class EnvironmentVariables(
     val databaseUsername: String,
     val databasePassword: String,
     val databaseSaveDelay: Long,
-    val databaseSaveDelayTimeUnit: TimeUnit
+    val databaseSaveDelayTimeUnit: TimeUnit,
+    val debugModeEnabled: Boolean
 ) {
     constructor(
         discordToken: String? = null,
@@ -26,7 +27,8 @@ data class EnvironmentVariables(
         databaseUsername: String? = null,
         databasePassword: String? = null,
         databaseSaveDelay: Long? = null,
-        databaseSaveDelayTimeUnit: TimeUnit? = null
+        databaseSaveDelayTimeUnit: TimeUnit? = null,
+        debugModeEnabled: Boolean? = null
     ) : this(
         discordToken = discordToken ?: System.getenv("ALPHAMUSIC_DISCORD_TOKEN") ?: System.getProperty("ALPHAMUSIC_DISCORD_TOKEN") ?: throw MissingArgumentException("Could not find environment variable ALPHAMUSIC_DISCORD_TOKEN"),
         youtubeEmail = youtubeEmail ?: System.getenv("ALPHAMUSIC_YOUTUBE_EMAIL") ?: System.getProperty("ALPHAMUSIC_YOUTUBE_EMAIL"),
@@ -37,6 +39,7 @@ data class EnvironmentVariables(
         databaseUsername = databaseUsername ?: System.getenv("ALPHAMUSIC_MYSQL_USERNAME") ?: System.getProperty("ALPHAMUSIC_MYSQL_USERNAME") ?: throw MissingArgumentException("Could not find environment variable ALPHAMUSIC_MYSQL_USERNAME"),
         databasePassword = databasePassword ?: System.getenv("ALPHAMUSIC_MYSQL_PASSWORD") ?: System.getProperty("ALPHAMUSIC_MYSQL_PASSWORD") ?: throw MissingArgumentException("Could not find environment variable ALPHAMUSIC_MYSQL_PASSWORD"),
         databaseSaveDelay = databaseSaveDelay ?: System.getenv("ALPHAMUSIC_MYSQL_SAVE_DELAY")?.toLong() ?: System.getProperty("ALPHAMUSIC_MYSQL_SAVE_DELAY")?.toLong() ?: 30,
-        databaseSaveDelayTimeUnit = databaseSaveDelayTimeUnit ?: (System.getenv("ALPHAMUSIC_MYSQL_SAVE_DELAY_TIMEUNIT") ?: System.getProperty("ALPHAMUSIC_MYSQL_SAVE_DELAY_TIMEUNIT")).toTimeUnit()
+        databaseSaveDelayTimeUnit = databaseSaveDelayTimeUnit ?: (System.getenv("ALPHAMUSIC_MYSQL_SAVE_DELAY_TIMEUNIT") ?: System.getProperty("ALPHAMUSIC_MYSQL_SAVE_DELAY_TIMEUNIT")).toTimeUnit(),
+        debugModeEnabled = debugModeEnabled ?: System.getenv("ALPHAMUSIC_DEBUG_MODE")?.toBoolean() ?: System.getProperty("ALPHAMUSIC_DEBUG_MODE")?.toBoolean() ?: false
     )
 }
