@@ -1,4 +1,4 @@
-# AlphaMusic - Discord Music Bot ![AlphaMusic Icon](https://github.com/BlitzOffline/AlphaMusic/assets/52609756/d49c2084-c08e-4747-a0ea-2308b125e5c3)
+# ![AlphaMusic Icon](https://github.com/BlitzOffline/AlphaMusic/assets/52609756/d49c2084-c08e-4747-a0ea-2308b125e5c3) AlphaMusic - Discord Music Bot
 
 
 ## Build Application
