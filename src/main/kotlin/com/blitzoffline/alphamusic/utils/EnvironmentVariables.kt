@@ -36,7 +36,7 @@ data class EnvironmentVariables(
         databaseName = databaseName ?: System.getenv("ALPHAMUSIC_MYSQL_DATABASE") ?: System.getProperty("ALPHAMUSIC_MYSQL_DATABASE") ?: throw MissingArgumentException("Could not find environment variable ALPHAMUSIC_MYSQL_DATABASE"),
         databaseUsername = databaseUsername ?: System.getenv("ALPHAMUSIC_MYSQL_USERNAME") ?: System.getProperty("ALPHAMUSIC_MYSQL_USERNAME") ?: throw MissingArgumentException("Could not find environment variable ALPHAMUSIC_MYSQL_USERNAME"),
         databasePassword = databasePassword ?: System.getenv("ALPHAMUSIC_MYSQL_PASSWORD") ?: System.getProperty("ALPHAMUSIC_MYSQL_PASSWORD") ?: throw MissingArgumentException("Could not find environment variable ALPHAMUSIC_MYSQL_PASSWORD"),
-        databaseSaveDelay = databaseSaveDelay ?: System.getenv("ALPHAMUSIC_MYSQL_DELAY")?.toLong() ?: System.getProperty("ALPHAMUSIC_MYSQL_DELAY")?.toLong() ?: 30,
-        databaseSaveDelayTimeUnit = databaseSaveDelayTimeUnit ?: (System.getenv("ALPHAMUSIC_MYSQL_DELAY_TIMEUNIT") ?: System.getProperty("ALPHAMUSIC_MYSQL_DELAY_TIMEUNIT")).toTimeUnit()
+        databaseSaveDelay = databaseSaveDelay ?: System.getenv("ALPHAMUSIC_MYSQL_SAVE_DELAY")?.toLong() ?: System.getProperty("ALPHAMUSIC_MYSQL_SAVE_DELAY")?.toLong() ?: 30,
+        databaseSaveDelayTimeUnit = databaseSaveDelayTimeUnit ?: (System.getenv("ALPHAMUSIC_MYSQL_SAVE_DELAY_TIMEUNIT") ?: System.getProperty("ALPHAMUSIC_MYSQL_SAVE_DELAY_TIMEUNIT")).toTimeUnit()
     )
 }
