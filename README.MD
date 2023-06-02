@@ -1,7 +1,5 @@
-<div style="text-align:center">
-  <h1>AlphaMusic - Discord Music Bot</h1>
-  <img src="https://github.com/BlitzOffline/AlphaMusic/blob/master/src/main/resources/icon.png?raw=true" alt="AlphaMusic Logo">
-</div>
+# AlphaMusic - Discord Music Bot
+![AlphaMusic Icon](https://github.com/BlitzOffline/AlphaMusic/blob/master/src/main/resources/icon.png?raw=true)
 
 ## Build Application
 ### Requirements:
