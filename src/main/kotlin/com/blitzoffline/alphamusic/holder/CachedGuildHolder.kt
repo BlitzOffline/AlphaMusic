@@ -85,11 +85,6 @@ class CachedGuildHolder(private val jda: JDA, environmentVariables: EnvironmentV
 
     private fun getByIdOrCreate(id: String): CachedGuild {
         return transaction {
-            val joinTime = jda.getGuildById(id)?.retrieveMemberById(jda.selfUser.id)?.complete()?.timeJoined ?: OffsetDateTime.now()
-            println("Join time: $joinTime")
-            println(joinTime.offset)
-            println("Join time instant: ${joinTime.toInstant()}")
-
             val guild = Guilds.findByIdOrCreate(id) {
                 this.joinedAt = jda.getGuildById(id)?.retrieveMemberById(jda.selfUser.id)?.complete()?.timeJoined?.toInstant() ?: Instant.now()
             }

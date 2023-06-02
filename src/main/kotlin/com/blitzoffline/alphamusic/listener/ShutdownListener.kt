@@ -6,7 +6,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter
 
 class ShutdownListener(private val bot: AlphaMusic) : ListenerAdapter() {
     override fun onShutdown(event: ShutdownEvent) {
-        println("LISTENER: Shutting down...")
         bot.guildHolder.save()
     }
 }
