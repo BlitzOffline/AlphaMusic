@@ -2,6 +2,19 @@ package com.blitzoffline.alphamusic.utils
 
 import java.time.Duration
 
+fun String?.toBooleanOrNull(): Boolean? {
+    if (this == null) return null
+    return when (this.lowercase()) {
+        "true" -> true
+        "1" -> true
+        "yes" -> true
+        "false" -> false
+        "0" -> false
+        "no" -> false
+        else -> null
+    }
+}
+
 fun formatHMS(duration: Duration): String {
     val builder = StringBuilder()
 
@@ -119,7 +132,7 @@ fun formatHMSDouble(progress: Duration, duration: Duration): String {
     }
 
 
-    return  "$progressBuilder / $durationBuilder"
+    return "$progressBuilder / $durationBuilder"
 }
 
 fun progressBar(progress: Long, duration: Long): String {
@@ -128,9 +141,9 @@ fun progressBar(progress: Long, duration: Long): String {
     val partValue = duration / 30
     val position = (progress / partValue).toInt()
 
-    if (position > 1) repeat(position-1) { builder.append("▬") }
+    if (position > 1) repeat(position - 1) { builder.append("▬") }
     builder.append("\uD83D\uDD18")
-    if (position < 29) repeat(30-position-1) { builder.append("▬") }
+    if (position < 29) repeat(30 - position - 1) { builder.append("▬") }
 
     return builder.toString()
 }

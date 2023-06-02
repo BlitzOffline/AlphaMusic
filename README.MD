@@ -48,6 +48,7 @@ If environment variables are not found, the application will check java system p
 - `ALPHAMUSIC_MYSQL_PASSWORD` - specify MySQL password - required
 - `ALPHAMUSIC_MYSQL_SAVE_DELAY` - specify delay between data saving tasks - default: `30`
 - `ALPHAMUSIC_MYSQL_SAVE_DELAY_TIMEUNIT` - specify the time unit to represent the save delay by - default: `MINUTES`
+- `ALPHAMUSIC_DEBUG_MODE` - specify if debug mode should be enabled when the app starts - default: `false`
 
 #### Example:
 `java -DALPHAMUSIC_MYSQL_HOST=example.test -DALPHAMUSIC_MYSQL_DATABASE=alphamusic -DALPHAMUSIC_MYSQL_USERNAME=alphamusic -DALPHAMUSIC_MYSQL_PASSWORD=pass1234 -jar build/libs/AlphaMusic.jar --discord_token mydiscord.token.123`

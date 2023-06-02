@@ -40,6 +40,6 @@ data class EnvironmentVariables(
         databasePassword = databasePassword ?: System.getenv("ALPHAMUSIC_MYSQL_PASSWORD") ?: System.getProperty("ALPHAMUSIC_MYSQL_PASSWORD") ?: throw MissingArgumentException("Could not find environment variable ALPHAMUSIC_MYSQL_PASSWORD"),
         databaseSaveDelay = databaseSaveDelay ?: System.getenv("ALPHAMUSIC_MYSQL_SAVE_DELAY")?.toLong() ?: System.getProperty("ALPHAMUSIC_MYSQL_SAVE_DELAY")?.toLong() ?: 30,
         databaseSaveDelayTimeUnit = databaseSaveDelayTimeUnit ?: (System.getenv("ALPHAMUSIC_MYSQL_SAVE_DELAY_TIMEUNIT") ?: System.getProperty("ALPHAMUSIC_MYSQL_SAVE_DELAY_TIMEUNIT")).toTimeUnit(),
-        debugModeEnabled = debugModeEnabled ?: System.getenv("ALPHAMUSIC_DEBUG_MODE")?.toBoolean() ?: System.getProperty("ALPHAMUSIC_DEBUG_MODE")?.toBoolean() ?: false
+        debugModeEnabled = debugModeEnabled ?: System.getenv("ALPHAMUSIC_DEBUG_MODE")?.toBooleanOrNull() ?: System.getProperty("ALPHAMUSIC_DEBUG_MODE")?.toBooleanOrNull() ?: false
     )
 }
