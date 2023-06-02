@@ -1,8 +1,8 @@
 package com.blitzoffline.alphamusic.holder
 
 import com.blitzoffline.alphamusic.manager.AudioPlayerManager
-import com.blitzoffline.alphamusic.track.TrackLoader
 import com.blitzoffline.alphamusic.manager.GuildManager
+import com.blitzoffline.alphamusic.track.TrackLoader
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.Guild
 

@@ -2,12 +2,12 @@ package com.blitzoffline.alphamusic.command
 
 import com.blitzoffline.alphamusic.holder.GuildManagersHolder
 import com.blitzoffline.alphamusic.track.TrackMetadata
-import com.blitzoffline.alphamusic.utils.formatHMS
 import com.blitzoffline.alphamusic.utils.extension.terminate
+import com.blitzoffline.alphamusic.utils.formatHMS
 import dev.triumphteam.cmd.core.annotations.*
 import dev.triumphteam.cmd.jda.sender.SlashCommandSender
-import java.time.Duration
 import net.dv8tion.jda.api.Permission
+import java.time.Duration
 
 @Command("seek")
 @Description("Seek to a certain moment in the currently playing song!")

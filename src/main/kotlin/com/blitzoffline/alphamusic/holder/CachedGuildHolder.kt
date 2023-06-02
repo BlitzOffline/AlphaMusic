@@ -1,20 +1,18 @@
 package com.blitzoffline.alphamusic.holder
 
 import com.blitzoffline.alphamusic.database.table.Guilds
+import com.blitzoffline.alphamusic.utils.extension.toTimeUnit
 import com.google.common.cache.CacheBuilder
 import com.google.common.cache.CacheLoader
-import com.google.common.util.concurrent.ListenableFuture
-import com.google.common.util.concurrent.MoreExecutors
 import net.dv8tion.jda.api.JDA
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import java.time.Instant
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 class CachedGuildHolder(private val jda: JDA) {
     private val delay = System.getenv("ALPHAMUSIC_MYSQL_DELAY")?.toLong() ?: 30
-    private val timeUnit = TimeUnit.valueOf(System.getenv("ALPHAMUSIC_MYSQL_TIMEUNIT") ?: "MINUTES")
+    private val timeUnit = System.getenv("ALPHAMUSIC_MYSQL_TIMEUNIT").toTimeUnit()
 
     private val scheduler = Executors.newScheduledThreadPool(1)
 

@@ -3,8 +3,8 @@ package com.blitzoffline.alphamusic.command
 import com.blitzoffline.alphamusic.AlphaMusic
 import com.blitzoffline.alphamusic.holder.GuildManagersHolder
 import com.blitzoffline.alphamusic.track.TrackMetadata
-import com.blitzoffline.alphamusic.utils.formatHMS
 import com.blitzoffline.alphamusic.utils.extension.terminate
+import com.blitzoffline.alphamusic.utils.formatHMS
 import com.github.ygimenez.method.Pages
 import com.github.ygimenez.model.InteractPage
 import com.github.ygimenez.model.Page
@@ -13,9 +13,9 @@ import dev.triumphteam.cmd.core.annotations.Description
 import dev.triumphteam.cmd.core.annotations.Requirement
 import dev.triumphteam.cmd.core.annotations.Requirements
 import dev.triumphteam.cmd.jda.sender.SlashCommandSender
-import java.time.Duration
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
+import java.time.Duration
 
 @Command("queue")
 @Description("List all the songs that are currently queued!")

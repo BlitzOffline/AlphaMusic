@@ -1,13 +1,13 @@
 package com.blitzoffline.alphamusic
 
 import com.blitzoffline.alphamusic.database.Database
-import com.blitzoffline.alphamusic.manager.AudioPlayerManager
-import com.blitzoffline.alphamusic.track.TrackLoader
 import com.blitzoffline.alphamusic.database.table.Guilds
 import com.blitzoffline.alphamusic.holder.CachedGuildHolder
 import com.blitzoffline.alphamusic.holder.GuildManagersHolder
 import com.blitzoffline.alphamusic.listener.ShutdownListener
 import com.blitzoffline.alphamusic.listener.VoiceListener
+import com.blitzoffline.alphamusic.manager.AudioPlayerManager
+import com.blitzoffline.alphamusic.track.TrackLoader
 import com.blitzoffline.alphamusic.utils.registerCommands
 import com.blitzoffline.alphamusic.utils.registerMessages
 import com.blitzoffline.alphamusic.utils.registerPagination
