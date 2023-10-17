@@ -30,6 +30,8 @@ fun main(args: Array<String>) {
         exitProcess(0)
     }
 
-    val bot = AlphaMusic(logger, startupCommand.getDiscordToken(), startupCommand.getYoutubeEmail(), startupCommand.getYoutubePassword()).run()
-    val console = ConsoleApplication(bot.jda, logger).run()
+    val bot = AlphaMusic(logger, startupCommand.getDiscordToken(), startupCommand.getYoutubeEmail(), startupCommand.getYoutubePassword())
+    bot.run()
+    val console = ConsoleApplication(bot.jda, logger)
+    console.run()
 }
