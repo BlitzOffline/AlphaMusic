@@ -99,6 +99,7 @@ class VoiceListener(private val bot: AlphaMusic) : ListenerAdapter() {
             if (channelJoined != guild.selfMember.voiceState?.channel) return
             if (guild.selfMember.voiceState?.isMuted == true) return
             if (guild.selfMember.voiceState?.isSuppressed == true) return
+
             guildManager.removeLeaveTask()
         }
     }

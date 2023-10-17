@@ -87,6 +87,7 @@ class CachedGuildHolder(private val jda: JDA, environmentVariables: EnvironmentV
         return transaction {
             val guild = Guilds.findByIdOrCreate(id) {
                 this.joinedAt = jda.getGuildById(id)?.retrieveMemberById(jda.selfUser.id)?.complete()?.timeJoined?.toInstant() ?: Instant.now()
+                this.guildName = jda.getGuildById(id)?.name
             }
             return@transaction CachedGuild(guild.radio, guild.volume, guild.joinedAt, guild.updatedAt)
         }
@@ -99,6 +100,8 @@ class CachedGuildHolder(private val jda: JDA, environmentVariables: EnvironmentV
                 updateStatement[volume] = oldValue.volume
                 updateStatement[joinedAt] = oldValue.joinedAt
                 updateStatement[updatedAt] = oldValue.updatedAt
+                // Save the latest known guild name on every save.
+                updateStatement[guildName] = jda.getGuildById(key)?.name
             }
 
             return@transaction oldValue

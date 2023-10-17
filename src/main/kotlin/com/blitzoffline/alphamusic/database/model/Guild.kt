@@ -11,6 +11,11 @@ class Guild(id: EntityID<String>) : Entity<String>(id) {
     companion object : EntityClass<String, Guild>(Guilds)
 
     /**
+     * The last known display name of this guild.
+     */
+    var guildName by Guilds.guildName
+
+    /**
      * The [Instant] at which the bot joined this guild.
      */
     var joinedAt by Guilds.joinedAt

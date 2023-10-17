@@ -11,6 +11,7 @@ object Guilds : IdTable<String>() {
     }
 
     override val id = varchar("id", 64).entityId()
+    val guildName = varchar("guild_name", 100).nullable().default(null)
     val radio = bool("radio").default(false)
     val volume = integer("volume").default(100)
     val joinedAt = timestamp("joined_at").default(Instant.now())
