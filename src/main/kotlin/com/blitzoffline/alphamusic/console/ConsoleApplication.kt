@@ -1,128 +1,30 @@
 package com.blitzoffline.alphamusic.console
 
+import com.blitzoffline.alphamusic.console.command.Command
 import com.blitzoffline.alphamusic.console.command.AppConsoleCommand
-import com.blitzoffline.alphamusic.console.command.handleException
-import com.blitzoffline.alphamusic.utils.extension.printHelp
 import net.dv8tion.jda.api.JDA
-import org.apache.commons.cli.HelpFormatter
-import org.apache.commons.cli.ParseException
-import org.apache.log4j.LogManager
 import org.slf4j.Logger
-import org.slf4j.event.Level
-import kotlin.system.exitProcess
 
-class ConsoleApplication(private val jda: JDA, private val logger: Logger) {
-    private val commands = listOf("app")
-    private var appConsoleCommand = AppConsoleCommand()
-    private val helpFormatter = HelpFormatter()
+class ConsoleApplication(jda: JDA, private val logger: Logger) {
+    private val commands: Set<Command> = setOf(
+        AppConsoleCommand("app", jda, logger)
+    )
 
     fun run() {
+        logger.debug("Successfully started console handler...")
         while (true) {
             val input = readlnOrNull()
             if (input.isNullOrBlank()) continue
 
-            val lowercaseInput = input.lowercase()
+            val splitInput = input.split(" ", limit = 2)
 
-            val command = commands.firstOrNull { lowercaseInput.startsWith(it) }
+            val command = commands.firstOrNull { it.name.equals(splitInput[0], true) }
             if (command == null) {
-                logger.warn("Unknown command: $input. Available commands: $commands")
+                logger.warn("Unknown command: ${splitInput[0]}. Available commands: ${commands.joinToString(", ") { it.name }}")
                 continue
             }
 
-            if (input.length == command.length) {
-                helpFormatter.printHelp(command, appConsoleCommand.options, logger)
-                continue
-            }
-
-            if (!input.substring(command.length).startsWith(" ")) {
-                logger.warn("Unknown command: $input. Available commands: $commands")
-                continue
-            }
-
-            val commandLine = input.substring(command.length + 1)
-            // TODO: Handle different commands. For now, only app command is available.
-
-            try {
-                appConsoleCommand = appConsoleCommand.parse(commandLine)
-            } catch (exception: ParseException) {
-                if (!handleException(exception, commandLine, appConsoleCommand.options, logger, Level.WARN)) {
-                    logger.warn("Option not found: $commandLine.")
-                    logger.debug("Something went wrong while executing command: $commandLine", exception)
-                }
-
-                helpFormatter.printHelp(command, appConsoleCommand.options, logger)
-                continue
-            }
-
-            var executed = 0
-            if (appConsoleCommand.debug()) {
-                val debugInfo = appConsoleCommand.debugInfo()
-                if (!debugInfo.isNullOrBlank() && !debugInfo.equals("true", true) && !debugInfo.equals("false", true)) {
-                    when(debugInfo) {
-                        "guilds" -> {
-                            logger.info("Bot is currently in ${jda.guilds.size} guilds.")
-                        }
-                        "members" -> {
-                            logger.info("Bot is currently serving ${jda.guilds.sumOf { it.memberCount }} members.")
-                        }
-                        "voice" -> {
-                            logger.info("Bot is currently connected to ${jda.audioManagers.count { it.isConnected }} voice channels.")
-                        }
-                        "voice-users" -> {
-                            // Count number of users that are currently connected to a voice channel together with the bot.
-                            jda.audioManagers.forEach { it.connectedChannel?.members?.size?.minus(1) }
-                            logger.info("Bot is currently serving ${jda.audioManagers
-                                .filter { it.isConnected && it.guild.selfMember.voiceState?.isMuted == false && it.guild.selfMember.voiceState?.isDeafened == false }
-                                .sumOf { it.connectedChannel?.members?.size?.minus(1) ?: 0 }} users in voice channels.")
-                        }
-                        "voice-users-total" -> {
-                            // Count number of users that are currently connected to a voice channel together with the bot.
-                            jda.audioManagers.forEach { it.connectedChannel?.members?.size?.minus(1) }
-                            logger.info("Bot is currently serving ${jda.audioManagers.sumOf { it.connectedChannel?.members?.size?.minus(1) ?: 0 }} users in voice channels.")
-                        }
-                    }
-                } else {
-                    val toggle = debugInfo.isNullOrBlank()
-                    val turnOn = if (toggle) !LogManager.getRootLogger().isDebugEnabled else debugInfo.toBoolean()
-
-                    if (turnOn) {
-                        logger.info("Debug mode enabled.")
-                        LogManager.getRootLogger().level = org.apache.log4j.Level.DEBUG
-                    } else {
-                        logger.info("Debug mode disabled.")
-                        LogManager.getRootLogger().level = org.apache.log4j.Level.INFO
-                    }
-                }
-                executed++
-            }
-
-            if (appConsoleCommand.version()) {
-                logger.info("AlphaMusic version: ${this.javaClass.`package`.implementationVersion}")
-                executed++
-            }
-
-            if (appConsoleCommand.help()) {
-                helpFormatter.printHelp(command, appConsoleCommand.options, logger)
-                executed++
-            }
-
-            if (appConsoleCommand.shutdown()) {
-                logger.info("Performing shutdown...")
-                logger.info("Closing JDA instance...")
-                jda.guilds.forEach { it.updateCommands().queue() }
-                jda.updateCommands()
-                jda.shutdown()
-                while (true) {
-                    if (jda.status != JDA.Status.SHUTDOWN) continue
-                    logger.info("Closed JDA instance successfully! Stopping application...")
-                    exitProcess(0)
-                }
-            }
-
-            if (executed == 0) {
-                logger.warn("Options not found: $commandLine.")
-                helpFormatter.printHelp(command, appConsoleCommand.options, logger)
-            }
+            command.execute(splitInput[1])
         }
     }
 }

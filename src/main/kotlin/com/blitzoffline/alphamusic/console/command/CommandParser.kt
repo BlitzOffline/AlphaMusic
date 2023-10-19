@@ -4,6 +4,10 @@ import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.DefaultParser
 import org.apache.commons.cli.Options
 
+/**
+ * Simple command parser.
+ * @param options argument settings for the command.
+ */
 open class CommandParser(val options: Options) {
     private val parser = DefaultParser.builder()
         .setAllowPartialMatching(true)
@@ -12,16 +16,24 @@ open class CommandParser(val options: Options) {
 
     private lateinit var commandLine: CommandLine
 
-    open fun parse(args: Array<String>): CommandParser {
+    /**
+     * Parse a set of arguments based on the settings selected in the constructor of the parser.
+     * @param args the arguments to be parsed based on the settings
+     */
+    fun parseArguments(args: Array<String>) {
         commandLine = parser.parse(options, args)
-        return this
     }
 
-    open fun parse(args: String): CommandParser {
-        return this.parse(args.split(" ").toTypedArray())
+    /**
+     * Helper method for [CommandParser.parseArguments]. The arguments string will be split at spaces.
+     * Parse a set of arguments based on the settings selected in the constructor of the parser.
+     * @param args the arguments to be parsed based on the settings
+     */
+    fun parseArguments(args: String) {
+        this.parseArguments(args.split(" ").toTypedArray())
     }
 
-    fun isPresent(option: String): Boolean {
+    fun isArgumentPresent(option: String): Boolean {
         if (!::commandLine.isInitialized) {
             throw IllegalStateException("No arguments specified!")
         }
@@ -29,7 +41,7 @@ open class CommandParser(val options: Options) {
         return commandLine.hasOption(option)
     }
 
-    fun getValue(option: String): String {
+    fun getArgumentValue(option: String): String {
         if (!::commandLine.isInitialized) {
             throw IllegalStateException("No arguments specified!")
         }
@@ -37,7 +49,7 @@ open class CommandParser(val options: Options) {
         return commandLine.getOptionValue(option)
     }
 
-    fun getOptionalValue(option: String): String? {
+    fun getOptionalArgumentValue(option: String): String? {
         if (!::commandLine.isInitialized) {
             throw IllegalStateException("No arguments specified!")
         }

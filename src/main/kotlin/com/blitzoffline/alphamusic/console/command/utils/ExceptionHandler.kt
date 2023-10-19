@@ -1,5 +1,6 @@
-package com.blitzoffline.alphamusic.console.command
+package com.blitzoffline.alphamusic.console.command.utils
 
+import com.blitzoffline.alphamusic.console.command.CommandParser
 import com.blitzoffline.alphamusic.utils.extension.log
 import org.apache.commons.cli.*
 import org.slf4j.Logger
