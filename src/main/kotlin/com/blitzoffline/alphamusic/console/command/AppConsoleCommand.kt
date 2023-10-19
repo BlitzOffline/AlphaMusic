@@ -31,7 +31,7 @@ class AppConsoleCommand(options: Options = defaultConsoleCommandOptions()) : Com
     }
 
     fun debugInfo(): String? {
-        if (!this.isPresent("debug")) return null
+        if (!this.debug()) return null
         return this.getOptionalValue("debug")
     }
 }

@@ -20,6 +20,7 @@ import org.apache.log4j.LogManager
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.Logger
+import kotlin.math.log
 
 class AlphaMusic(
     private val logger: Logger,
@@ -60,21 +61,34 @@ class AlphaMusic(
     }
 
     fun run(): AlphaMusic {
+        logger.debug("Initializing JDA instance...")
         jda = createJDAInstance()
         jda.awaitReady()
+
+        logger.debug("Configuring JDA exception handling...")
         RestAction.setPassContext(true)
         RestAction.setDefaultFailure(Throwable::printStackTrace)
 
+        logger.debug("Initializing guilds cache...")
         guildHolder = CachedGuildHolder(jda, environmentVariables)
+        logger.debug("Initializing guild managers...")
         guildManagers = GuildManagersHolder(jda, trackLoader, audioPlayerManager, guildHolder)
 
+        logger.debug("Initializing slash commands manager...")
         commandManager = SlashCommandManager.create(jda)
+        logger.debug("Registering slash command requirements...")
         registerRequirements(commandManager, guildManagers)
+        logger.debug("Registering slash command requirement failure messages...")
         registerMessages(commandManager, guildManagers)
+        logger.debug("Registering slash commands...")
         registerCommands(commandManager, jda, guildManagers, trackLoader)
+        logger.debug("Uploading slash commands...")
         commandManager.pushCommands()
 
+        logger.debug("Initializing paginator...")
         registerPagination(jda)
+
+        logger.debug("Successfully started application...")
         return this
     }
 

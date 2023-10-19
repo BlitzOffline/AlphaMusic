@@ -11,27 +11,32 @@ import org.slf4j.LoggerFactory
 import org.slf4j.event.Level
 import kotlin.system.exitProcess
 
-private val logger: Logger = LoggerFactory.getLogger(AlphaMusic::class.java)
+private val LOGGER: Logger = LoggerFactory.getLogger(AlphaMusic::class.java)
 
 fun main(args: Array<String>) {
     val helpFormatter = HelpFormatter()
     var startupCommand = StartupCommand()
 
     try {
+        LOGGER.debug("Parsing startup arguments: " + args.joinToString(" "))
         startupCommand = startupCommand.parse(args)
     } catch (exception: ParseException) {
         val commandLine = args.joinToString(" ")
-        if (!handleException(exception, commandLine, startupCommand.options, logger, Level.ERROR)) {
-            logger.error("Something went wrong while starting the bot.", exception)
-            logger.info("Something went wrong while executing command: $commandLine", exception)
+        if (!handleException(exception, commandLine, startupCommand.options, LOGGER, Level.ERROR)) {
+            LOGGER.error("Something went wrong while starting the bot.", exception)
+            LOGGER.info("Something went wrong while executing command: $commandLine", exception)
         }
 
-        helpFormatter.printHelp("AlphaMusic.jar", startupCommand.options, logger)
+        helpFormatter.printHelp("AlphaMusic.jar", startupCommand.options, LOGGER)
         exitProcess(0)
     }
 
-    val bot = AlphaMusic(logger, startupCommand.getDiscordToken(), startupCommand.getYoutubeEmail(), startupCommand.getYoutubePassword())
+    LOGGER.debug("Initializing application...")
+    val bot = AlphaMusic(LOGGER, startupCommand.getDiscordToken(), startupCommand.getYoutubeEmail(), startupCommand.getYoutubePassword())
+    LOGGER.debug("Starting application...")
     bot.run()
-    val console = ConsoleApplication(bot.jda, logger)
+    LOGGER.debug("Initializing console handler...")
+    val console = ConsoleApplication(bot.jda, LOGGER)
+    LOGGER.debug("Starting console handler...")
     console.run()
 }
