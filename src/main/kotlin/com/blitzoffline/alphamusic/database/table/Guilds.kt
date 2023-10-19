@@ -5,7 +5,7 @@ import org.jetbrains.exposed.sql.javatime.timestamp
 import java.time.Instant
 import com.blitzoffline.alphamusic.database.model.Guild as GuildModel
 
-object Guilds : IdTable<String>() {
+object Guilds : IdTable<String>("guilds") {
     fun findByIdOrCreate(id: String, init: GuildModel.() -> Unit = {}): GuildModel {
         return GuildModel.findById(id) ?: GuildModel.new(id) { init() }
     }
