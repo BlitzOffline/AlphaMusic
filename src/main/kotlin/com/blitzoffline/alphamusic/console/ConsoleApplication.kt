@@ -24,7 +24,7 @@ class ConsoleApplication(jda: JDA, private val logger: Logger) {
                 continue
             }
 
-            command.execute(splitInput[1])
+            command.execute(splitInput.getOrNull(1))
         }
     }
 }

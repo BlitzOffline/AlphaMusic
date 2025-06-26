@@ -20,20 +20,17 @@ import org.apache.log4j.LogManager
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.Logger
-import kotlin.math.log
 
 class AlphaMusic(
     private val logger: Logger,
     discordToken: String? = null,
-    youtubeEmail: String? = null,
-    youtubePassword: String? = null
+    youtubeRefreshToken: String? = null
 ) {
     private val environmentVariables = EnvironmentVariables(
         discordToken = discordToken,
-        youtubeEmail = youtubeEmail,
-        youtubePassword = youtubePassword
+        youtubeRefreshToken = youtubeRefreshToken
     )
-    private val audioPlayerManager = AudioPlayerManager(youtubeEmail, youtubePassword)
+    private val audioPlayerManager = AudioPlayerManager(environmentVariables.youtubeRefreshToken)
     private val trackLoader = TrackLoader()
 
     private lateinit var commandManager: SlashCommandManager<SlashSender>

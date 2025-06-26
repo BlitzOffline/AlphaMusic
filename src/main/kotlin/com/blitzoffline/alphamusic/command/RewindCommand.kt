@@ -66,7 +66,7 @@ class RewindCommand(private val guildManagersHolder: GuildManagersHolder) {
 
         total *= 1000
 
-        playing.position = playing.position - total
+        playing.position -= total
         event.terminate(reason = "Rewound song to: ${formatHMS(Duration.ofMillis(playing.position))}!")
     }
 }

@@ -8,11 +8,7 @@ class StartupCommandParser(options: Options = Constants.STARTUP_COMMAND_OPTIONS)
         return this.getOptionalArgumentValue("discord_token")
     }
 
-    fun getYoutubeEmail(): String? {
-        return this.getOptionalArgumentValue("youtube_email")
-    }
-
-    fun getYoutubePassword(): String? {
-        return this.getOptionalArgumentValue("youtube_pass")
+    fun getYoutubeRefreshToken(): String? {
+        return this.getOptionalArgumentValue("youtube_refresh_token")
     }
 }

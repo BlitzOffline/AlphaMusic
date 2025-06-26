@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.JDA
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import java.time.Instant
-import java.time.OffsetDateTime
 import java.util.concurrent.Executors
 
 class CachedGuildHolder(private val jda: JDA, environmentVariables: EnvironmentVariables) {

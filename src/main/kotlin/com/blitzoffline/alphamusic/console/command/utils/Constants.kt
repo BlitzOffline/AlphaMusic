@@ -30,12 +30,8 @@ class Constants {
                     .desc("Discord bot token").build()
             )
             addOption(
-                Option.builder("ye").longOpt("youtube_email").required(false).hasArg(true).argName("email")
-                    .desc("Youtube account email").build()
-            )
-            addOption(
-                Option.builder("yp").longOpt("youtube_pass").required(false).hasArg(true).argName("password")
-                    .desc("Youtube account password").build()
+                Option.builder("yrt").longOpt("youtube_refresh_token").required(false).hasArg(true).argName("token")
+                    .desc("Youtube refresh token").build()
             )
         }
     }

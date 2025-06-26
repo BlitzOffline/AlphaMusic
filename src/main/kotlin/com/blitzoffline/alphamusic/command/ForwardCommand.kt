@@ -74,7 +74,7 @@ class ForwardCommand(private val guildManagersHolder: GuildManagersHolder) {
             )
         }
 
-        playing.position = playing.position + total
+        playing.position += total
         event.terminate(reason = "Forwarded song to: ${formatHMS(Duration.ofMillis(playing.position))}!")
     }
 }

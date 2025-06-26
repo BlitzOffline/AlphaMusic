@@ -6,8 +6,7 @@ import java.util.concurrent.TimeUnit
 
 data class EnvironmentVariables(
     val discordToken: String,
-    val youtubeEmail: String?,
-    val youtubePassword: String?,
+    val youtubeRefreshToken: String?,
     val databaseHost: String,
     val databasePort: String,
     val databaseName: String,
@@ -19,8 +18,7 @@ data class EnvironmentVariables(
 ) {
     constructor(
         discordToken: String? = null,
-        youtubeEmail: String? = null,
-        youtubePassword: String? = null,
+        youtubeRefreshToken: String? = null,
         databaseHost: String? = null,
         databasePort: String? = null,
         databaseName: String? = null,
@@ -31,8 +29,7 @@ data class EnvironmentVariables(
         debugModeEnabled: Boolean? = null
     ) : this(
         discordToken = discordToken ?: System.getenv("ALPHAMUSIC_DISCORD_TOKEN") ?: System.getProperty("ALPHAMUSIC_DISCORD_TOKEN") ?: throw MissingArgumentException("Could not find environment variable ALPHAMUSIC_DISCORD_TOKEN"),
-        youtubeEmail = youtubeEmail ?: System.getenv("ALPHAMUSIC_YOUTUBE_EMAIL") ?: System.getProperty("ALPHAMUSIC_YOUTUBE_EMAIL"),
-        youtubePassword = youtubePassword ?: System.getenv("ALPHAMUSIC_YOUTUBE_PASSWORD") ?: System.getProperty("ALPHAMUSIC_YOUTUBE_PASSWORD"),
+        youtubeRefreshToken = youtubeRefreshToken ?: System.getenv("ALPHAMUSIC_YOUTUBE_REFRESH_TOKEN") ?: System.getProperty("ALPHAMUSIC_YOUTUBE_REFRESH_TOKEN"),
         databaseHost = databaseHost ?: System.getenv("ALPHAMUSIC_MYSQL_HOST") ?: System.getProperty("ALPHAMUSIC_MYSQL_HOST") ?: throw MissingArgumentException("Could not find environment variable ALPHAMUSIC_MYSQL_HOST"),
         databasePort = databasePort ?: System.getenv("ALPHAMUSIC_MYSQL_PORT") ?: System.getProperty("ALPHAMUSIC_MYSQL_PORT") ?: "3306",
         databaseName = databaseName ?: System.getenv("ALPHAMUSIC_MYSQL_DATABASE") ?: System.getProperty("ALPHAMUSIC_MYSQL_DATABASE") ?: throw MissingArgumentException("Could not find environment variable ALPHAMUSIC_MYSQL_DATABASE"),

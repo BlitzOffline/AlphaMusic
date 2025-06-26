@@ -1,0 +1,36 @@
+[versions]
+kotlin="2.0.21"
+shadow="8.3.5"
+commons-cli="1.9.0"
+slf4j="2.0.16"
+jda="5.1.2"
+lavalink-youtube="1.8.3"
+lavalink-lavaplayer="2.2.2"
+pagination-utils="4.0.6"
+# ALPHA-10 is a rework of the command system. It is not merged yet: https://github.com/TriumphTeam/triumph-cmds/pull/84
+jda-slash="2.0.0-ALPHA-10"
+mysql-connector="8.0.33"
+hikaricp="6.0.0"
+exposed = "0.56.0"
+
+[libraries]
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
+commons-cli = { group = "commons-cli", name = "commons-cli", version.ref = "commons-cli" }
+slf4j-log4j12 = { group = "org.slf4j", name = "slf4j-log4j12", version.ref = "slf4j" }
+jda = { group = "net.dv8tion", name = "JDA", version.ref = "jda" }
+lavalink-youtube-common = { group = "dev.lavalink.youtube", name = "common", version.ref = "lavalink-youtube" }
+lavalink-youtube-v2 = { group = "dev.lavalink.youtube", name = "v2", version.ref = "lavalink-youtube" }
+lavalink-lavaplayer = { group = "dev.arbjerg", name = "lavaplayer", version.ref = "lavalink-lavaplayer" }
+pagination-utils = { group = "com.github.ygimenez", name = "Pagination-Utils", version.ref = "pagination-utils" }
+triumph-cmd-jda-slash = { group = "dev.triumphteam", name = "triumph-cmd-jda-slash", version.ref = "jda-slash" }
+mysql-connector = { group = "mysql", name = "mysql-connector-java", version.ref = "mysql-connector" }
+hikaricp = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikaricp" }
+exposed-core = { group = "org.jetbrains.exposed", name = "exposed-core", version.ref = "exposed" }
+exposed-dao = { group = "org.jetbrains.exposed", name = "exposed-dao", version.ref = "exposed" }
+exposed-jdbc = { group = "org.jetbrains.exposed", name = "exposed-jdbc", version.ref = "exposed" }
+exposed-java-time = { group = "org.jetbrains.exposed", name = "exposed-java-time", version.ref = "exposed" }
+
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }

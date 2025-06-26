@@ -32,7 +32,7 @@ fun main(args: Array<String>) {
     }
 
     LOGGER.debug("Initializing application...")
-    val bot = AlphaMusic(LOGGER, startupCommandParser.getDiscordToken(), startupCommandParser.getYoutubeEmail(), startupCommandParser.getYoutubePassword())
+    val bot = AlphaMusic(LOGGER, startupCommandParser.getDiscordToken(), startupCommandParser.getYoutubeRefreshToken())
     LOGGER.debug("Starting application...")
     bot.run()
     LOGGER.debug("Initializing console handler...")
