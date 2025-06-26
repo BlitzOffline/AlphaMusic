@@ -12,7 +12,6 @@ import dev.lavalink.youtube.clients.TvHtml5EmbeddedWithThumbnail
  */
 class AudioPlayerManager(youtubeRefreshToken: String?) : DefaultAudioPlayerManager() {
     init {
-//        TODO: Fix youtube requiring login
         val source = YoutubeAudioSourceManager(
             YoutubeSourceOptions()
                 .setAllowSearch(true)
